@@ -2,7 +2,7 @@ using System.Diagnostics;
 using Amazon_clone.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Amazon_clone.Controllers
+namespace Amazon_clone.Web_Api_Amazon_Clone.Controllers
 {
     public class HomeController : Controller
     {
