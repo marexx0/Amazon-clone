@@ -1,3 +1,9 @@
+<<<<<<< HEAD:Web_Api_Amazon/Controllers/HomeController.cs
+=======
+using System.Diagnostics;
+using Amazon_clone.Core.Dtos;
+
+>>>>>>> develop:Amazon-clone/Web_Api_Amazon_Clone/Controllers/HomeController.cs
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using Web_Api_Amazon.Models;
