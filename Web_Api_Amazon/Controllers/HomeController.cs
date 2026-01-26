@@ -1,9 +1,9 @@
+
 using System.Diagnostics;
-using Amazon_clone.Core.Dtos;
-
 using Microsoft.AspNetCore.Mvc;
+using Web_Api_Amazon.Models;
 
-namespace Amazon_clone.Web_Api_Amazon_Clone.Controllers
+namespace Web_Api_Amazon.Controllers
 {
     public class HomeController : Controller
     {

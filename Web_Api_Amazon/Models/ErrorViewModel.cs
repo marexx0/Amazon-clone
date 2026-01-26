@@ -1,4 +1,4 @@
-namespace Amazon_clone.Core.Dtos
+namespace Web_Api_Amazon.Models
 {
     public class ErrorViewModel
     {
