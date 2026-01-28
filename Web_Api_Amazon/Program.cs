@@ -1,6 +1,7 @@
 using Amazon_clone.DataAccess.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +11,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDbContext<ShopDbContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlServer(connectionString,
+        b => b.MigrationsAssembly("DataAccess")));
+
 
 
 // Identity
