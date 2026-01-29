@@ -1,11 +1,12 @@
-using Amazon_clone.DataAccess.Data;
+﻿using Amazon_clone.DataAccess.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -20,9 +21,7 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     .AddEntityFrameworkStores<ShopDbContext>();
 
 builder.Services.AddControllersWithViews();
-
-
-
+builder.Services.AddRazorPages(); 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -39,7 +38,7 @@ else
 
 app.UseHttpsRedirection();
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();

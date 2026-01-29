@@ -6,6 +6,7 @@ public class User : IdentityUser
     public string FirstName { get; set; }
     public string LastName { get; set; }
 
+
     // Orders made by user
     public ICollection<Order> Orders { get; set; }
 
