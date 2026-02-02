@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using DataAccess.Persistance;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
@@ -15,6 +16,16 @@ namespace Amazon_clone.DataAccess.Data
         public ShopDbContext(DbContextOptions<ShopDbContext> options)
             : base(options)
         {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ShopDbContext).Assembly);
+
+
+            modelBuilder.Entity<Category>().HasData(CategorySeeder.GetCategories());
+            modelBuilder.Entity<Product>().HasData(ProductSeeder.GetProducts());
         }
     }
 }
