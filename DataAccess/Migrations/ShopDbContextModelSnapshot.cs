@@ -207,183 +207,6 @@ namespace DataAccess.Migrations
                         });
                 });
 
-            modelBuilder.Entity("CategoryProperty", b =>
-                {
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PropertyDefinitionId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsRequired")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsVariantOption")
-                        .HasColumnType("bit");
-
-                    b.HasKey("CategoryId", "PropertyDefinitionId");
-
-                    b.HasIndex("PropertyDefinitionId");
-
-                    b.ToTable("CategoryProperty");
-
-                    b.HasData(
-                        new
-                        {
-                            CategoryId = 6,
-                            PropertyDefinitionId = 1,
-                            IsRequired = true,
-                            IsVariantOption = false
-                        },
-                        new
-                        {
-                            CategoryId = 6,
-                            PropertyDefinitionId = 2,
-                            IsRequired = false,
-                            IsVariantOption = true
-                        },
-                        new
-                        {
-                            CategoryId = 6,
-                            PropertyDefinitionId = 3,
-                            IsRequired = false,
-                            IsVariantOption = true
-                        },
-                        new
-                        {
-                            CategoryId = 7,
-                            PropertyDefinitionId = 1,
-                            IsRequired = true,
-                            IsVariantOption = false
-                        },
-                        new
-                        {
-                            CategoryId = 7,
-                            PropertyDefinitionId = 2,
-                            IsRequired = false,
-                            IsVariantOption = true
-                        },
-                        new
-                        {
-                            CategoryId = 7,
-                            PropertyDefinitionId = 3,
-                            IsRequired = false,
-                            IsVariantOption = true
-                        },
-                        new
-                        {
-                            CategoryId = 8,
-                            PropertyDefinitionId = 1,
-                            IsRequired = true,
-                            IsVariantOption = false
-                        },
-                        new
-                        {
-                            CategoryId = 9,
-                            PropertyDefinitionId = 1,
-                            IsRequired = true,
-                            IsVariantOption = false
-                        },
-                        new
-                        {
-                            CategoryId = 10,
-                            PropertyDefinitionId = 1,
-                            IsRequired = true,
-                            IsVariantOption = false
-                        },
-                        new
-                        {
-                            CategoryId = 11,
-                            PropertyDefinitionId = 1,
-                            IsRequired = true,
-                            IsVariantOption = false
-                        },
-                        new
-                        {
-                            CategoryId = 12,
-                            PropertyDefinitionId = 1,
-                            IsRequired = true,
-                            IsVariantOption = false
-                        },
-                        new
-                        {
-                            CategoryId = 13,
-                            PropertyDefinitionId = 1,
-                            IsRequired = true,
-                            IsVariantOption = false
-                        },
-                        new
-                        {
-                            CategoryId = 14,
-                            PropertyDefinitionId = 1,
-                            IsRequired = true,
-                            IsVariantOption = false
-                        },
-                        new
-                        {
-                            CategoryId = 15,
-                            PropertyDefinitionId = 1,
-                            IsRequired = true,
-                            IsVariantOption = false
-                        },
-                        new
-                        {
-                            CategoryId = 16,
-                            PropertyDefinitionId = 1,
-                            IsRequired = true,
-                            IsVariantOption = false
-                        },
-                        new
-                        {
-                            CategoryId = 17,
-                            PropertyDefinitionId = 1,
-                            IsRequired = true,
-                            IsVariantOption = false
-                        },
-                        new
-                        {
-                            CategoryId = 18,
-                            PropertyDefinitionId = 1,
-                            IsRequired = true,
-                            IsVariantOption = false
-                        },
-                        new
-                        {
-                            CategoryId = 19,
-                            PropertyDefinitionId = 1,
-                            IsRequired = true,
-                            IsVariantOption = false
-                        },
-                        new
-                        {
-                            CategoryId = 20,
-                            PropertyDefinitionId = 1,
-                            IsRequired = true,
-                            IsVariantOption = false
-                        },
-                        new
-                        {
-                            CategoryId = 21,
-                            PropertyDefinitionId = 1,
-                            IsRequired = true,
-                            IsVariantOption = false
-                        },
-                        new
-                        {
-                            CategoryId = 22,
-                            PropertyDefinitionId = 1,
-                            IsRequired = true,
-                            IsVariantOption = false
-                        },
-                        new
-                        {
-                            CategoryId = 23,
-                            PropertyDefinitionId = 1,
-                            IsRequired = true,
-                            IsVariantOption = false
-                        });
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -614,7 +437,7 @@ namespace DataAccess.Migrations
                             Id = 1,
                             CategoryId = 6,
                             Description = "Comfortable cotton t-shirt for everyday wear.",
-                            ImageUrl = "/images/products/tshirt.png",
+                            ImageUrl = "/images/products/tshirt.jpg",
                             Name = "Men's Casual T-Shirt",
                             Price = 19.989999999999998
                         },
@@ -623,7 +446,7 @@ namespace DataAccess.Migrations
                             Id = 2,
                             CategoryId = 7,
                             Description = "Lightweight running shoes with breathable material.",
-                            ImageUrl = "/images/products/sneakers.png",
+                            ImageUrl = "/images/products/sneakers.jpg",
                             Name = "Running Sneakers",
                             Price = 89.989999999999995
                         },
@@ -632,7 +455,7 @@ namespace DataAccess.Migrations
                             Id = 3,
                             CategoryId = 8,
                             Description = "13-inch laptop with Apple M2 chip and 16GB RAM.",
-                            ImageUrl = "/images/products/macbook_air_m2.png",
+                            ImageUrl = "/images/products/macbook_air_m2.jpg",
                             Name = "Apple MacBook Air M2",
                             Price = 1499.99
                         },
@@ -641,7 +464,7 @@ namespace DataAccess.Migrations
                             Id = 4,
                             CategoryId = 9,
                             Description = "Flagship smartphone with advanced camera system.",
-                            ImageUrl = "/images/products/galaxy_s24.png",
+                            ImageUrl = "/images/products/galaxy_s24.jpg",
                             Name = "Samsung Galaxy S24",
                             Price = 999.99000000000001
                         },
@@ -650,7 +473,7 @@ namespace DataAccess.Migrations
                             Id = 5,
                             CategoryId = 10,
                             Description = "Noise-cancelling wireless headphones.",
-                            ImageUrl = "/images/products/sony_xm5.png",
+                            ImageUrl = "/images/products/sony_xm5.jpg",
                             Name = "Sony WH-1000XM5",
                             Price = 399.99000000000001
                         },
@@ -659,7 +482,7 @@ namespace DataAccess.Migrations
                             Id = 6,
                             CategoryId = 11,
                             Description = "Mirrorless camera for photography enthusiasts.",
-                            ImageUrl = "/images/products/canon_r10.png",
+                            ImageUrl = "/images/products/canon_r10.jpg",
                             Name = "Canon EOS R10",
                             Price = 979.99000000000001
                         },
@@ -668,7 +491,7 @@ namespace DataAccess.Migrations
                             Id = 7,
                             CategoryId = 12,
                             Description = "Next-gen gaming console from Sony.",
-                            ImageUrl = "/images/products/ps5.png",
+                            ImageUrl = "/images/products/ps5.jpg",
                             Name = "PlayStation 5",
                             Price = 549.99000000000001
                         },
@@ -677,7 +500,7 @@ namespace DataAccess.Migrations
                             Id = 8,
                             CategoryId = 13,
                             Description = "Minimalist wall clock for home decor.",
-                            ImageUrl = "/images/products/wall_clock.png",
+                            ImageUrl = "/images/products/wall_clock.jpg",
                             Name = "Modern Wall Clock",
                             Price = 39.990000000000002
                         },
@@ -686,7 +509,7 @@ namespace DataAccess.Migrations
                             Id = 9,
                             CategoryId = 14,
                             Description = "Solid wood dining table for family meals.",
-                            ImageUrl = "/images/products/dining_table.png",
+                            ImageUrl = "/images/products/dining_table.jpg",
                             Name = "Wooden Dining Table",
                             Price = 799.99000000000001
                         },
@@ -695,7 +518,7 @@ namespace DataAccess.Migrations
                             Id = 10,
                             CategoryId = 15,
                             Description = "Energy-efficient LED lamp with adjustable brightness.",
-                            ImageUrl = "/images/products/desk_lamp.png",
+                            ImageUrl = "/images/products/desk_lamp.jpg",
                             Name = "LED Desk Lamp",
                             Price = 49.990000000000002
                         },
@@ -704,7 +527,7 @@ namespace DataAccess.Migrations
                             Id = 11,
                             CategoryId = 16,
                             Description = "Complete set of tools for gardening tasks.",
-                            ImageUrl = "/images/products/garden_tools.png",
+                            ImageUrl = "/images/products/garden_tools.jpg",
                             Name = "Garden Tool Set",
                             Price = 59.990000000000002
                         },
@@ -713,7 +536,7 @@ namespace DataAccess.Migrations
                             Id = 12,
                             CategoryId = 17,
                             Description = "Powerful electric drill for home improvement.",
-                            ImageUrl = "/images/products/drill.png",
+                            ImageUrl = "/images/products/drill.jpg",
                             Name = "Electric Drill",
                             Price = 129.99000000000001
                         },
@@ -722,7 +545,7 @@ namespace DataAccess.Migrations
                             Id = 13,
                             CategoryId = 18,
                             Description = "High-quality concrete mix for construction.",
-                            ImageUrl = "/images/products/concrete.png",
+                            ImageUrl = "/images/products/concrete.jpg",
                             Name = "Concrete Mix",
                             Price = 14.99
                         },
@@ -731,7 +554,7 @@ namespace DataAccess.Migrations
                             Id = 14,
                             CategoryId = 19,
                             Description = "Adjustable dumbbell set for home workouts.",
-                            ImageUrl = "/images/products/dumbbells.png",
+                            ImageUrl = "/images/products/dumbbells.jpg",
                             Name = "Fitness Dumbbells Set",
                             Price = 119.98999999999999
                         },
@@ -740,7 +563,7 @@ namespace DataAccess.Migrations
                             Id = 15,
                             CategoryId = 20,
                             Description = "Universal phone holder for car dashboards.",
-                            ImageUrl = "/images/products/car_holder.png",
+                            ImageUrl = "/images/products/car_holder.jpg",
                             Name = "Car Phone Holder",
                             Price = 24.989999999999998
                         },
@@ -749,7 +572,7 @@ namespace DataAccess.Migrations
                             Id = 16,
                             CategoryId = 21,
                             Description = "Educational toy set for kids.",
-                            ImageUrl = "/images/products/blocks.png",
+                            ImageUrl = "/images/products/blocks.jpg",
                             Name = "Kids Building Blocks",
                             Price = 34.990000000000002
                         },
@@ -758,7 +581,7 @@ namespace DataAccess.Migrations
                             Id = 17,
                             CategoryId = 22,
                             Description = "Comprehensive guide to C# and .NET development.",
-                            ImageUrl = "/images/products/csharp_book.png",
+                            ImageUrl = "/images/products/csharp_book.jpg",
                             Name = "C# Programming Book",
                             Price = 44.990000000000002
                         },
@@ -767,701 +590,9 @@ namespace DataAccess.Migrations
                             Id = 18,
                             CategoryId = 23,
                             Description = "Dietary supplement to support immunity.",
-                            ImageUrl = "/images/products/vitamin_c.png",
+                            ImageUrl = "/images/products/vitamin_c.jpg",
                             Name = "Vitamin C Tablets",
                             Price = 14.99
-                        },
-                        new
-                        {
-                            Id = 19,
-                            CategoryId = 8,
-                            Description = "Ergonomic wireless mouse with long battery life.",
-                            ImageUrl = "/images/products/wireless_mouse.png",
-                            Name = "Wireless Mouse",
-                            Price = 29.989999999999998
-                        },
-                        new
-                        {
-                            Id = 20,
-                            CategoryId = 10,
-                            Description = "Track workouts, heart rate, and sleep with ease.",
-                            ImageUrl = "/images/products/smart_watch.png",
-                            Name = "Smart Fitness Watch",
-                            Price = 199.99000000000001
-                        },
-                        new
-                        {
-                            Id = 21,
-                            CategoryId = 19,
-                            Description = "Non-slip yoga mat with extra cushioning.",
-                            ImageUrl = "/images/products/yoga_mat.png",
-                            Name = "Premium Yoga Mat",
-                            Price = 39.990000000000002
-                        });
-                });
-
-            modelBuilder.Entity("ProductImage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ContentType")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("FileName")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
-
-                    b.Property<byte[]>("ImageData")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<bool>("IsPrimary")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SortOrder")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId", "IsPrimary");
-
-                    b.ToTable("ProductImages");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ContentType = "image/png",
-                            FileName = "tshirt.png",
-                            ImageUrl = "/images/products/tshirt.png",
-                            IsPrimary = true,
-                            ProductId = 1,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ContentType = "image/png",
-                            FileName = "sneakers.png",
-                            ImageUrl = "/images/products/sneakers.png",
-                            IsPrimary = true,
-                            ProductId = 2,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ContentType = "image/png",
-                            FileName = "macbook_air_m2.png",
-                            ImageUrl = "/images/products/macbook_air_m2.png",
-                            IsPrimary = true,
-                            ProductId = 3,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ContentType = "image/png",
-                            FileName = "galaxy_s24.png",
-                            ImageUrl = "/images/products/galaxy_s24.png",
-                            IsPrimary = true,
-                            ProductId = 4,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ContentType = "image/png",
-                            FileName = "sony_xm5.png",
-                            ImageUrl = "/images/products/sony_xm5.png",
-                            IsPrimary = true,
-                            ProductId = 5,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 6,
-                            ContentType = "image/png",
-                            FileName = "canon_r10.png",
-                            ImageUrl = "/images/products/canon_r10.png",
-                            IsPrimary = true,
-                            ProductId = 6,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 7,
-                            ContentType = "image/png",
-                            FileName = "ps5.png",
-                            ImageUrl = "/images/products/ps5.png",
-                            IsPrimary = true,
-                            ProductId = 7,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 8,
-                            ContentType = "image/png",
-                            FileName = "wall_clock.png",
-                            ImageUrl = "/images/products/wall_clock.png",
-                            IsPrimary = true,
-                            ProductId = 8,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 9,
-                            ContentType = "image/png",
-                            FileName = "dining_table.png",
-                            ImageUrl = "/images/products/dining_table.png",
-                            IsPrimary = true,
-                            ProductId = 9,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 10,
-                            ContentType = "image/png",
-                            FileName = "desk_lamp.png",
-                            ImageUrl = "/images/products/desk_lamp.png",
-                            IsPrimary = true,
-                            ProductId = 10,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 11,
-                            ContentType = "image/png",
-                            FileName = "garden_tools.png",
-                            ImageUrl = "/images/products/garden_tools.png",
-                            IsPrimary = true,
-                            ProductId = 11,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 12,
-                            ContentType = "image/png",
-                            FileName = "drill.png",
-                            ImageUrl = "/images/products/drill.png",
-                            IsPrimary = true,
-                            ProductId = 12,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 13,
-                            ContentType = "image/png",
-                            FileName = "concrete.png",
-                            ImageUrl = "/images/products/concrete.png",
-                            IsPrimary = true,
-                            ProductId = 13,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 14,
-                            ContentType = "image/png",
-                            FileName = "dumbbells.png",
-                            ImageUrl = "/images/products/dumbbells.png",
-                            IsPrimary = true,
-                            ProductId = 14,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 15,
-                            ContentType = "image/png",
-                            FileName = "car_holder.png",
-                            ImageUrl = "/images/products/car_holder.png",
-                            IsPrimary = true,
-                            ProductId = 15,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 16,
-                            ContentType = "image/png",
-                            FileName = "blocks.png",
-                            ImageUrl = "/images/products/blocks.png",
-                            IsPrimary = true,
-                            ProductId = 16,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 17,
-                            ContentType = "image/png",
-                            FileName = "csharp_book.png",
-                            ImageUrl = "/images/products/csharp_book.png",
-                            IsPrimary = true,
-                            ProductId = 17,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 18,
-                            ContentType = "image/png",
-                            FileName = "vitamin_c.png",
-                            ImageUrl = "/images/products/vitamin_c.png",
-                            IsPrimary = true,
-                            ProductId = 18,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 19,
-                            ContentType = "image/png",
-                            FileName = "wireless_mouse.png",
-                            ImageUrl = "/images/products/wireless_mouse.png",
-                            IsPrimary = true,
-                            ProductId = 19,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 20,
-                            ContentType = "image/png",
-                            FileName = "smart_watch.png",
-                            ImageUrl = "/images/products/smart_watch.png",
-                            IsPrimary = true,
-                            ProductId = 20,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 21,
-                            ContentType = "image/png",
-                            FileName = "yoga_mat.png",
-                            ImageUrl = "/images/products/yoga_mat.png",
-                            IsPrimary = true,
-                            ProductId = 21,
-                            SortOrder = 0
-                        });
-                });
-
-            modelBuilder.Entity("ProductProperty", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PropertyDefinitionId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("PropertyDefinitionId");
-
-                    b.ToTable("ProductProperty");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ProductId = 1,
-                            PropertyDefinitionId = 1,
-                            Value = "Generic Brand"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ProductId = 2,
-                            PropertyDefinitionId = 1,
-                            Value = "RunFast"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ProductId = 3,
-                            PropertyDefinitionId = 1,
-                            Value = "Apple"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ProductId = 4,
-                            PropertyDefinitionId = 1,
-                            Value = "Samsung"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ProductId = 5,
-                            PropertyDefinitionId = 1,
-                            Value = "Sony"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            ProductId = 6,
-                            PropertyDefinitionId = 1,
-                            Value = "Canon"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            ProductId = 7,
-                            PropertyDefinitionId = 1,
-                            Value = "Sony"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            ProductId = 8,
-                            PropertyDefinitionId = 1,
-                            Value = "Nordic"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            ProductId = 9,
-                            PropertyDefinitionId = 1,
-                            Value = "OakWorks"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            ProductId = 10,
-                            PropertyDefinitionId = 1,
-                            Value = "BrightLite"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            ProductId = 11,
-                            PropertyDefinitionId = 1,
-                            Value = "GardenPro"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            ProductId = 12,
-                            PropertyDefinitionId = 1,
-                            Value = "ToolMaster"
-                        },
-                        new
-                        {
-                            Id = 13,
-                            ProductId = 13,
-                            PropertyDefinitionId = 1,
-                            Value = "BuildRight"
-                        },
-                        new
-                        {
-                            Id = 14,
-                            ProductId = 14,
-                            PropertyDefinitionId = 1,
-                            Value = "FitZone"
-                        },
-                        new
-                        {
-                            Id = 15,
-                            ProductId = 15,
-                            PropertyDefinitionId = 1,
-                            Value = "AutoGrip"
-                        },
-                        new
-                        {
-                            Id = 16,
-                            ProductId = 16,
-                            PropertyDefinitionId = 1,
-                            Value = "PlayKids"
-                        },
-                        new
-                        {
-                            Id = 17,
-                            ProductId = 17,
-                            PropertyDefinitionId = 1,
-                            Value = "TechPress"
-                        },
-                        new
-                        {
-                            Id = 18,
-                            ProductId = 18,
-                            PropertyDefinitionId = 1,
-                            Value = "HealthPlus"
-                        },
-                        new
-                        {
-                            Id = 19,
-                            ProductId = 19,
-                            PropertyDefinitionId = 1,
-                            Value = "LogiTech"
-                        },
-                        new
-                        {
-                            Id = 20,
-                            ProductId = 20,
-                            PropertyDefinitionId = 1,
-                            Value = "Pulse"
-                        },
-                        new
-                        {
-                            Id = 21,
-                            ProductId = 21,
-                            PropertyDefinitionId = 1,
-                            Value = "ZenFlex"
-                        });
-                });
-
-            modelBuilder.Entity("ProductVariant", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.ToTable("ProductVariant");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ProductId = 1,
-                            Quantity = 20
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ProductId = 1,
-                            Quantity = 15
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ProductId = 2,
-                            Quantity = 10
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ProductId = 2,
-                            Quantity = 5
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ProductId = 2,
-                            Quantity = 8
-                        },
-                        new
-                        {
-                            Id = 6,
-                            ProductId = 3,
-                            Quantity = 6
-                        },
-                        new
-                        {
-                            Id = 7,
-                            ProductId = 3,
-                            Quantity = 4
-                        });
-                });
-
-            modelBuilder.Entity("ProductVariantValue", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ProductVariantId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PropertyDefinitionId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductVariantId");
-
-                    b.HasIndex("PropertyDefinitionId");
-
-                    b.ToTable("ProductVariantValue");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ProductVariantId = 1,
-                            PropertyDefinitionId = 3,
-                            Value = "M"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ProductVariantId = 1,
-                            PropertyDefinitionId = 2,
-                            Value = "White"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ProductVariantId = 2,
-                            PropertyDefinitionId = 3,
-                            Value = "L"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ProductVariantId = 2,
-                            PropertyDefinitionId = 2,
-                            Value = "Black"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ProductVariantId = 3,
-                            PropertyDefinitionId = 3,
-                            Value = "41"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            ProductVariantId = 3,
-                            PropertyDefinitionId = 2,
-                            Value = "White"
-                        },
-                        new
-                        {
-                            Id = 7,
-                            ProductVariantId = 4,
-                            PropertyDefinitionId = 3,
-                            Value = "42"
-                        },
-                        new
-                        {
-                            Id = 8,
-                            ProductVariantId = 4,
-                            PropertyDefinitionId = 2,
-                            Value = "Black"
-                        },
-                        new
-                        {
-                            Id = 9,
-                            ProductVariantId = 5,
-                            PropertyDefinitionId = 3,
-                            Value = "43"
-                        },
-                        new
-                        {
-                            Id = 10,
-                            ProductVariantId = 5,
-                            PropertyDefinitionId = 2,
-                            Value = "Gray"
-                        },
-                        new
-                        {
-                            Id = 11,
-                            ProductVariantId = 6,
-                            PropertyDefinitionId = 2,
-                            Value = "Space Gray"
-                        },
-                        new
-                        {
-                            Id = 12,
-                            ProductVariantId = 7,
-                            PropertyDefinitionId = 2,
-                            Value = "Silver"
-                        });
-                });
-
-            modelBuilder.Entity("PropertyDefinition", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("DataType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("GroupName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name");
-
-                    b.ToTable("PropertyDefinition");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            DataType = "Text",
-                            GroupName = "General",
-                            Name = "Brand"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            DataType = "Text",
-                            GroupName = "Variant",
-                            Name = "Color"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            DataType = "Text",
-                            GroupName = "Variant",
-                            Name = "Size"
                         });
                 });
 
@@ -1567,25 +698,6 @@ namespace DataAccess.Migrations
                     b.Navigation("ParentCategory");
                 });
 
-            modelBuilder.Entity("CategoryProperty", b =>
-                {
-                    b.HasOne("Category", "Category")
-                        .WithMany("CategoryProperties")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("PropertyDefinition", "PropertyDefinition")
-                        .WithMany("CategoryProperties")
-                        .HasForeignKey("PropertyDefinitionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-
-                    b.Navigation("PropertyDefinition");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -1678,70 +790,8 @@ namespace DataAccess.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("ProductImage", b =>
-                {
-                    b.HasOne("Product", "Product")
-                        .WithMany("Images")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("ProductProperty", b =>
-                {
-                    b.HasOne("Product", "Product")
-                        .WithMany("Properties")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PropertyDefinition", "PropertyDefinition")
-                        .WithMany("ProductProperties")
-                        .HasForeignKey("PropertyDefinitionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("PropertyDefinition");
-                });
-
-            modelBuilder.Entity("ProductVariant", b =>
-                {
-                    b.HasOne("Product", "Product")
-                        .WithMany("Variants")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("ProductVariantValue", b =>
-                {
-                    b.HasOne("ProductVariant", "ProductVariant")
-                        .WithMany("VariantValues")
-                        .HasForeignKey("ProductVariantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PropertyDefinition", "PropertyDefinition")
-                        .WithMany()
-                        .HasForeignKey("PropertyDefinitionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("ProductVariant");
-
-                    b.Navigation("PropertyDefinition");
-                });
-
             modelBuilder.Entity("Category", b =>
                 {
-                    b.Navigation("CategoryProperties");
-
                     b.Navigation("Products");
 
                     b.Navigation("SubCategories");
@@ -1756,25 +806,7 @@ namespace DataAccess.Migrations
                 {
                     b.Navigation("CartItems");
 
-                    b.Navigation("Images");
-
                     b.Navigation("OrderItems");
-
-                    b.Navigation("Properties");
-
-                    b.Navigation("Variants");
-                });
-
-            modelBuilder.Entity("ProductVariant", b =>
-                {
-                    b.Navigation("VariantValues");
-                });
-
-            modelBuilder.Entity("PropertyDefinition", b =>
-                {
-                    b.Navigation("CategoryProperties");
-
-                    b.Navigation("ProductProperties");
                 });
 
             modelBuilder.Entity("User", b =>

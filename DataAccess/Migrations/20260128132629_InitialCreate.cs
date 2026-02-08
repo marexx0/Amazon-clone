@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -72,21 +72,6 @@ namespace DataAccess.Migrations
                         principalTable: "Categories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "PropertyDefinition",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    DataType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GroupName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PropertyDefinition", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -240,32 +225,6 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CategoryProperty",
-                columns: table => new
-                {
-                    CategoryId = table.Column<int>(type: "int", nullable: false),
-                    PropertyDefinitionId = table.Column<int>(type: "int", nullable: false),
-                    IsRequired = table.Column<bool>(type: "bit", nullable: false),
-                    IsVariantOption = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CategoryProperty", x => new { x.CategoryId, x.PropertyDefinitionId });
-                    table.ForeignKey(
-                        name: "FK_CategoryProperty_Categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_CategoryProperty_PropertyDefinition_PropertyDefinitionId",
-                        column: x => x.PropertyDefinitionId,
-                        principalTable: "PropertyDefinition",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "CartItems",
                 columns: table => new
                 {
@@ -320,80 +279,6 @@ namespace DataAccess.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "ProductProperty",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductId = table.Column<int>(type: "int", nullable: false),
-                    PropertyDefinitionId = table.Column<int>(type: "int", nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductProperty", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProductProperty_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ProductProperty_PropertyDefinition_PropertyDefinitionId",
-                        column: x => x.PropertyDefinitionId,
-                        principalTable: "PropertyDefinition",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductVariant",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductId = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductVariant", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProductVariant_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductVariantValue",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductVariantId = table.Column<int>(type: "int", nullable: false),
-                    PropertyDefinitionId = table.Column<int>(type: "int", nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductVariantValue", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ProductVariantValue_ProductVariant_ProductVariantId",
-                        column: x => x.ProductVariantId,
-                        principalTable: "ProductVariant",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ProductVariantValue_PropertyDefinition_PropertyDefinitionId",
-                        column: x => x.PropertyDefinitionId,
-                        principalTable: "PropertyDefinition",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
             migrationBuilder.InsertData(
                 table: "Categories",
                 columns: new[] { "Id", "Name", "ParentCategoryId" },
@@ -403,24 +288,7 @@ namespace DataAccess.Migrations
                     { 2, "Technology", null },
                     { 3, "Home", null },
                     { 4, "Auto", null },
-                    { 5, "Health", null }
-                });
-
-            migrationBuilder.InsertData(
-                table: "PropertyDefinition",
-                columns: new[] { "Id", "DataType", "GroupName", "Name" },
-                values: new object[,]
-                {
-                    { 1, "Text", "General", "Brand" },
-                    { 2, "Text", "Variant", "Color" },
-                    { 3, "Text", "Variant", "Size" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Categories",
-                columns: new[] { "Id", "Name", "ParentCategoryId" },
-                values: new object[,]
-                {
+                    { 5, "Health", null },
                     { 6, "Clothing", 1 },
                     { 7, "Shoes", 1 },
                     { 8, "Computers / Laptops / Tablets", 2 },
@@ -439,35 +307,6 @@ namespace DataAccess.Migrations
                     { 21, "Toys Kids", 5 },
                     { 22, "Books / Media", 5 },
                     { 23, "Health", 5 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "CategoryProperty",
-                columns: new[] { "CategoryId", "PropertyDefinitionId", "IsRequired", "IsVariantOption" },
-                values: new object[,]
-                {
-                    { 6, 1, true, false },
-                    { 6, 2, false, true },
-                    { 6, 3, false, true },
-                    { 7, 1, true, false },
-                    { 7, 2, false, true },
-                    { 7, 3, false, true },
-                    { 8, 1, true, false },
-                    { 9, 1, true, false },
-                    { 10, 1, true, false },
-                    { 11, 1, true, false },
-                    { 12, 1, true, false },
-                    { 13, 1, true, false },
-                    { 14, 1, true, false },
-                    { 15, 1, true, false },
-                    { 16, 1, true, false },
-                    { 17, 1, true, false },
-                    { 18, 1, true, false },
-                    { 19, 1, true, false },
-                    { 20, 1, true, false },
-                    { 21, 1, true, false },
-                    { 22, 1, true, false },
-                    { 23, 1, true, false }
                 });
 
             migrationBuilder.InsertData(
@@ -493,45 +332,6 @@ namespace DataAccess.Migrations
                     { 16, 21, "Educational toy set for kids.", "/images/products/blocks.jpg", "Kids Building Blocks", 34.990000000000002 },
                     { 17, 22, "Comprehensive guide to C# and .NET development.", "/images/products/csharp_book.jpg", "C# Programming Book", 44.990000000000002 },
                     { 18, 23, "Dietary supplement to support immunity.", "/images/products/vitamin_c.jpg", "Vitamin C Tablets", 14.99 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "ProductProperty",
-                columns: new[] { "Id", "ProductId", "PropertyDefinitionId", "Value" },
-                values: new object[,]
-                {
-                    { 1, 1, 1, "Generic Brand" },
-                    { 2, 2, 1, "RunFast" },
-                    { 3, 3, 1, "Apple" },
-                    { 4, 4, 1, "Samsung" },
-                    { 5, 5, 1, "Sony" },
-                    { 6, 7, 1, "Sony" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "ProductVariant",
-                columns: new[] { "Id", "ProductId", "Quantity" },
-                values: new object[,]
-                {
-                    { 1, 1, 20 },
-                    { 2, 1, 15 },
-                    { 3, 2, 10 },
-                    { 4, 2, 5 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "ProductVariantValue",
-                columns: new[] { "Id", "ProductVariantId", "PropertyDefinitionId", "Value" },
-                values: new object[,]
-                {
-                    { 1, 1, 3, "M" },
-                    { 2, 1, 2, "White" },
-                    { 3, 2, 3, "L" },
-                    { 4, 2, 2, "Black" },
-                    { 5, 3, 3, "41" },
-                    { 6, 3, 2, "White" },
-                    { 7, 4, 3, "42" },
-                    { 8, 4, 2, "Black" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -589,11 +389,6 @@ namespace DataAccess.Migrations
                 column: "ParentCategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CategoryProperty_PropertyDefinitionId",
-                table: "CategoryProperty",
-                column: "PropertyDefinitionId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_OrderId",
                 table: "OrderItems",
                 column: "OrderId");
@@ -609,16 +404,6 @@ namespace DataAccess.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductProperty_ProductId",
-                table: "ProductProperty",
-                column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductProperty_PropertyDefinitionId",
-                table: "ProductProperty",
-                column: "PropertyDefinitionId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Products_CategoryId",
                 table: "Products",
                 column: "CategoryId");
@@ -626,26 +411,6 @@ namespace DataAccess.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Products_Name",
                 table: "Products",
-                column: "Name");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductVariant_ProductId",
-                table: "ProductVariant",
-                column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductVariantValue_ProductVariantId",
-                table: "ProductVariantValue",
-                column: "ProductVariantId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductVariantValue_PropertyDefinitionId",
-                table: "ProductVariantValue",
-                column: "PropertyDefinitionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PropertyDefinition_Name",
-                table: "PropertyDefinition",
                 column: "Name");
         }
 
@@ -671,16 +436,7 @@ namespace DataAccess.Migrations
                 name: "CartItems");
 
             migrationBuilder.DropTable(
-                name: "CategoryProperty");
-
-            migrationBuilder.DropTable(
                 name: "OrderItems");
-
-            migrationBuilder.DropTable(
-                name: "ProductProperty");
-
-            migrationBuilder.DropTable(
-                name: "ProductVariantValue");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -689,16 +445,10 @@ namespace DataAccess.Migrations
                 name: "Orders");
 
             migrationBuilder.DropTable(
-                name: "ProductVariant");
-
-            migrationBuilder.DropTable(
-                name: "PropertyDefinition");
+                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Categories");
