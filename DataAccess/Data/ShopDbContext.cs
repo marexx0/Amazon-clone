@@ -12,6 +12,7 @@ namespace Amazon_clone.DataAccess.Data
         public DbSet<CartItem> CartItems { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
 
         public ShopDbContext(DbContextOptions<ShopDbContext> options)
             : base(options)
@@ -25,7 +26,13 @@ namespace Amazon_clone.DataAccess.Data
 
 
             modelBuilder.Entity<Category>().HasData(CategorySeeder.GetCategories());
-            modelBuilder.Entity<Product>().HasData(ProductSeeder.GetProducts());
+            modelBuilder.Entity<Product>().HasData(PropertySeeder.GetProducts());
+            modelBuilder.Entity<ProductImage>().HasData(ProductImageSeeder.GetProductImages());
+            modelBuilder.Entity<PropertyDefinition>().HasData(PropertySeeder.GetPropertyDefinitions());
+            modelBuilder.Entity<CategoryProperty>().HasData(PropertySeeder.GetCategoryProperties());
+            modelBuilder.Entity<ProductProperty>().HasData(PropertySeeder.GetProductProperties());
+            modelBuilder.Entity<ProductVariant>().HasData(PropertySeeder.GetProductVariants());
+            modelBuilder.Entity<ProductVariantValue>().HasData(PropertySeeder.GetProductVariantValues());
         }
     }
 }

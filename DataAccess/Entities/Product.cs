@@ -14,4 +14,10 @@
 
     public ICollection<CartItem> CartItems { get; set; }
     public ICollection<OrderItem> OrderItems { get; set; }
+
+    public ICollection<ProductProperty> Properties { get; set; }
+
+    public ICollection<ProductVariant> Variants { get; set; }
+
+    public ICollection<ProductImage> Images { get; set; }
 }

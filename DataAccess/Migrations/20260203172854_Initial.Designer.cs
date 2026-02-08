@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ShopDbContext))]
-    [Migration("20260128132629_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260203172854_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -207,6 +207,183 @@ namespace DataAccess.Migrations
                             Id = 23,
                             Name = "Health",
                             ParentCategoryId = 5
+                        });
+                });
+
+            modelBuilder.Entity("CategoryProperty", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PropertyDefinitionId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsRequired")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsVariantOption")
+                        .HasColumnType("bit");
+
+                    b.HasKey("CategoryId", "PropertyDefinitionId");
+
+                    b.HasIndex("PropertyDefinitionId");
+
+                    b.ToTable("CategoryProperty");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryId = 6,
+                            PropertyDefinitionId = 1,
+                            IsRequired = true,
+                            IsVariantOption = false
+                        },
+                        new
+                        {
+                            CategoryId = 6,
+                            PropertyDefinitionId = 2,
+                            IsRequired = false,
+                            IsVariantOption = true
+                        },
+                        new
+                        {
+                            CategoryId = 6,
+                            PropertyDefinitionId = 3,
+                            IsRequired = false,
+                            IsVariantOption = true
+                        },
+                        new
+                        {
+                            CategoryId = 7,
+                            PropertyDefinitionId = 1,
+                            IsRequired = true,
+                            IsVariantOption = false
+                        },
+                        new
+                        {
+                            CategoryId = 7,
+                            PropertyDefinitionId = 2,
+                            IsRequired = false,
+                            IsVariantOption = true
+                        },
+                        new
+                        {
+                            CategoryId = 7,
+                            PropertyDefinitionId = 3,
+                            IsRequired = false,
+                            IsVariantOption = true
+                        },
+                        new
+                        {
+                            CategoryId = 8,
+                            PropertyDefinitionId = 1,
+                            IsRequired = true,
+                            IsVariantOption = false
+                        },
+                        new
+                        {
+                            CategoryId = 9,
+                            PropertyDefinitionId = 1,
+                            IsRequired = true,
+                            IsVariantOption = false
+                        },
+                        new
+                        {
+                            CategoryId = 10,
+                            PropertyDefinitionId = 1,
+                            IsRequired = true,
+                            IsVariantOption = false
+                        },
+                        new
+                        {
+                            CategoryId = 11,
+                            PropertyDefinitionId = 1,
+                            IsRequired = true,
+                            IsVariantOption = false
+                        },
+                        new
+                        {
+                            CategoryId = 12,
+                            PropertyDefinitionId = 1,
+                            IsRequired = true,
+                            IsVariantOption = false
+                        },
+                        new
+                        {
+                            CategoryId = 13,
+                            PropertyDefinitionId = 1,
+                            IsRequired = true,
+                            IsVariantOption = false
+                        },
+                        new
+                        {
+                            CategoryId = 14,
+                            PropertyDefinitionId = 1,
+                            IsRequired = true,
+                            IsVariantOption = false
+                        },
+                        new
+                        {
+                            CategoryId = 15,
+                            PropertyDefinitionId = 1,
+                            IsRequired = true,
+                            IsVariantOption = false
+                        },
+                        new
+                        {
+                            CategoryId = 16,
+                            PropertyDefinitionId = 1,
+                            IsRequired = true,
+                            IsVariantOption = false
+                        },
+                        new
+                        {
+                            CategoryId = 17,
+                            PropertyDefinitionId = 1,
+                            IsRequired = true,
+                            IsVariantOption = false
+                        },
+                        new
+                        {
+                            CategoryId = 18,
+                            PropertyDefinitionId = 1,
+                            IsRequired = true,
+                            IsVariantOption = false
+                        },
+                        new
+                        {
+                            CategoryId = 19,
+                            PropertyDefinitionId = 1,
+                            IsRequired = true,
+                            IsVariantOption = false
+                        },
+                        new
+                        {
+                            CategoryId = 20,
+                            PropertyDefinitionId = 1,
+                            IsRequired = true,
+                            IsVariantOption = false
+                        },
+                        new
+                        {
+                            CategoryId = 21,
+                            PropertyDefinitionId = 1,
+                            IsRequired = true,
+                            IsVariantOption = false
+                        },
+                        new
+                        {
+                            CategoryId = 22,
+                            PropertyDefinitionId = 1,
+                            IsRequired = true,
+                            IsVariantOption = false
+                        },
+                        new
+                        {
+                            CategoryId = 23,
+                            PropertyDefinitionId = 1,
+                            IsRequired = true,
+                            IsVariantOption = false
                         });
                 });
 
@@ -599,6 +776,262 @@ namespace DataAccess.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ProductProperty", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PropertyDefinitionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("PropertyDefinitionId");
+
+                    b.ToTable("ProductProperty");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ProductId = 1,
+                            PropertyDefinitionId = 1,
+                            Value = "Generic Brand"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ProductId = 2,
+                            PropertyDefinitionId = 1,
+                            Value = "RunFast"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ProductId = 3,
+                            PropertyDefinitionId = 1,
+                            Value = "Apple"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ProductId = 4,
+                            PropertyDefinitionId = 1,
+                            Value = "Samsung"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ProductId = 5,
+                            PropertyDefinitionId = 1,
+                            Value = "Sony"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            ProductId = 7,
+                            PropertyDefinitionId = 1,
+                            Value = "Sony"
+                        });
+                });
+
+            modelBuilder.Entity("ProductVariant", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductVariant");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ProductId = 1,
+                            Quantity = 20
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ProductId = 1,
+                            Quantity = 15
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ProductId = 2,
+                            Quantity = 10
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ProductId = 2,
+                            Quantity = 5
+                        });
+                });
+
+            modelBuilder.Entity("ProductVariantValue", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ProductVariantId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PropertyDefinitionId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductVariantId");
+
+                    b.HasIndex("PropertyDefinitionId");
+
+                    b.ToTable("ProductVariantValue");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            ProductVariantId = 1,
+                            PropertyDefinitionId = 3,
+                            Value = "M"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ProductVariantId = 1,
+                            PropertyDefinitionId = 2,
+                            Value = "White"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ProductVariantId = 2,
+                            PropertyDefinitionId = 3,
+                            Value = "L"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ProductVariantId = 2,
+                            PropertyDefinitionId = 2,
+                            Value = "Black"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ProductVariantId = 3,
+                            PropertyDefinitionId = 3,
+                            Value = "41"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            ProductVariantId = 3,
+                            PropertyDefinitionId = 2,
+                            Value = "White"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            ProductVariantId = 4,
+                            PropertyDefinitionId = 3,
+                            Value = "42"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            ProductVariantId = 4,
+                            PropertyDefinitionId = 2,
+                            Value = "Black"
+                        });
+                });
+
+            modelBuilder.Entity("PropertyDefinition", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("DataType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GroupName")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name");
+
+                    b.ToTable("PropertyDefinition");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            DataType = "Text",
+                            GroupName = "General",
+                            Name = "Brand"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            DataType = "Text",
+                            GroupName = "Variant",
+                            Name = "Color"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            DataType = "Text",
+                            GroupName = "Variant",
+                            Name = "Size"
+                        });
+                });
+
             modelBuilder.Entity("User", b =>
                 {
                     b.Property<string>("Id")
@@ -701,6 +1134,25 @@ namespace DataAccess.Migrations
                     b.Navigation("ParentCategory");
                 });
 
+            modelBuilder.Entity("CategoryProperty", b =>
+                {
+                    b.HasOne("Category", "Category")
+                        .WithMany("CategoryProperties")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("PropertyDefinition", "PropertyDefinition")
+                        .WithMany("CategoryProperties")
+                        .HasForeignKey("PropertyDefinitionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+
+                    b.Navigation("PropertyDefinition");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -793,8 +1245,59 @@ namespace DataAccess.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("ProductProperty", b =>
+                {
+                    b.HasOne("Product", "Product")
+                        .WithMany("Properties")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PropertyDefinition", "PropertyDefinition")
+                        .WithMany("ProductProperties")
+                        .HasForeignKey("PropertyDefinitionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("PropertyDefinition");
+                });
+
+            modelBuilder.Entity("ProductVariant", b =>
+                {
+                    b.HasOne("Product", "Product")
+                        .WithMany("Variants")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("ProductVariantValue", b =>
+                {
+                    b.HasOne("ProductVariant", "ProductVariant")
+                        .WithMany("VariantValues")
+                        .HasForeignKey("ProductVariantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PropertyDefinition", "PropertyDefinition")
+                        .WithMany()
+                        .HasForeignKey("PropertyDefinitionId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("ProductVariant");
+
+                    b.Navigation("PropertyDefinition");
+                });
+
             modelBuilder.Entity("Category", b =>
                 {
+                    b.Navigation("CategoryProperties");
+
                     b.Navigation("Products");
 
                     b.Navigation("SubCategories");
@@ -810,6 +1313,22 @@ namespace DataAccess.Migrations
                     b.Navigation("CartItems");
 
                     b.Navigation("OrderItems");
+
+                    b.Navigation("Properties");
+
+                    b.Navigation("Variants");
+                });
+
+            modelBuilder.Entity("ProductVariant", b =>
+                {
+                    b.Navigation("VariantValues");
+                });
+
+            modelBuilder.Entity("PropertyDefinition", b =>
+                {
+                    b.Navigation("CategoryProperties");
+
+                    b.Navigation("ProductProperties");
                 });
 
             modelBuilder.Entity("User", b =>
