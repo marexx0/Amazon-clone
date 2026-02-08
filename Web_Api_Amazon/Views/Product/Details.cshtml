@@ -1,0 +1,75 @@
+﻿
+<div class="product-page container">
+    <div class="product-main">
+        <div class="images">
+            <img src="@Model.ImageUrl" class="main-image" alt="@Model.Name" />
+            @* <div class="gallery">
+                @foreach (var img in Model.GalleryImages)
+                {
+                    <img src="@img" class="thumb" />
+                }
+            </div> *@
+        </div>
+
+        <div class="details">
+            <h1>@Model.Name</h1>
+            <p class="price">$@Model.Price</p>
+            @* <p class="brand">Brand: @Model.Brand</p> *@
+
+            @* <div class="colors">
+                <span>Color:</span>
+                @foreach (var color in Model.Colors)
+                {
+                    <span class="color-box" style="background-color:@color"></span>
+                }
+            </div> *@
+
+            @* <div class="sizes">
+                <span>Size:</span>
+                @foreach (var size in Model.Sizes)
+                {
+                    <button class="size-btn">@size</button>
+                }
+            </div> *@
+
+            <div class="quantity">
+                <button>-</button>
+                <input type="number" value="1" />
+                <button>+</button>
+            </div>
+
+            <div class="actions">
+                <button class="add-to-cart">Add to Cart</button>
+                <button class="buy-now">Buy Now</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <ul class="tab-menu">
+            <li>Description</li>
+            <li>Product Details</li>
+        </ul>
+        <div class="tab-content">
+            <div class="description">@Html.Raw(Model.Description)</div>
+            @* <div class="product-details">@Html.Raw(Model.ProductDetails)</div> *@
+        </div>
+    </div>
+
+    <div class="related-products">
+        <h3>Customers also viewed</h3>
+        @* <div class="products">
+            @foreach (var related in Model.RelatedProducts)
+            {
+                <div class="product-card">
+                    <img src="@related.ImageUrl" alt="@related.Name" />
+                    <p>@related.Name</p>
+                    <p>$@related.Price</p>
+                </div>
+            }
+        </div> *@
+    </div>
+</div>
+@section Styles {
+    <link rel="stylesheet" href="~/css/product.css" />
+}
