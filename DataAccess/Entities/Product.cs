@@ -1,4 +1,4 @@
-﻿public class Product
+public class Product
 {
     public int Id { get; set; }
 
@@ -14,4 +14,8 @@
 
     public ICollection<CartItem> CartItems { get; set; }
     public ICollection<OrderItem> OrderItems { get; set; }
+
+    public ICollection<ProductProperty> Properties { get; set; }
+
+    public ICollection<ProductVariant> Variants { get; set; }
 }
