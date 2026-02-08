@@ -1,75 +1,251 @@
-﻿
-<div class="product-page container">
+﻿@{
+    var productName = Model?.Name ?? "Club C 85 Shoes";
+    var productPrice = Model?.Price ?? 199;
+    var productDescription = Model?.Description ?? "Discover the perfect balance of sport performance, everyday comfort, and iconic design with men's Reebok sneakers. Designed for active lifestyles and urban wear, these sneakers combine Reebok's athletic heritage with modern technologies to deliver reliable support, durability, and style in every step.";
+    var mainImage = Model?.ImageUrl ?? "https://images.unsplash.com/photo-1528701800489-20be3c99b15d?auto=format&fit=crop&w=900&q=80";
+}
+
+<div class="product-page">
+    <div class="product-breadcrumb">
+        <span>Men</span>
+        <span class="divider">›</span>
+        <span>Shoes</span>
+        <span class="divider">›</span>
+        <span class="current">Athletic</span>
+    </div>
+
     <div class="product-main">
-        <div class="images">
-            <img src="@Model.ImageUrl" class="main-image" alt="@Model.Name" />
-            @* <div class="gallery">
-                @foreach (var img in Model.GalleryImages)
-                {
-                    <img src="@img" class="thumb" />
-                }
-            </div> *@
+        <div class="product-gallery">
+            <div class="main-image-card">
+                <img src="@mainImage" alt="@productName" />
+                <button class="ghost-action" type="button">View in 3D</button>
+            </div>
+            <div class="thumbnail-row">
+                <button class="thumbnail is-active" type="button">
+                    <img src="@mainImage" alt="@productName" />
+                </button>
+                <button class="thumbnail" type="button">
+                    <img src="https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&w=300&q=80" alt="@productName side" />
+                </button>
+                <button class="thumbnail" type="button">
+                    <img src="https://images.unsplash.com/photo-1514989940723-e8e51635b782?auto=format&fit=crop&w=300&q=80" alt="@productName top" />
+                </button>
+                <button class="thumbnail" type="button">
+                    <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=300&q=80" alt="@productName detail" />
+                </button>
+            </div>
         </div>
 
-        <div class="details">
-            <h1>@Model.Name</h1>
-            <p class="price">$@Model.Price</p>
-            @* <p class="brand">Brand: @Model.Brand</p> *@
+        <div class="product-details">
+            <div class="product-meta">
+                <span class="chip">Free Shipping and Free Returns</span>
+                <button class="icon-button" type="button" aria-label="Save product">
+                    <span aria-hidden="true">♡</span>
+                </button>
+            </div>
+            <h1>@productName</h1>
+            <div class="rating">
+                <div class="stars" aria-label="4.8 out of 5">
+                    <span>★ ★ ★ ★ ★</span>
+                </div>
+                <span class="rating-count">4.8 (42 reviews)</span>
+            </div>
+            <p class="price">$@productPrice.ToString("0.00")</p>
 
-            @* <div class="colors">
-                <span>Color:</span>
-                @foreach (var color in Model.Colors)
-                {
-                    <span class="color-box" style="background-color:@color"></span>
-                }
-            </div> *@
+            <div class="option-group">
+                <span class="option-label">Color</span>
+                <div class="color-options">
+                    <button class="color-option is-selected" type="button" aria-label="White" data-color="White"></button>
+                    <button class="color-option color-olive" type="button" aria-label="Olive" data-color="Olive"></button>
+                    <button class="color-option color-black" type="button" aria-label="Black" data-color="Black"></button>
+                </div>
+            </div>
 
-            @* <div class="sizes">
-                <span>Size:</span>
-                @foreach (var size in Model.Sizes)
-                {
-                    <button class="size-btn">@size</button>
-                }
-            </div> *@
+            <div class="option-group">
+                <div class="option-header">
+                    <span class="option-label">Size</span>
+                    <a class="size-guide" href="#">Size guide</a>
+                </div>
+                <div class="size-options">
+                    <button class="size-option" type="button">41</button>
+                    <button class="size-option" type="button">42</button>
+                    <button class="size-option" type="button">43</button>
+                    <button class="size-option is-selected" type="button">44</button>
+                    <button class="size-option" type="button">45</button>
+                    <button class="size-option" type="button">46</button>
+                </div>
+            </div>
 
-            <div class="quantity">
-                <button>-</button>
-                <input type="number" value="1" />
-                <button>+</button>
+            <div class="option-group">
+                <span class="option-label">Quantity</span>
+                <div class="quantity-control">
+                    <button class="qty-btn" type="button" data-qty="decrease">-</button>
+                    <input type="number" value="1" min="1" aria-label="Quantity" />
+                    <button class="qty-btn" type="button" data-qty="increase">+</button>
+                </div>
             </div>
 
             <div class="actions">
-                <button class="add-to-cart">Add to Cart</button>
-                <button class="buy-now">Buy Now</button>
+                <button class="primary-btn" type="button">Add to cart</button>
+                <button class="secondary-btn" type="button">Buy now</button>
             </div>
         </div>
     </div>
 
     <div class="tabs">
-        <ul class="tab-menu">
-            <li>Description</li>
-            <li>Product Details</li>
-        </ul>
+        <div class="tab-menu">
+            <button class="tab-link is-active" type="button" data-tab="description">Description</button>
+            <button class="tab-link" type="button" data-tab="details">Product details</button>
+            <button class="tab-link" type="button" data-tab="reviews">Reviews</button>
+        </div>
         <div class="tab-content">
-            <div class="description">@Html.Raw(Model.Description)</div>
-            @* <div class="product-details">@Html.Raw(Model.ProductDetails)</div> *@
+            <div class="tab-panel is-active" id="description">
+                <p>@Html.Raw(productDescription)</p>
+                <p>Crafted from high-quality materials, the upper provides excellent breathability while maintaining a structured and supportive fit. Whether made from premium synthetic leather, textile mesh, or a combination of both, the construction ensures long-lasting wear and easy maintenance.</p>
+            </div>
+            <div class="tab-panel" id="details">
+                <ul>
+                    <li>Premium synthetic leather upper with breathable mesh overlays.</li>
+                    <li>Cushioned midsole for all-day comfort.</li>
+                    <li>Non-slip rubber outsole for reliable traction.</li>
+                    <li>Padded collar and tongue for enhanced support.</li>
+                    <li>Lightweight build for casual and sporty wear.</li>
+                </ul>
+            </div>
+            <div class="tab-panel" id="reviews">
+                <p>Customers love the classic design and comfortable fit. Add your review after purchase.</p>
+            </div>
         </div>
     </div>
 
-    <div class="related-products">
-        <h3>Customers also viewed</h3>
-        @* <div class="products">
-            @foreach (var related in Model.RelatedProducts)
-            {
-                <div class="product-card">
-                    <img src="@related.ImageUrl" alt="@related.Name" />
-                    <p>@related.Name</p>
-                    <p>$@related.Price</p>
+    <section class="related-products">
+        <div class="section-header">
+            <h2>Customers also viewed</h2>
+            <a href="#">View all</a>
+        </div>
+        <div class="card-row">
+            <article class="product-card">
+                <img src="https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=400&q=80" alt="Running shoes" />
+                <div class="card-body">
+                    <span class="badge">Best seller</span>
+                    <h3>Adidas Samba</h3>
+                    <p class="card-price">$65.00</p>
+                    <button class="mini-btn" type="button">Buy now</button>
                 </div>
-            }
-        </div> *@
-    </div>
+            </article>
+            <article class="product-card">
+                <img src="https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&w=400&q=80" alt="Women's trainers" />
+                <div class="card-body">
+                    <span class="badge">Allora choice</span>
+                    <h3>Urban Run</h3>
+                    <p class="card-price">$41.59</p>
+                    <button class="mini-btn" type="button">Buy now</button>
+                </div>
+            </article>
+            <article class="product-card">
+                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=400&q=80" alt="Red sneakers" />
+                <div class="card-body">
+                    <span class="badge">Limited</span>
+                    <h3>Daily Strike</h3>
+                    <p class="card-price">$42.53</p>
+                    <button class="mini-btn" type="button">Buy now</button>
+                </div>
+            </article>
+            <article class="product-card">
+                <img src="https://images.unsplash.com/photo-1528701800489-20be3c99b15d?auto=format&fit=crop&w=400&q=80" alt="Classic shoes" />
+                <div class="card-body">
+                    <span class="badge">Trending</span>
+                    <h3>Classic Lite</h3>
+                    <p class="card-price">$79.99</p>
+                    <button class="mini-btn" type="button">Buy now</button>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section class="feature-row">
+        <div class="feature">
+            <span class="feature-icon">🔒</span>
+            <div>
+                <h4>Secure Payments</h4>
+                <p>Your payments are safely encrypted.</p>
+            </div>
+        </div>
+        <div class="feature">
+            <span class="feature-icon">✅</span>
+            <div>
+                <h4>100% Original Products</h4>
+                <p>Verified brands only.</p>
+            </div>
+        </div>
+        <div class="feature">
+            <span class="feature-icon">💬</span>
+            <div>
+                <h4>24/7 Customer Support</h4>
+                <p>We are here to help.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="newsletter">
+        <div>
+            <h3>Don't miss the best deals</h3>
+            <p>Registered users get access to exclusive offers, order history, and faster checkout.</p>
+            <button class="primary-btn" type="button">Sign up free</button>
+        </div>
+        <div class="newsletter-graphic" aria-hidden="true">✦</div>
+    </section>
+
+    <section class="top-picks">
+        <div class="section-header">
+            <h2>Top Picks of the Month</h2>
+            <a href="#">Explore all</a>
+        </div>
+        <div class="card-row">
+            <article class="product-card">
+                <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=400&q=80" alt="Book" />
+                <div class="card-body">
+                    <span class="badge">Best seller</span>
+                    <h3>The Last Thing He Told Me</h3>
+                    <p class="card-price">$7.16</p>
+                    <button class="mini-btn" type="button">Buy now</button>
+                </div>
+            </article>
+            <article class="product-card">
+                <img src="https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?auto=format&fit=crop&w=400&q=80" alt="Hoodie" />
+                <div class="card-body">
+                    <span class="badge">In trend</span>
+                    <h3>Women's Casual Hoodie</h3>
+                    <p class="card-price">$24.99</p>
+                    <button class="mini-btn" type="button">Buy now</button>
+                </div>
+            </article>
+            <article class="product-card">
+                <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=400&q=80" alt="Lotion" />
+                <div class="card-body">
+                    <span class="badge">Eco-friendly</span>
+                    <h3>Shea Butter Body Lotion</h3>
+                    <p class="card-price">$9.97</p>
+                    <button class="mini-btn" type="button">Buy now</button>
+                </div>
+            </article>
+            <article class="product-card">
+                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=400&q=80" alt="Headphones" />
+                <div class="card-body">
+                    <span class="badge">Allora choice</span>
+                    <h3>Apple Headphones</h3>
+                    <p class="card-price">$17.99</p>
+                    <button class="mini-btn" type="button">Buy now</button>
+                </div>
+            </article>
+        </div>
+    </section>
 </div>
+
 @section Styles {
     <link rel="stylesheet" href="~/css/product.css" />
+}
+
+@section Scripts {
+    <script src="~/js/product.js" asp-append-version="true"></script>
 }
