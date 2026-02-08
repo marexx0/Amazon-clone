@@ -1,0 +1,55 @@
+﻿/* Product Page Styles */
+.product-page {
+    display: flex;
+    flex-direction: column;
+}
+
+.product-main {
+    display: flex;
+    gap: 2rem;
+}
+
+.images {
+    flex: 1;
+}
+
+.details {
+    flex: 1;
+}
+
+.gallery img {
+    width: 50px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.color-box {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #ccc;
+    margin-right: 5px;
+}
+
+.size-btn {
+    margin: 0 3px;
+}
+
+.tabs {
+    margin-top: 2rem;
+}
+
+.related-products {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.products {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+}
+body {
+    background: red !important;
+}
