@@ -1,39 +1,55 @@
-﻿@{
-    var productName = Model?.Name ?? "Club C 85 Shoes";
-    var productPrice = Model?.Price ?? 199;
-    var productDescription = Model?.Description ?? "Discover the perfect balance of sport performance, everyday comfort, and iconic design with men's Reebok sneakers. Designed for active lifestyles and urban wear, these sneakers combine Reebok's athletic heritage with modern technologies to deliver reliable support, durability, and style in every step.";
-    var mainImage = Model?.ImageUrl ?? "https://images.unsplash.com/photo-1528701800489-20be3c99b15d?auto=format&fit=crop&w=900&q=80";
+﻿@using System.Collections.Generic
+@using System.Linq
+@model Web_Api_Amazon.Models.ProductDetailsViewModel
+@{
+    var product = Model.Product;
+    var images = Model.Images ?? new List<ProductImage>();
+    var mainImage = images.FirstOrDefault(i => i.IsPrimary) ?? images.FirstOrDefault();
+    var breadcrumbs = new List<Category>();
+    var category = product?.Category;
+    while (category != null)
+    {
+        breadcrumbs.Insert(0, category);
+        category = category.ParentCategory;
+    }
 }
 
 <div class="product-page">
     <div class="product-breadcrumb">
-        <span>Men</span>
-        <span class="divider">›</span>
-        <span>Shoes</span>
-        <span class="divider">›</span>
-        <span class="current">Athletic</span>
+        @if (breadcrumbs.Any())
+        {
+            for (var i = 0; i < breadcrumbs.Count; i++)
+            {
+                <span>@breadcrumbs[i].Name</span>
+                if (i < breadcrumbs.Count - 1)
+                {
+                    <span class="divider">›</span>
+                }
+            }
+        }
     </div>
 
     <div class="product-main">
         <div class="product-gallery">
             <div class="main-image-card">
-                <img src="@mainImage" alt="@productName" />
+                @if (mainImage != null)
+                {
+                    <img src="@mainImage.ImageUrl" alt="@product?.Name" />
+                }
                 <button class="ghost-action" type="button">View in 3D</button>
             </div>
-            <div class="thumbnail-row">
-                <button class="thumbnail is-active" type="button">
-                    <img src="@mainImage" alt="@productName" />
-                </button>
-                <button class="thumbnail" type="button">
-                    <img src="https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&w=300&q=80" alt="@productName side" />
-                </button>
-                <button class="thumbnail" type="button">
-                    <img src="https://images.unsplash.com/photo-1514989940723-e8e51635b782?auto=format&fit=crop&w=300&q=80" alt="@productName top" />
-                </button>
-                <button class="thumbnail" type="button">
-                    <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=300&q=80" alt="@productName detail" />
-                </button>
-            </div>
+            @if (images.Any())
+            {
+                <div class="thumbnail-row">
+                    @foreach (var image in images)
+                    {
+                        var isActive = image == mainImage ? "is-active" : string.Empty;
+                        <button class="thumbnail @isActive" type="button" data-image="@image.ImageUrl">
+                            <img src="@image.ImageUrl" alt="@product?.Name" />
+                        </button>
+                    }
+                </div>
+            }
         </div>
 
         <div class="product-details">
@@ -43,38 +59,53 @@
                     <span aria-hidden="true">♡</span>
                 </button>
             </div>
-            <h1>@productName</h1>
-            <div class="rating">
-                <div class="stars" aria-label="4.8 out of 5">
-                    <span>★ ★ ★ ★ ★</span>
-                </div>
-                <span class="rating-count">4.8 (42 reviews)</span>
-            </div>
-            <p class="price">$@productPrice.ToString("0.00")</p>
+            <h1>@product?.Name</h1>
+            @if (!string.IsNullOrWhiteSpace(Model.Brand))
+            {
+                <p class="brand">@Model.Brand</p>
+            }
+            <p class="price">$@product?.Price.ToString("0.00")</p>
 
-            <div class="option-group">
-                <span class="option-label">Color</span>
-                <div class="color-options">
-                    <button class="color-option is-selected" type="button" aria-label="White" data-color="White"></button>
-                    <button class="color-option color-olive" type="button" aria-label="Olive" data-color="Olive"></button>
-                    <button class="color-option color-black" type="button" aria-label="Black" data-color="Black"></button>
+            @if (Model.AvailableColors.Any())
+            {
+                <div class="option-group">
+                    <div class="option-header">
+                        <span class="option-label">Color</span>
+                        <span class="selected-color">
+                            <span class="selected-color-dot" style="background:@Model.AvailableColors.First()"></span>
+                            <span class="selected-color-name">@Model.AvailableColors.First()</span>
+                        </span>
+                    </div>
+                    <div class="color-options">
+                        @foreach (var color in Model.AvailableColors)
+                        {
+                            var isSelected = color == Model.AvailableColors.First();
+                            var selectedClass = isSelected ? "is-selected" : string.Empty;
+                            <button class="color-option @selectedClass" type="button" aria-label="@color" data-color="@color">
+                                <span class="color-swatch" style="background:@color;"></span>
+                            </button>
+                        }
+                    </div>
                 </div>
-            </div>
+            }
 
-            <div class="option-group">
-                <div class="option-header">
-                    <span class="option-label">Size</span>
-                    <a class="size-guide" href="#">Size guide</a>
+            @if (Model.AvailableSizes.Any())
+            {
+                <div class="option-group">
+                    <div class="option-header">
+                        <span class="option-label">Size</span>
+                        <a class="size-guide" href="#">Size guide</a>
+                    </div>
+                    <div class="size-options">
+                        @foreach (var size in Model.AvailableSizes)
+                        {
+                            var isSelected = size == Model.AvailableSizes.First();
+                            var selectedClass = isSelected ? "is-selected" : string.Empty;
+                            <button class="size-option @selectedClass" type="button">@size</button>
+                        }
+                    </div>
                 </div>
-                <div class="size-options">
-                    <button class="size-option" type="button">41</button>
-                    <button class="size-option" type="button">42</button>
-                    <button class="size-option" type="button">43</button>
-                    <button class="size-option is-selected" type="button">44</button>
-                    <button class="size-option" type="button">45</button>
-                    <button class="size-option" type="button">46</button>
-                </div>
-            </div>
+            }
 
             <div class="option-group">
                 <span class="option-label">Quantity</span>
@@ -100,20 +131,56 @@
         </div>
         <div class="tab-content">
             <div class="tab-panel is-active" id="description">
-                <p>@Html.Raw(productDescription)</p>
-                <p>Crafted from high-quality materials, the upper provides excellent breathability while maintaining a structured and supportive fit. Whether made from premium synthetic leather, textile mesh, or a combination of both, the construction ensures long-lasting wear and easy maintenance.</p>
+                <p>@product?.Description</p>
             </div>
             <div class="tab-panel" id="details">
-                <ul>
-                    <li>Premium synthetic leather upper with breathable mesh overlays.</li>
-                    <li>Cushioned midsole for all-day comfort.</li>
-                    <li>Non-slip rubber outsole for reliable traction.</li>
-                    <li>Padded collar and tongue for enhanced support.</li>
-                    <li>Lightweight build for casual and sporty wear.</li>
-                </ul>
+                <div class="details-grid">
+                    @if (!string.IsNullOrWhiteSpace(Model.Brand))
+                    {
+                        <div class="detail-item">
+                            <span class="detail-label">Brand</span>
+                            <span class="detail-value">@Model.Brand</span>
+                        </div>
+                    }
+                    @if (product?.Category != null)
+                    {
+                        <div class="detail-item">
+                            <span class="detail-label">Category</span>
+                            <span class="detail-value">@product.Category.Name</span>
+                        </div>
+                    }
+                    @if (Model.AvailableColors.Any())
+                    {
+                        <div class="detail-item">
+                            <span class="detail-label">Colors</span>
+                            <span class="detail-value">@string.Join(", ", Model.AvailableColors)</span>
+                        </div>
+                    }
+                    @if (Model.AvailableSizes.Any())
+                    {
+                        <div class="detail-item">
+                            <span class="detail-label">Sizes</span>
+                            <span class="detail-value">@string.Join(", ", Model.AvailableSizes)</span>
+                        </div>
+                    }
+                    @if (product?.Properties?.Any() == true)
+                    {
+                        @foreach (var property in product.Properties)
+                        {
+                            if (property.PropertyDefinition?.Name == "Brand")
+                            {
+                                continue;
+                            }
+                            <div class="detail-item">
+                                <span class="detail-label">@property.PropertyDefinition?.Name</span>
+                                <span class="detail-value">@property.Value</span>
+                            </div>
+                        }
+                    }
+                </div>
             </div>
             <div class="tab-panel" id="reviews">
-                <p>Customers love the classic design and comfortable fit. Add your review after purchase.</p>
+                <p>No reviews yet.</p>
             </div>
         </div>
     </div>
@@ -124,42 +191,21 @@
             <a href="#">View all</a>
         </div>
         <div class="card-row">
-            <article class="product-card">
-                <img src="https://images.unsplash.com/photo-1503341455253-b2e723bb3dbb?auto=format&fit=crop&w=400&q=80" alt="Running shoes" />
-                <div class="card-body">
-                    <span class="badge">Best seller</span>
-                    <h3>Adidas Samba</h3>
-                    <p class="card-price">$65.00</p>
-                    <button class="mini-btn" type="button">Buy now</button>
-                </div>
-            </article>
-            <article class="product-card">
-                <img src="https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&w=400&q=80" alt="Women's trainers" />
-                <div class="card-body">
-                    <span class="badge">Allora choice</span>
-                    <h3>Urban Run</h3>
-                    <p class="card-price">$41.59</p>
-                    <button class="mini-btn" type="button">Buy now</button>
-                </div>
-            </article>
-            <article class="product-card">
-                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=400&q=80" alt="Red sneakers" />
-                <div class="card-body">
-                    <span class="badge">Limited</span>
-                    <h3>Daily Strike</h3>
-                    <p class="card-price">$42.53</p>
-                    <button class="mini-btn" type="button">Buy now</button>
-                </div>
-            </article>
-            <article class="product-card">
-                <img src="https://images.unsplash.com/photo-1528701800489-20be3c99b15d?auto=format&fit=crop&w=400&q=80" alt="Classic shoes" />
-                <div class="card-body">
-                    <span class="badge">Trending</span>
-                    <h3>Classic Lite</h3>
-                    <p class="card-price">$79.99</p>
-                    <button class="mini-btn" type="button">Buy now</button>
-                </div>
-            </article>
+            @foreach (var related in Model.RelatedProducts)
+            {
+                var relatedImage = related.Images?.OrderBy(i => i.SortOrder).FirstOrDefault()?.ImageUrl ?? related.ImageUrl;
+                <article class="product-card">
+                    @if (!string.IsNullOrWhiteSpace(relatedImage))
+                    {
+                        <img src="@relatedImage" alt="@related.Name" />
+                    }
+                    <div class="card-body">
+                        <h3>@related.Name</h3>
+                        <p class="card-price">$@related.Price.ToString("0.00")</p>
+                        <button class="mini-btn" type="button">Buy now</button>
+                    </div>
+                </article>
+            }
         </div>
     </section>
 
@@ -202,42 +248,21 @@
             <a href="#">Explore all</a>
         </div>
         <div class="card-row">
-            <article class="product-card">
-                <img src="https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=400&q=80" alt="Book" />
-                <div class="card-body">
-                    <span class="badge">Best seller</span>
-                    <h3>The Last Thing He Told Me</h3>
-                    <p class="card-price">$7.16</p>
-                    <button class="mini-btn" type="button">Buy now</button>
-                </div>
-            </article>
-            <article class="product-card">
-                <img src="https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?auto=format&fit=crop&w=400&q=80" alt="Hoodie" />
-                <div class="card-body">
-                    <span class="badge">In trend</span>
-                    <h3>Women's Casual Hoodie</h3>
-                    <p class="card-price">$24.99</p>
-                    <button class="mini-btn" type="button">Buy now</button>
-                </div>
-            </article>
-            <article class="product-card">
-                <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=400&q=80" alt="Lotion" />
-                <div class="card-body">
-                    <span class="badge">Eco-friendly</span>
-                    <h3>Shea Butter Body Lotion</h3>
-                    <p class="card-price">$9.97</p>
-                    <button class="mini-btn" type="button">Buy now</button>
-                </div>
-            </article>
-            <article class="product-card">
-                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=400&q=80" alt="Headphones" />
-                <div class="card-body">
-                    <span class="badge">Allora choice</span>
-                    <h3>Apple Headphones</h3>
-                    <p class="card-price">$17.99</p>
-                    <button class="mini-btn" type="button">Buy now</button>
-                </div>
-            </article>
+            @foreach (var pick in Model.TopPicks)
+            {
+                var pickImage = pick.Images?.OrderBy(i => i.SortOrder).FirstOrDefault()?.ImageUrl ?? pick.ImageUrl;
+                <article class="product-card">
+                    @if (!string.IsNullOrWhiteSpace(pickImage))
+                    {
+                        <img src="@pickImage" alt="@pick.Name" />
+                    }
+                    <div class="card-body">
+                        <h3>@pick.Name</h3>
+                        <p class="card-price">$@pick.Price.ToString("0.00")</p>
+                        <button class="mini-btn" type="button">Buy now</button>
+                    </div>
+                </article>
+            }
         </div>
     </section>
 </div>
