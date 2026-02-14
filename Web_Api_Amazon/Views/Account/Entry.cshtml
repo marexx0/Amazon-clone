@@ -11,7 +11,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 
     <style>
 
@@ -31,14 +32,25 @@
             padding: 40px;
         }
 
+      
+
+
         /* ===== Layout ===== */
 
         .main-container {
             width: 100%;
-            max-width: 1400px;
-            display: grid;
+            max-width: 1440px;
             grid-template-columns: 420px 1fr;
-            gap: 60px;
+            gap: 80px;
+            display: grid;
+           
+            
+        }
+
+        .main-container {
+            max-width: 1440px;
+            grid-template-columns: 420px 1fr;
+            gap: 80px;
         }
 
         /* ===== LEFT ===== */
@@ -52,17 +64,23 @@
 
         h1 {
             font-family: "DM Sans", sans-serif;
-            font-size: 28px;
+            font-size: 28px; 
+            line-height: 36px;
             font-weight: 700;
-            margin-bottom: 6px;
-            color: #080808;
+            color: #080808; 
+            margin-bottom: 8px;
         }
 
+
         .subtitle {
-            color: #808080;
-            font-size: 14px;
+            font-family: "DM Sans", sans-serif;
+            font-size: 14px; 
+            line-height: 24px;
+            font-weight: 500;
+            color: #686868; 
             margin-bottom: 28px;
         }
+
 
         .input-group {
             margin-bottom: 18px;
@@ -110,19 +128,15 @@
 
         .btn-login {
             width: 100%;
-            height: 42px;
+            height: 44px;
             border: none;
             border-radius: 8px;
-            background: #9D9D9D1A;
-            color: #9D9D9D ;
-            font-weight: 700;
+            background: #E5E5E5;
+            color: #080808;
+            font-weight: 500;
+            margin-top: 8px;
             cursor: pointer;
         }
-
-            .btn-login:hover {
-            background: #B5ED24;
-                color: #080808
-            }
 
         .hint {
             font-size: 12px;
@@ -140,13 +154,13 @@
         .oauth-button {
             height: 44px;
             border-radius: 10px;
-            background: #EEF4FD; /* blue-50 */
-            border: 1px solid #DDE7FA; /* blue-100 */
+            background: #EEF4FD; 
+            border: 1px solid #DDE7FA; 
 
             font-family: "DM Sans", sans-serif;
             font-size: 14px;
             font-weight: 500;
-            color: #0D1B34; /* blue-950 / base-black-alt */
+            color: #0D1B34; 
 
             display: flex;
             align-items: center;
@@ -159,11 +173,11 @@
 
 
             .oauth-button:hover {
-                background: #DDE7FA; /* blue-100 */
+                background: #DDE7FA; 
             }
 
             .oauth-button:active {
-                background: #B4CFF5; /* blue-200 */
+                background: #B4CFF5; 
             }
 
 
@@ -183,6 +197,9 @@
                 text-decoration: none;
             }
 
+        /* FOOTER LINKS */
+
+       
         .footer-links {
             margin-top: 24px;
             font-size: 13px;
@@ -200,17 +217,15 @@
                 text-decoration: underline;
             }
 
-         .link-muted {
-            color: #1D64CC;
+        .link-muted {
+            color: #878787;
             font-weight: 500;
             text-decoration: none;
         }
 
             .link-muted:hover {
-            text-decoration: underline;
-        }
-
-            
+                text-decoration: underline;
+            }
 
         .footer {
             margin-top: 40px;
@@ -226,36 +241,44 @@
             gap: 10px;
         }
 
-        
-
-        .image-section {
+     .image-section {
     position: relative;
     background: #0D1B34;
     border-radius: 24px;
-    min-height: 220px;
-    min-width: 220px;
     overflow: hidden;
+
+    
+    min-width: 220px;
+    min-height: 620px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .auth-image {
-    position: absolute;          
-    top: 50%;                    
-    left: 50%;                   
-    transform: translate(-50%, -50%); 
-    max-width: 60%;   
-    max-height: 60%;   
-    width: auto;                 
-    height: auto;                
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 60%;
+    max-height: 60%;
+    width: auto;
+    height: auto;
 }
+
 .logo-small {
     position: absolute;
-    bottom: 20px;      
-    right: 20px;        
-    width: 104px;       
-    height: 61px;       
+    bottom: 20px;
+    right: 20px;
+    width: 104px;
+    height: 61px;
     object-fit: contain;
     opacity: 1;
 }
+
+
+
+
         /* ===== Responsive ===== */
 
         @@media (max-width:900px) {
@@ -278,45 +301,14 @@
         <!-- LEFT -->
         <div class="form-section">
 
-            <h1>Log In to Allora</h1>
+            <h1>Welcome to Allora!</h1>
             <div class="subtitle">
-                Welcome back. Sign in to continue your journey
+               Choose how you'd like to continue
             </div>
+
+       
+
            
-            <form asp-action="Login" asp-controller="Account" method="post">
-
-                <div class="input-group">
-                    <label asp-for="Email">Email</label>
-                    <input asp-for="Email" placeholder="name@gmail.com" />
-                    <span asp-validation-for="Email" class="validation-error"></span>
-                </div>
-
-                <div class="input-group password-group">
-                    <label asp-for="Password">Password</label>
-
-                    <input asp-for="Password"
-                           type="password"
-                           id="passwordInput"
-                           placeholder="••••••••" />
-
-                    <span class="toggle-password" onclick="togglePassword()">
-                        <i id="eyeIcon" class="fa-regular fa-eye"></i>
-                    </span>
-
-                    <span asp-validation-for="Password" class="validation-error"></span>
-                </div>
-
-               
-                   
-                    <button type="submit" class="btn-login">Log In</button>
-                
-
-
-            </form>
-
-            <div class="hint">
-                Make sure you're using the email you signed up with
-            </div>
 
             <div class="oauth-buttons">
 
@@ -333,13 +325,17 @@
             </div>
 
 
+           
             <div class="footer-links">
                 New to Allora?
                 <a asp-action="SelectAccountType" asp-controller="Account" class="link-primary">Create an account</a><br />
 
-               
-                <a asp-action="ForgotPassword" asp-controller="Account" class="link-muted">Forgot Password?</a><br />
-               
+                Already have an account?
+                <a asp-action="Login" asp-controller="Account" class="link-primary">Log in</a><br />
+
+                <a asp-action="Index" asp-controller="Home" class="link-muted">
+                    ← Return to Previous Page
+                </a>
             </div>
 
             <div class="footer">
@@ -348,8 +344,9 @@
 
         </div>
 
-        <div class="image-section">
-    <img src="~/imageslogreg/Illustrations2.png" asp-append-version="true" class="auth-image" />
+        <!-- RIGHT -->
+         <div class="image-section">
+    <img src="~/imageslogreg/Illustrations1.png" asp-append-version="true" class="auth-image" />
     <img src="~/imageslogreg/Logotype.png" asp-append-version="true" class="logo-small" />
 </div>
 
@@ -378,17 +375,5 @@
 </body>
 </html>
 
-@if (TempData["PasswordChanged"] != null)
-{
-    <div class="success-message">@TempData["PasswordChanged"]</div>
-}
-
-<style>
-    .success-message {
-        color: #16a34a;
-        margin-bottom: 12px;
-        font-weight: 500;
-    }
-</style>
 
 

@@ -1,15 +1,24 @@
 ﻿@model RegisterViewModel
 @{
-    ViewData["Title"] = "Register";
     Layout = null;
+    ViewData["Title"] = "Register";
 }
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Register - Amazon Clone</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@600"
+          rel="stylesheet">
+
+  
+
     <style>
+
         * {
             margin: 0;
             padding: 0;
@@ -17,93 +26,45 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: #e5e5e5;
+            font-family: "DM Sans", sans-serif;
+            background: #FCFCFC;
             min-height: 100vh;
             display: flex;
-            justify-content: center;
             align-items: center;
-            padding: 20px;
+            justify-content: center;
+            padding: 40px;
         }
 
-        .page-title {
-            position: absolute;
-            top: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #9ca3af;
-            font-size: 14px;
-            font-weight: 500;
-        }
+        /* LAYOUT */
 
         .main-container {
             width: 100%;
-            max-width: 1100px;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
-            overflow: hidden;
-            display: flex;
-            min-height: 650px;
+            max-width: 1400px;
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 60px;
         }
 
+        /* LEFT */
+
         .form-section {
-            flex: 0 0 42%;
-            padding: 60px 50px;
+            max-width: 420px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            background: white;
-        }
-
-        .image-section {
-            flex: 1;
-            background: linear-gradient(135deg, #e8eaf6 0%, #f3e5f5 100%);
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-            .image-section::before {
-                content: '';
-                position: absolute;
-                width: 400px;
-                height: 400px;
-                background: radial-gradient(circle, rgba(103, 58, 183, 0.08) 0%, transparent 70%);
-                border-radius: 50%;
-                animation: pulse 4s ease-in-out infinite;
-            }
-
-        .logo {
-            position: absolute;
-            bottom: 50px;
-            right: 50px;
-            font-size: 32px;
-            font-weight: 700;
-            color: #673ab7;
-            font-style: italic;
-            letter-spacing: -1px;
-        }
-
-        .progress-bar {
-            width: 50px;
-            height: 3px;
-            background: #673ab7;
-            margin-bottom: 25px;
         }
 
         h1 {
-            font-size: 24px;
-            font-weight: 600;
-            color: #1a1a1a;
+            font-family: "DM Sans",sans-serif;
+            font-size: 28px;
+            font-weight: 700;
             margin-bottom: 6px;
         }
 
         .subtitle {
-            color: #6b7280;
-            font-size: 13px;
-            margin-bottom: 30px;
+            color: #808080;
+            font-size: 14px;
+            margin-bottom: 28px;
         }
 
         .input-group {
@@ -111,237 +72,411 @@
         }
 
         label {
+            font-size: 12px;
+            margin-bottom: 6px;
             display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #374151;
-            font-size: 13px;
         }
 
         .input-wrapper {
             position: relative;
         }
 
-        input[type="text"],
-        input[type="email"],
-        input[type="password"] {
+        input:not([type="checkbox"]) {
             width: 100%;
-            padding: 11px 16px;
-            border: 1.5px solid #e0e0e0;
+            height: 44px;
+            padding: 0 14px;
+            border: 1px solid #E5E5E5;
             border-radius: 8px;
             font-size: 14px;
-            transition: all 0.2s ease;
-            background: #fafafa;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #673ab7;
             background: white;
-            box-shadow: 0 0 0 3px rgba(103, 58, 183, 0.08);
         }
 
-        input::placeholder {
-            color: #b0b0b0;
+        input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
         }
+
+
+        /* PASSWORD EYE */
 
         .password-toggle {
             position: absolute;
-            right: 14px;
+            right: 12px;
             top: 50%;
             transform: translateY(-50%);
             cursor: pointer;
-            color: #9ca3af;
-            font-size: 18px;
-            user-select: none;
+            color: #808080;
         }
 
-        .password-requirements {
+        /* PASSWORD RULES */
+
+        .password-rules {
             display: flex;
-            gap: 12px;
-            margin-top: 8px;
-            font-size: 11px;
-            color: #9ca3af;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
         }
 
-        .requirement {
-            padding: 4px 8px;
-            background: #f5f5f5;
-            border-radius: 4px;
+            .password-rules span {
+                font-size: 11px;
+                padding: 6px 10px;
+                border-radius: 20px;
+                background: #F3F3F3;
+                color: #9CA3AF;
+            }
+
+                .password-rules span.valid {
+                    background: #E5E7EB;
+                    color: #111827;
+                }
+
+        /* BUTTON */
+
+        /* BUTTON */
+        .btn-main {
+            width: 100%;
+            height: 42px;
+            border: none;
+            border-radius: 8px;
+            background: #9D9D9D1A;
+            color: #080808;
+            font-weight: 700;
+            cursor: pointer;
         }
 
-        .char-count {
-            font-size: 11px;
-            color: #9ca3af;
-            margin-top: 5px;
+            .btn-main:hover {
+                background: #B5ED24;
+            }
+
+        /* AGREEMENTS */
+
+        .agreements {
+            margin-top: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 13px;
+            color: #6B7280;
         }
+
+            .agreements input {
+                margin-right: 8px;
+            }
+
+        /* VALIDATION */
 
         .validation-error {
             color: #ef4444;
             font-size: 12px;
-            margin-top: 6px;
+            margin-top: 4px;
             display: block;
         }
 
-        .btn-continue {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            background: #673ab7;
-            color: white;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            margin-top: 15px;
-            margin-bottom: 20px;
-        }
+        /* FOOTER LINKS */
 
-            .btn-continue:hover {
-                background: #5e35b1;
-                transform: translateY(-1px);
-                box-shadow: 0 4px 12px rgba(103, 58, 183, 0.3);
-            }
-
-            .btn-continue:active {
-                transform: scale(0.98);
-            }
-
-        .checkbox-group {
-            margin-bottom: 12px;
-        }
-
-        .checkbox-wrapper {
-            display: flex;
-            align-items: center;
+        .footer-links {
+            margin-top: 24px;
             font-size: 13px;
-            color: #374151;
-            margin-bottom: 8px;
+            line-height: 1.8;
+            color: #6B7280;
         }
 
-            .checkbox-wrapper input[type="checkbox"] {
-                width: 16px;
-                height: 16px;
-                margin-right: 8px;
-                cursor: pointer;
-            }
-
-            .checkbox-wrapper a {
-                color: #1a1a1a;
-                font-weight: 600;
-                text-decoration: none;
-            }
-
-                .checkbox-wrapper a:hover {
-                    text-decoration: underline;
-                }
-
-        .back-link {
-            display: inline-block;
-            font-size: 13px;
-            color: #1a1a1a;
-            text-decoration: none;
+        .link-primary {
+            color: #1D64CC;
             font-weight: 500;
-            margin-top: 10px;
+            text-decoration: none;
         }
 
-            .back-link:hover {
+            .link-primary:hover {
+                text-decoration: underline;
+            }
+
+        .link-muted {
+            color: #878787;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+            .link-muted:hover {
                 text-decoration: underline;
             }
 
         .footer {
-            text-align: left;
-            margin-top: 30px;
-            padding-top: 25px;
-            border-top: 1px solid #f0f0f0;
+            margin-top: 40px;
             font-size: 11px;
-            color: #9ca3af;
+            color: #9CA3AF;
         }
+
+        /* RIGHT */
+        .image-section {
+    position: relative;
+    background: #0D1B34;
+    border-radius: 24px;
+    min-height: 220px;
+    min-width: 220px;
+    overflow: hidden;
+}
+
+.auth-image {
+    position: absolute;          
+    top: 50%;                    
+    left: 50%;                   
+    transform: translate(-50%, -50%); 
+    max-width: 60%;    
+    max-height: 60%;  
+    width: auto;                 
+    height: auto;                
+}
+
+        .page-accent {
+            width: 120px;
+            height: 3px;
+            border-radius: 5px;
+            background: #A8EB13; 
+            margin-bottom: 20px;
+        }
+
+        /* RESPONSIVE */
+/* 
+        @@media (max-width:900px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                max-width: 520px;
+            }
+
+            .image-section {
+                min-height: 320px;
+            }
+        } */
+        /* ВАЛІДАЦІЯ */
+        input.valid {
+            border: 1px solid #379838;
+            background: #37983833;
+        }
+
+        input.invalid {
+            border: 1px solid #ef4444;
+            background: #ef444422;
+        }
+
+
+        .valid-check {
+            position: absolute;
+            right: 40px;
+            
+            top: 50%;
+            transform: translateY(-50%);
+            color: #A8EB13;
+            font-weight: bold;
+            display: none;
+        }
+
+        
+        .password-rules span {
+            font-size: 11px;
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: #F3F3F3;
+            color: #9CA3AF;
+            transition: all 0.2s;
+            border: 1px solid transparent; 
+        }
+
+            .password-rules span.valid {
+                background: #37983833; 
+                color: #111827;
+                border: 1px solid #A8EB13; 
+                font-weight: 500;
+            }
+
+.logo-small {
+    position: absolute;
+    bottom: 20px;      
+    right: 20px;        
+    width: 104px;       
+    height: 61px;       
+    object-fit: contain;
+    opacity: 1;
+}
 
     </style>
 </head>
+
 <body>
-    <div class="page-title">Personal Registration</div>
 
     <div class="main-container">
+
+        <!-- LEFT -->
         <div class="form-section">
-            <div>
-                <div class="progress-bar"></div>
-
-                <h1>Create your personal account</h1>
-                <p class="subtitle">Join Allora and make smarter choices with ease</p>
-
-                <!-- Registration form -->
-                <form asp-action="Register" asp-controller="Account" method="post">
-                    <div class="input-group">
-                        <label asp-for="Email">Email</label>
-                        <input asp-for="Email" type="email" placeholder="name@gmail.com" />
-                        <span asp-validation-for="Email" class="validation-error"></span>
-                    </div>
-
-                    <div class="input-group">
-                        <label asp-for="Password">Password</label>
-                        <div class="input-wrapper">
-                            <input asp-for="Password" type="password" placeholder="••••••••" id="passwordInput" />
-                            <span class="password-toggle" onclick="togglePassword()">👁</span>
-                        </div>
-                        <div class="password-requirements">
-                            <span class="requirement">Number</span>
-                            <span class="requirement">Uppercase Letter</span>
-                            <span class="requirement">Lowercase Letter</span>
-                        </div>
-                        <span asp-validation-for="Password" class="validation-error"></span>
-                    </div>
-
-                
-                    <button type="submit" class="btn-continue">Continue</button>
-
-                    <div class="checkbox-group">
-                        <div class="checkbox-wrapper">
-                            <input type="checkbox" id="terms" required />
-                            <label for="terms" style="display: inline; margin: 0; font-weight: 400;">
-                                I agree to the <a href="#">Terms of Service</a>
-                            </label>
-                        </div>
-                        <div class="checkbox-wrapper">
-                            <input type="checkbox" id="privacy" required />
-                            <label for="privacy" style="display: inline; margin: 0; font-weight: 400;">
-                                I agree to the <a href="#">Privacy Policy</a>
-                            </label>
-                        </div>
-                    </div>
-
-                    <a asp-action="Login" asp-controller="Account" class="back-link">Return to Previous Page</a>
-                </form>
-
-                <div class="footer">
-                    © 2028, Allora.com, Inc. or its affiliates
-                </div>
+            <div class="page-accent"></div>
+            <h1>
+                Create your @(ViewBag.AccountType == "Business" ? "business" : "personal") account
+            </h1>
+            <div class="subtitle">
+                Join Allora and continue your journey
             </div>
+
+            <form asp-action="Register" asp-controller="Account" method="post">
+
+                <input type="hidden" asp-for="AccountType" value="@ViewBag.AccountType" />
+                <!-- EMAIL -->
+                <div class="input-group">
+                    <label asp-for="Email">Email</label>
+                    <input asp-for="Email" placeholder="example@gmail.com" />
+                    <span asp-validation-for="Email" class="validation-error"></span>
+                </div>
+
+                <!-- PASSWORD -->
+                <div class="input-group">
+                    <label asp-for="Password">Password</label>
+
+                    <!-- INPUT -->
+                    <div class="input-wrapper">
+                        <input asp-for="Password"
+                               type="password"
+                               id="passwordInput"
+                               placeholder="DIO9-75sx"
+                               oninput="checkPassword()" />
+                        <span class="password-toggle" onclick="togglePassword()">
+                            <i id="eyeIcon" class="fa-regular fa-eye"></i>
+                        </span>
+                        <span class="valid-check" id="passwordCheck">✔</span>
+                    </div>
+                    <span asp-validation-for="Password" class="validation-error"></span>
+
+                   
+                    <div class="password-rules">
+                        <span id="ruleNumber">Number</span>
+                        <span id="ruleUpper">Uppercase</span>
+                        <span id="ruleLower">Lowercase</span>
+                        <span id="ruleLength">8+ characters</span>
+                    </div>
+                </div>
+
+                <button id="continueBtn" type="submit" class="btn-main" disabled>
+                    Continue
+                </button>
+
+                <div class="agreements">
+
+                    <label>
+                        <input type="checkbox" id="termsCheck" onchange="checkForm()" />
+                        I agree to
+                        <a asp-action="SelectAccountType" asp-controller="Account" class="link-primary">  Terms of Service</a><br />
+                      
+                    </label>
+
+                    <label>
+                        <input type="checkbox" id="privacyCheck" onchange="checkForm()" />
+                        I agree to
+                        <a asp-action="SelectAccountType" asp-controller="Account" class="link-primary"> Privacy Policy</a><br />
+                        
+                    </label>
+
+                </div>
+
+            </form>
+
+            <div class="footer-links">
+      
+               
+                <a asp-action ="SelectAccountType" asp-controller="Account" class="link-muted">
+                    ← Return to Previous Page
+                </a>
+            </div>
+            <div class="footer">
+                © 2026 Allora.com Inc. or its affiliates
+            </div>
+
         </div>
 
-        <div class="image-section">
-            <div class="logo">allora</div>
-        </div>
+        <!-- RIGHT -->
+         <div class="image-section">
+    <img src="~/imageslogreg/Illustrations2.png" asp-append-version="true" class="auth-image" />
+    <img src="~/imageslogreg/Logotype.png" asp-append-version="true" class="logo-small" />
+</div>
+
     </div>
 
     <script>
-        function togglePassword() {
-            const input = document.getElementById('passwordInput');
-            const toggle = event.target;
-            if (input.type === 'password') {
-                input.type = 'text';
-                toggle.textContent = '🙈';
-            } else {
-                input.type = 'password';
-                toggle.textContent = '👁';
+
+        function togglePassword(){
+            const input=document.getElementById("passwordInput");
+            const icon=document.getElementById("eyeIcon");
+
+            if(input.type==="password"){
+                input.type="text";
+                icon.classList.replace("fa-eye","fa-eye-slash");
+            }else{
+                input.type="password";
+                icon.classList.replace("fa-eye-slash","fa-eye");
             }
         }
+
+        function checkPassword(){
+            const passInput=document.getElementById("passwordInput");
+            const pass=passInput.value;
+
+            const number=/[0-9]/.test(pass);
+            const upper=/[A-Z]/.test(pass);
+            const lower=/[a-z]/.test(pass);
+            const length=pass.length>=8;
+
+            toggleRule("ruleNumber",number);
+            toggleRule("ruleUpper",upper);
+            toggleRule("ruleLower",lower);
+            toggleRule("ruleLength",length);
+
+            if(number && upper && lower && length){
+                passInput.classList.add("valid");
+                passInput.classList.remove("invalid");
+                document.getElementById("passwordCheck").style.display="inline";
+            }else if(pass.length > 0){
+                passInput.classList.remove("valid");
+                passInput.classList.add("invalid");
+                document.getElementById("passwordCheck").style.display="none";
+            }else{
+                passInput.classList.remove("valid","invalid");
+                document.getElementById("passwordCheck").style.display="none";
+            }
+
+            checkForm();
+        }
+
+        function toggleRule(id,isValid){
+            const el=document.getElementById(id);
+            if(isValid) el.classList.add("valid");
+            else el.classList.remove("valid");
+        }
+
+        function checkForm(){
+            const pass=document.getElementById("passwordInput").value;
+            const terms=document.getElementById("termsCheck").checked;
+            const privacy=document.getElementById("privacyCheck").checked;
+
+            const validPass =
+                /[0-9]/.test(pass) &&
+                /[A-Z]/.test(pass) &&
+                /[a-z]/.test(pass) &&
+                pass.length>=8;
+
+            const btn=document.getElementById("continueBtn");
+
+            if(validPass && terms && privacy){
+                btn.disabled=false;
+                btn.style.background="#CFFA4E";
+            }else{
+                btn.disabled=true;
+                btn.style.background="#9D9D9D1A";
+            }
+        }
+
     </script>
 
-    @section Scripts {
+
+    @section Scripts{
         <partial name="_ValidationScriptsPartial" />
     }
+
 </body>
 </html>

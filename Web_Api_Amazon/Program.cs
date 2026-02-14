@@ -1,7 +1,8 @@
 ﻿using Amazon_clone.DataAccess.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.Identity.UI.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -19,10 +20,15 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
         options.SignIn.RequireConfirmedAccount = false)
     .AddDefaultTokenProviders()
     .AddEntityFrameworkStores<ShopDbContext>();
-
+builder.Services.AddScoped<IEmailSender, EmailService>();
 builder.Services.AddControllersWithViews();
-builder.Services.AddRazorPages(); 
+
+builder.Services.AddRazorPages();
 var app = builder.Build();
+
+
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

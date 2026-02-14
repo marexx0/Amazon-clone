@@ -18,6 +18,8 @@ namespace Amazon_clone.DataAccess.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+                
             modelBuilder.Entity<IdentityUserLogin<string>>()
                 .HasKey(x => new { x.LoginProvider, x.ProviderKey });
 
@@ -26,6 +28,7 @@ namespace Amazon_clone.DataAccess.Data
 
             modelBuilder.Entity<IdentityUserToken<string>>()
                 .HasKey(x => new { x.UserId, x.LoginProvider, x.Name });
+
         }
         }
 }
