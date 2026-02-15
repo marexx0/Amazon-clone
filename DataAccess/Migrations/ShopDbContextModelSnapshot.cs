@@ -59,152 +59,11 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<int?>("ParentCategoryId")
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ParentCategoryId");
-
                     b.ToTable("Categories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Lifestyle"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Name = "Technology"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Name = "Home"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "Auto"
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Name = "Health"
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Name = "Clothing",
-                            ParentCategoryId = 1
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Name = "Shoes",
-                            ParentCategoryId = 1
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Name = "Computers / Laptops / Tablets",
-                            ParentCategoryId = 2
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Name = "Mobile Phones",
-                            ParentCategoryId = 2
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Name = "Audio and Wearables",
-                            ParentCategoryId = 2
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Name = "Cameras / Photo Equipment",
-                            ParentCategoryId = 2
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Name = "Gaming",
-                            ParentCategoryId = 2
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Name = "Home Decor",
-                            ParentCategoryId = 3
-                        },
-                        new
-                        {
-                            Id = 14,
-                            Name = "Furniture",
-                            ParentCategoryId = 3
-                        },
-                        new
-                        {
-                            Id = 15,
-                            Name = "Lighting",
-                            ParentCategoryId = 3
-                        },
-                        new
-                        {
-                            Id = 16,
-                            Name = "Yard and Garden",
-                            ParentCategoryId = 3
-                        },
-                        new
-                        {
-                            Id = 17,
-                            Name = "Tools / Hardware / Plumbing",
-                            ParentCategoryId = 3
-                        },
-                        new
-                        {
-                            Id = 18,
-                            Name = "Building Materials",
-                            ParentCategoryId = 3
-                        },
-                        new
-                        {
-                            Id = 19,
-                            Name = "Sports / Outdoor / Fitness",
-                            ParentCategoryId = 4
-                        },
-                        new
-                        {
-                            Id = 20,
-                            Name = "Auto Parts / Accessories",
-                            ParentCategoryId = 4
-                        },
-                        new
-                        {
-                            Id = 21,
-                            Name = "Toys Kids",
-                            ParentCategoryId = 5
-                        },
-                        new
-                        {
-                            Id = 22,
-                            Name = "Books / Media",
-                            ParentCategoryId = 5
-                        },
-                        new
-                        {
-                            Id = 23,
-                            Name = "Health",
-                            ParentCategoryId = 5
-                        });
                 });
 
             modelBuilder.Entity("CategoryProperty", b =>
@@ -1225,8 +1084,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("Value")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -1536,6 +1394,9 @@ namespace DataAccess.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("AccountType")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -1548,11 +1409,9 @@ namespace DataAccess.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
@@ -1735,7 +1594,7 @@ namespace DataAccess.Migrations
                     b.HasOne("Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -1806,8 +1665,6 @@ namespace DataAccess.Migrations
                     b.Navigation("CategoryProperties");
 
                     b.Navigation("Products");
-
-                    b.Navigation("SubCategories");
                 });
 
             modelBuilder.Entity("Order", b =>
