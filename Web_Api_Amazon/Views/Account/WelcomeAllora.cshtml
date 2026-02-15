@@ -1,0 +1,211 @@
+﻿@{
+    Layout = null;
+    ViewData["Title"] = "Welcome Back";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "DM Sans", sans-serif;
+            background: #FCFCFC;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 1400px;
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 60px;
+        }
+
+        .form-section {
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        h1 {
+            font-family: "DM Sans",sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: #080808;
+        }
+
+        .subtitle {
+            color: #808080;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 14px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-secondary {
+            color: #1D64CC;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+            .btn-secondary:hover {
+                text-decoration: underline;
+            }
+
+        .btn-primary {
+            width: 100%;
+            height: 42px;
+            border: none;
+            border-radius: 8px;
+            background: #CFFA4E;
+            color: #080808;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+            .btn-primaryn:hover {
+                background: #B5ED24;
+            }
+
+        .help-link {
+            font-size: 13px;
+            margin-top: 12px;
+        }
+
+            .help-link a {
+                color: #2563eb;
+                text-decoration: none;
+                font-weight: 500;
+            }
+
+                .help-link a:hover {
+                    text-decoration: underline;
+                }
+
+        .image-section {
+    position: relative;
+    background: #0D1B34;
+    border-radius: 24px;
+    overflow: hidden;
+
+ 
+    min-width: 220px;
+    min-height: 620px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 60%;
+    max-height: 60%;
+    width: auto;
+    height: auto;
+}
+
+.logo-small {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 104px;
+    height: 61px;
+    object-fit: contain;
+    opacity: 1;
+}
+
+        
+
+        .footer {
+            margin-top: 40px;
+            font-size: 11px;
+            color: #9CA3AF;
+        }
+        @@media (max-width:900px) {
+            .main-container
+
+        {
+            grid-template-columns: 1fr;
+            max-width: 520px;
+        }
+
+        .image-section {
+            min-height: 320px;
+            margin-top: 20px;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container">
+
+        <!-- LEFT -->
+        <div class="form-section">
+            <h1>Welcome to Allora!</h1>
+            <p class="subtitle">Let's help you find the right direcrion</p>
+
+            <div class="action-buttons">
+                <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Start exploring</a>
+                <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Set preferences</a>
+            </div>
+
+            <div class="help-link">
+                <a asp-controller="Account" asp-action="Login">Need help?</a>
+            </div>
+        </div>
+
+       
+        <!-- RIGHT -->
+        <div class="image-section">
+    <img src="~/imageslogreg/Group.png" asp-append-version="true" class="auth-image" />
+    <img src="~/imageslogreg/Logotype.png" asp-append-version="true" class="logo-small" />
+</div>
+        <div class="footer">
+            © 2026 Allora.com Inc. or its affiliates
+        </div>
+    </div>
+</body>
+</html>
