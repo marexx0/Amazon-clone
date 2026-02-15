@@ -1,4 +1,4 @@
-﻿﻿@using System.Collections.Generic
+﻿@using System.Collections.Generic
 @using System.Linq
 @model Web_Api_Amazon.Models.ProductDetailsViewModel
 @{
@@ -42,9 +42,8 @@
                 {
                     <img src="@mainImage.ImageUrl" alt="@product?.Name" />
                 }
-			</div>
-
-            <button class="ghost-action" type="button">View in 3D</button>
+                <button class="ghost-action" type="button">View in 3D</button>
+            </div>
 
             @if (uniqueImages.Any())
             {
@@ -76,10 +75,7 @@
                 <div class="option-group">
                     <div class="option-header">
                         <span class="option-label">Color</span>
-                        <span class="selected-color">
-                            <span class="selected-color-dot" style="background:@Model.AvailableColors.First()"></span>
-                            <span class="selected-color-name">@Model.AvailableColors.First()</span>
-                        </span>
+                        <span class="option-value">@Model.AvailableColors.First()</span>
                     </div>
                     <div class="color-options">
                         @foreach (var color in Model.AvailableColors)
@@ -99,7 +95,7 @@
                 <div class="option-group">
                     <div class="option-header">
                         <span class="option-label">Size</span>
-                        <span class="selected-size">• @Model.AvailableSizes.First()</span>
+                        <span class="option-value">@Model.AvailableSizes.First()</span>
                     </div>
                     <div class="size-options">
                         @foreach (var size in Model.AvailableSizes)
@@ -109,15 +105,13 @@
                             <button class="size-option @selectedClass" type="button" data-size="@size">@size</button>
                         }
                     </div>
-                    <div class="option-footer">
-                        <a class="size-guide" href="#">Size guide</a>
-                    </div>
+                    <a class="size-guide" href="#">Size guide</a>
                 </div>
             }
 
             <div class="option-group">
                 <div class="quantity-control">
-                    <button class="qty-btn" type="button" data-qty="decrease">-</button>
+                    <button class="qty-btn" type="button" data-qty="decrease">−</button>
                     <input type="number" value="1" min="1" aria-label="Quantity" />
                     <button class="qty-btn" type="button" data-qty="increase">+</button>
                 </div>
@@ -132,41 +126,41 @@
 
     <div class="tabs">
         <div class="tab-menu">
-            <button class="tab-link is-active" type="button" data-tab="description">Description</button>
-            <button class="tab-link" type="button" data-tab="details">Product details</button>
+            <button class="tab-link" type="button" data-tab="description">Description</button>
+            <button class="tab-link is-active" type="button" data-tab="details">Product details</button>
             <button class="tab-link" type="button" data-tab="reviews">Reviews</button>
         </div>
         <div class="tab-content">
-            <div class="tab-panel is-active" id="description">
+            <div class="tab-panel" id="description">
                 <p>@product?.Description</p>
             </div>
-            <div class="tab-panel" id="details">
+            <div class="tab-panel is-active" id="details">
                 <div class="details-grid details-grid-two-col">
                     @if (!string.IsNullOrWhiteSpace(Model.Brand))
                     {
                         <div class="detail-item">
-                            <span class="detail-label">Brand</span>
+                            <span class="detail-label">Brand:</span>
                             <span class="detail-value">@Model.Brand</span>
                         </div>
                     }
                     @if (product?.Category != null)
                     {
                         <div class="detail-item">
-                            <span class="detail-label">Category</span>
+                            <span class="detail-label">Category:</span>
                             <span class="detail-value">@product.Category.Name</span>
                         </div>
                     }
                     @if (Model.AvailableColors.Any())
                     {
                         <div class="detail-item">
-                            <span class="detail-label">Colors</span>
+                            <span class="detail-label">Colors:</span>
                             <span class="detail-value">@string.Join(", ", Model.AvailableColors)</span>
                         </div>
                     }
                     @if (Model.AvailableSizes.Any())
                     {
                         <div class="detail-item">
-                            <span class="detail-label">Sizes</span>
+                            <span class="detail-label">Sizes:</span>
                             <span class="detail-value">@string.Join(", ", Model.AvailableSizes)</span>
                         </div>
                     }
@@ -179,7 +173,7 @@
                                 continue;
                             }
                             <div class="detail-item">
-                                <span class="detail-label">@property.PropertyDefinition?.Name</span>
+                                <span class="detail-label">@(property.PropertyDefinition?.Name):</span>
                                 <span class="detail-value">@property.Value</span>
                             </div>
                         }
@@ -200,7 +194,7 @@
             @for (var i = 0; i < Model.RelatedProducts.Count; i++)
             {
                 var related = Model.RelatedProducts[i];
-                var relatedImage = related.Images?.OrderBy(i => i.SortOrder).FirstOrDefault()?.ImageUrl ?? related.ImageUrl;
+                var relatedImage = related.Images?.OrderBy(img => img.SortOrder).FirstOrDefault()?.ImageUrl ?? related.ImageUrl;
                 <article class="product-card">
                     @if (!string.IsNullOrWhiteSpace(relatedImage))
                     {
@@ -265,7 +259,7 @@
         <div class="card-row">
             @foreach (var pick in Model.TopPicks)
             {
-                var pickImage = pick.Images?.OrderBy(i => i.SortOrder).FirstOrDefault()?.ImageUrl ?? pick.ImageUrl;
+                var pickImage = pick.Images?.OrderBy(img => img.SortOrder).FirstOrDefault()?.ImageUrl ?? pick.ImageUrl;
                 <article class="product-card">
                     @if (!string.IsNullOrWhiteSpace(pickImage))
                     {
