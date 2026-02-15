@@ -1,7 +1,6 @@
-using DataAccess.Persistance;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 
 namespace Amazon_clone.DataAccess.Data
 {
@@ -17,7 +16,6 @@ namespace Amazon_clone.DataAccess.Data
             : base(options)
         {
         }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -31,6 +29,16 @@ namespace Amazon_clone.DataAccess.Data
             modelBuilder.Entity<ProductProperty>().HasData(PropertySeeder.GetProductProperties());
             modelBuilder.Entity<ProductVariant>().HasData(PropertySeeder.GetProductVariants());
             modelBuilder.Entity<ProductVariantValue>().HasData(PropertySeeder.GetProductVariantValues());
+                
+            modelBuilder.Entity<IdentityUserLogin<string>>()
+                .HasKey(x => new { x.LoginProvider, x.ProviderKey });
+
+            modelBuilder.Entity<IdentityUserRole<string>>()
+                .HasKey(x => new { x.UserId, x.RoleId });
+
+            modelBuilder.Entity<IdentityUserToken<string>>()
+                .HasKey(x => new { x.UserId, x.LoginProvider, x.Name });
+
         }
     }
 }

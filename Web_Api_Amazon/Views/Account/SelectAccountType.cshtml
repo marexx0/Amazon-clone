@@ -1,0 +1,326 @@
+﻿@{
+    Layout = null;
+    ViewData["Title"] = "Account Type";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400"
+          rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "DM Sans", sans-serif;
+            background: #FCFCFC;
+            padding: 50px 70px;
+            color: #080808;
+        }
+
+        /* MAIN LAYOUT */
+        .main-container {
+            width: 100%;
+            max-width: 1350px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 70px;
+        }
+
+        /* LEFT */
+        .form-section {
+            max-width: 420px;
+        }
+
+        /* H1 — Bold */
+        h1 {
+            font-size: 28px;
+            line-height: 36px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        /* Subheading S2 */
+        .subtitle {
+            font-size: 14px;
+            line-height: 24px;
+            font-weight: 500;
+            color: #686868;
+            margin-bottom: 28px;
+        }
+
+        /* ACCOUNT CARDS */
+        .account-card {
+            background: #3B82E10D; 
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        /* H5 — Semibold */
+        .account-title {
+            font-size: 16px;
+            line-height: 20px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        /* Body B3 */
+        .account-desc {
+            font-size: 14px;
+            line-height: 20px;
+            font-weight: 400;
+            color: #6B7280;
+            margin-bottom: 14px;
+        }
+
+        .account-list {
+            font-size: 14px;
+            line-height: 20px;
+            color: #374151;
+            margin-bottom: 16px;
+        }
+
+        .account-list div {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        /* PLUS */
+        .plus {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1.5px solid #A8EB13;
+            color: #A8EB13;
+
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+
+        /* BUTTON */
+        .btn-main {
+            width: 100%;
+            height: 42px;
+            border: none;
+            border-radius: 8px;
+            background: #CFFA4E;
+            color: #080808;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .btn-main:hover {
+            background: #B5ED24;
+        }
+
+        /* FOOTER LINKS */
+        .footer-links {
+            margin-top: 24px;
+            font-size: 13px;
+            line-height: 1.8;
+            color: #6B7280;
+        }
+
+        .link-primary {
+            color: #1D64CC;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .link-primary:hover {
+            text-decoration: underline;
+        }
+
+        .link-muted {
+            color: #878787;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .link-muted:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            margin-top: 40px;
+            font-size: 11px;
+            color: #9CA3AF;
+        }
+
+        /* RIGHT */
+        .image-section {
+            background: #0D1B34 ;
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 1 / 1; 
+            width: 100%;
+            max-height: 620px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo {
+            position: absolute;
+            right: 30px;
+            bottom: 25px;
+            font-weight: 700;
+            font-style: italic;
+            font-size: 28px;
+            color: #9CA3AF;
+        }
+        .image-section {
+    position: relative;
+    background: #0D1B34;
+    border-radius: 24px;
+    overflow: hidden;
+
+    
+    min-width: 220px;
+    min-height: 620px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 60%;
+    max-height: 60%;
+    width: auto;
+    height: auto;
+}
+
+.logo-small {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 104px;
+    height: 61px;
+    object-fit: contain;
+    opacity: 1;
+}
+
+
+
+
+   /* 
+        @@media (max-width:900px) {
+            body {
+                padding: 30px 25px;
+            }
+
+            .main-container {
+                grid-template-columns: 1fr;
+                max-width: 520px;
+            }
+
+            .image-section {
+                min-height: 300px;
+            }
+        }  */
+    </style>
+</head>
+
+<body>
+
+<div class="main-container">
+
+    <!-- LEFT -->
+    <div class="form-section">
+
+        <h1>How will you use Allora?</h1>
+        <div class="subtitle">To better suit your needs</div>
+
+        <form asp-action="SelectAccountType" asp-controller="Account" method="post">
+
+            <!-- PERSONAL -->
+            <div class="account-card">
+                <div class="account-title">Personal account</div>
+                <div class="account-desc">For personal use</div>
+
+                <div class="account-list">
+                    <div><span class="plus">+</span> Discover and compare products</div>
+                    <div><span class="plus">+</span> Get clear, guided recommendations</div>
+                    <div><span class="plus">+</span> Save favorites and track orders</div>
+                </div>
+
+                <button name="accountType" value="Personal" class="btn-main">
+                    Continue with Personal
+                </button>
+            </div>
+
+            <!-- BUSINESS -->
+            <div class="account-card">
+                <div class="account-title">Business account</div>
+                <div class="account-desc">For professional needs</div>
+
+                <div class="account-list">
+                    <div><span class="plus">+</span> Manage business settings</div>
+                    <div><span class="plus">+</span> Access advanced insights and tools</div>
+                    <div><span class="plus">+</span> Collaborate with team members</div>
+                </div>
+
+                <button name="accountType" value="Business" class="btn-main">
+                    Continue with Business
+                </button>
+            </div>
+
+        </form>
+
+        <div class="footer-links">
+            Not sure which account?
+            <a href="#" class="link-primary">Find out</a><br />
+
+            Already have an account?
+            <a asp-action="Login" asp-controller="Account" class="link-primary">Log in</a><br />
+
+            <a asp-action="Entry" asp-controller="Account" class="link-muted">
+                ← Return to Previous Page
+            </a>
+        </div>
+
+        <div class="footer">
+            © 2026, Allora.com, Inc. or its affiliates
+        </div>
+
+    </div>
+
+    <!-- RIGHT -->
+        <div class="image-section">
+    <img src="~/imageslogreg/Illustrations.png" asp-append-version="true" class="auth-image" />
+    <img src="~/imageslogreg/Logotype.png" asp-append-version="true" class="logo-small" />
+</div>
+
+
+
+   
+</body>
+</html>
