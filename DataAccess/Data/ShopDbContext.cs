@@ -19,6 +19,16 @@ namespace Amazon_clone.DataAccess.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ShopDbContext).Assembly);
+
+            modelBuilder.Entity<Category>().HasData(CategorySeeder.GetCategories());
+            modelBuilder.Entity<Product>().HasData(ProductSeeder.GetProducts());
+
+            modelBuilder.Entity<PropertyDefinition>().HasData(PropertySeeder.GetPropertyDefinitions());
+            modelBuilder.Entity<CategoryProperty>().HasData(PropertySeeder.GetCategoryProperties());
+            modelBuilder.Entity<ProductProperty>().HasData(PropertySeeder.GetProductProperties());
+            modelBuilder.Entity<ProductVariant>().HasData(PropertySeeder.GetProductVariants());
+            modelBuilder.Entity<ProductVariantValue>().HasData(PropertySeeder.GetProductVariantValues());
                 
             modelBuilder.Entity<IdentityUserLogin<string>>()
                 .HasKey(x => new { x.LoginProvider, x.ProviderKey });
@@ -30,5 +40,5 @@ namespace Amazon_clone.DataAccess.Data
                 .HasKey(x => new { x.UserId, x.LoginProvider, x.Name });
 
         }
-        }
+    }
 }
