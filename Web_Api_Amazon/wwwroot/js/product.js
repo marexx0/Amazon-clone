@@ -61,10 +61,14 @@
     });
 
     const sizeButtons = document.querySelectorAll('.size-option');
+    const selectedSize = document.querySelector('.selected-size');
     sizeButtons.forEach((btn) => {
         btn.addEventListener('click', () => {
             sizeButtons.forEach((item) => item.classList.remove('is-selected'));
             btn.classList.add('is-selected');
+            if (selectedSize) {
+                selectedSize.textContent = `• ${btn.textContent?.trim() ?? ''}`;
+            }
         });
     });
 })();

@@ -59,11 +59,152 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<int?>("ParentCategoryId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ParentCategoryId");
+
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Lifestyle"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Technology"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Home"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Auto"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Health"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Clothing",
+                            ParentCategoryId = 1
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Shoes",
+                            ParentCategoryId = 1
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Computers / Laptops / Tablets",
+                            ParentCategoryId = 2
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Mobile Phones",
+                            ParentCategoryId = 2
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "Audio and Wearables",
+                            ParentCategoryId = 2
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "Cameras / Photo Equipment",
+                            ParentCategoryId = 2
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Name = "Gaming",
+                            ParentCategoryId = 2
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Name = "Home Decor",
+                            ParentCategoryId = 3
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Name = "Furniture",
+                            ParentCategoryId = 3
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Name = "Lighting",
+                            ParentCategoryId = 3
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Name = "Yard and Garden",
+                            ParentCategoryId = 3
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Name = "Tools / Hardware / Plumbing",
+                            ParentCategoryId = 3
+                        },
+                        new
+                        {
+                            Id = 18,
+                            Name = "Building Materials",
+                            ParentCategoryId = 3
+                        },
+                        new
+                        {
+                            Id = 19,
+                            Name = "Sports / Outdoor / Fitness",
+                            ParentCategoryId = 4
+                        },
+                        new
+                        {
+                            Id = 20,
+                            Name = "Auto Parts / Accessories",
+                            ParentCategoryId = 4
+                        },
+                        new
+                        {
+                            Id = 21,
+                            Name = "Toys Kids",
+                            ParentCategoryId = 5
+                        },
+                        new
+                        {
+                            Id = 22,
+                            Name = "Books / Media",
+                            ParentCategoryId = 5
+                        },
+                        new
+                        {
+                            Id = 23,
+                            Name = "Health",
+                            ParentCategoryId = 5
+                        });
                 });
 
             modelBuilder.Entity("CategoryProperty", b =>
@@ -684,128 +825,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ProductId", "IsPrimary");
 
                     b.ToTable("ProductImages");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ContentType = "image/png",
-                            FileName = "tshirt.png",
-                            ImageUrl = "/images/products/tshirt.png",
-                            IsPrimary = true,
-                            ProductId = 1,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ContentType = "image/png",
-                            FileName = "sneakers.png",
-                            ImageUrl = "/images/products/sneakers.png",
-                            IsPrimary = true,
-                            ProductId = 2,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ContentType = "image/png",
-                            FileName = "macbook_air_m2.png",
-                            ImageUrl = "/images/products/macbook_air_m2.png",
-                            IsPrimary = true,
-                            ProductId = 3,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ContentType = "image/png",
-                            FileName = "galaxy_s24.png",
-                            ImageUrl = "/images/products/galaxy_s24.png",
-                            IsPrimary = true,
-                            ProductId = 4,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ContentType = "image/png",
-                            FileName = "sony_xm5.png",
-                            ImageUrl = "/images/products/sony_xm5.png",
-                            IsPrimary = true,
-                            ProductId = 5,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 6,
-                            ContentType = "image/png",
-                            FileName = "canon_r10.png",
-                            ImageUrl = "/images/products/canon_r10.png",
-                            IsPrimary = true,
-                            ProductId = 6,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 7,
-                            ContentType = "image/png",
-                            FileName = "ps5.png",
-                            ImageUrl = "/images/products/ps5.png",
-                            IsPrimary = true,
-                            ProductId = 7,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 22,
-                            ContentType = "image/jpeg",
-                            FileName = "nike_dunk_cacao_pair.jpg",
-                            ImageUrl = "/images/products/nike_dunk_cacao_pair.jpg",
-                            IsPrimary = true,
-                            ProductId = 22,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 23,
-                            ContentType = "image/jpeg",
-                            FileName = "nike_dunk_cacao_outsole.jpg",
-                            ImageUrl = "/images/products/nike_dunk_cacao_outsole.jpg",
-                            IsPrimary = false,
-                            ProductId = 22,
-                            SortOrder = 1
-                        },
-                        new
-                        {
-                            Id = 24,
-                            ContentType = "image/jpeg",
-                            FileName = "nike_dunk_cacao_top.jpg",
-                            ImageUrl = "/images/products/nike_dunk_cacao_top.jpg",
-                            IsPrimary = false,
-                            ProductId = 22,
-                            SortOrder = 2
-                        },
-                        new
-                        {
-                            Id = 25,
-                            ContentType = "image/jpeg",
-                            FileName = "nike_dunk_cacao_side.jpg",
-                            ImageUrl = "/images/products/nike_dunk_cacao_side.jpg",
-                            IsPrimary = false,
-                            ProductId = 22,
-                            SortOrder = 3
-                        },
-                        new
-                        {
-                            Id = 26,
-                            ContentType = "image/jpeg",
-                            FileName = "nike_dunk_cacao_angle.jpg",
-                            ImageUrl = "/images/products/nike_dunk_cacao_angle.jpg",
-                            IsPrimary = false,
-                            ProductId = 22,
-                            SortOrder = 4
-                        });
                 });
 
             modelBuilder.Entity("ProductProperty", b =>
@@ -1084,7 +1103,8 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("Value")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("Id");
 
@@ -1594,7 +1614,7 @@ namespace DataAccess.Migrations
                     b.HasOne("Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -1665,6 +1685,8 @@ namespace DataAccess.Migrations
                     b.Navigation("CategoryProperties");
 
                     b.Navigation("Products");
+
+                    b.Navigation("SubCategories");
                 });
 
             modelBuilder.Entity("Order", b =>

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ShopDbContext))]
-    [Migration("20260210124838_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260215151851_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -828,128 +828,6 @@ namespace DataAccess.Migrations
                     b.HasIndex("ProductId", "IsPrimary");
 
                     b.ToTable("ProductImages");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ContentType = "image/png",
-                            FileName = "tshirt.png",
-                            ImageUrl = "/images/products/tshirt.png",
-                            IsPrimary = true,
-                            ProductId = 1,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ContentType = "image/png",
-                            FileName = "sneakers.png",
-                            ImageUrl = "/images/products/sneakers.png",
-                            IsPrimary = true,
-                            ProductId = 2,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ContentType = "image/png",
-                            FileName = "macbook_air_m2.png",
-                            ImageUrl = "/images/products/macbook_air_m2.png",
-                            IsPrimary = true,
-                            ProductId = 3,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 4,
-                            ContentType = "image/png",
-                            FileName = "galaxy_s24.png",
-                            ImageUrl = "/images/products/galaxy_s24.png",
-                            IsPrimary = true,
-                            ProductId = 4,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 5,
-                            ContentType = "image/png",
-                            FileName = "sony_xm5.png",
-                            ImageUrl = "/images/products/sony_xm5.png",
-                            IsPrimary = true,
-                            ProductId = 5,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 6,
-                            ContentType = "image/png",
-                            FileName = "canon_r10.png",
-                            ImageUrl = "/images/products/canon_r10.png",
-                            IsPrimary = true,
-                            ProductId = 6,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 7,
-                            ContentType = "image/png",
-                            FileName = "ps5.png",
-                            ImageUrl = "/images/products/ps5.png",
-                            IsPrimary = true,
-                            ProductId = 7,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 22,
-                            ContentType = "image/jpeg",
-                            FileName = "nike_dunk_cacao_pair.jpg",
-                            ImageUrl = "/images/products/nike_dunk_cacao_pair.jpg",
-                            IsPrimary = true,
-                            ProductId = 22,
-                            SortOrder = 0
-                        },
-                        new
-                        {
-                            Id = 23,
-                            ContentType = "image/jpeg",
-                            FileName = "nike_dunk_cacao_outsole.jpg",
-                            ImageUrl = "/images/products/nike_dunk_cacao_outsole.jpg",
-                            IsPrimary = false,
-                            ProductId = 22,
-                            SortOrder = 1
-                        },
-                        new
-                        {
-                            Id = 24,
-                            ContentType = "image/jpeg",
-                            FileName = "nike_dunk_cacao_top.jpg",
-                            ImageUrl = "/images/products/nike_dunk_cacao_top.jpg",
-                            IsPrimary = false,
-                            ProductId = 22,
-                            SortOrder = 2
-                        },
-                        new
-                        {
-                            Id = 25,
-                            ContentType = "image/jpeg",
-                            FileName = "nike_dunk_cacao_side.jpg",
-                            ImageUrl = "/images/products/nike_dunk_cacao_side.jpg",
-                            IsPrimary = false,
-                            ProductId = 22,
-                            SortOrder = 3
-                        },
-                        new
-                        {
-                            Id = 26,
-                            ContentType = "image/jpeg",
-                            FileName = "nike_dunk_cacao_angle.jpg",
-                            ImageUrl = "/images/products/nike_dunk_cacao_angle.jpg",
-                            IsPrimary = false,
-                            ProductId = 22,
-                            SortOrder = 4
-                        });
                 });
 
             modelBuilder.Entity("ProductProperty", b =>
@@ -1539,6 +1417,9 @@ namespace DataAccess.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<string>("AccountType")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -1551,11 +1432,9 @@ namespace DataAccess.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
