@@ -1,75 +1,276 @@
-﻿
-<div class="product-page container">
-    <div class="product-main">
-        <div class="images">
-            <img src="@Model.ImageUrl" class="main-image" alt="@Model.Name" />
-            @* <div class="gallery">
-                @foreach (var img in Model.GalleryImages)
+﻿@using System.Collections.Generic
+@using System.Linq
+@model Web_Api_Amazon.Models.ProductDetailsViewModel
+@{
+    var product = Model.Product;
+    var images = Model.Images ?? new List<ProductImage>();
+    var mainImage = images.FirstOrDefault(i => i.IsPrimary) ?? images.FirstOrDefault();
+    var breadcrumbs = new List<Category>();
+    var category = product?.Category;
+    while (category != null)
+    {
+        breadcrumbs.Insert(0, category);
+        category = category.ParentCategory;
+    }
+}
+
+<div class="product-page">
+    <div class="product-breadcrumb">
+        @if (breadcrumbs.Any())
+        {
+            for (var i = 0; i < breadcrumbs.Count; i++)
+            {
+                <span>@breadcrumbs[i].Name</span>
+                if (i < breadcrumbs.Count - 1)
                 {
-                    <img src="@img" class="thumb" />
+                    <span class="divider">›</span>
                 }
-            </div> *@
+            }
+        }
+    </div>
+
+    <div class="product-main">
+        <div class="product-gallery">
+            <div class="main-image-card">
+                @if (mainImage != null)
+                {
+                    <img src="@mainImage.ImageUrl" alt="@product?.Name" />
+                }
+                <button class="ghost-action" type="button">View in 3D</button>
+            </div>
+            @if (images.Any())
+            {
+                <div class="thumbnail-row">
+                    @foreach (var image in images)
+                    {
+                        var isActive = image == mainImage ? "is-active" : string.Empty;
+                        <button class="thumbnail @isActive" type="button" data-image="@image.ImageUrl">
+                            <img src="@image.ImageUrl" alt="@product?.Name" />
+                        </button>
+                    }
+                </div>
+            }
         </div>
 
-        <div class="details">
-            <h1>@Model.Name</h1>
-            <p class="price">$@Model.Price</p>
-            @* <p class="brand">Brand: @Model.Brand</p> *@
+        <div class="product-details">
+            <div class="product-meta">
+                <span class="chip">Free Shipping and Free Returns</span>
+                <button class="icon-button" type="button" aria-label="Save product">
+                    <span aria-hidden="true">♡</span>
+                </button>
+            </div>
+            <h1>@product?.Name</h1>
+            @if (!string.IsNullOrWhiteSpace(Model.Brand))
+            {
+                <p class="brand">@Model.Brand</p>
+            }
+            <p class="price">$@product?.Price.ToString("0.00")</p>
 
-            @* <div class="colors">
-                <span>Color:</span>
-                @foreach (var color in Model.Colors)
-                {
-                    <span class="color-box" style="background-color:@color"></span>
-                }
-            </div> *@
+            @if (Model.AvailableColors.Any())
+            {
+                <div class="option-group">
+                    <div class="option-header">
+                        <span class="option-label">Color</span>
+                        <span class="selected-color">
+                            <span class="selected-color-dot" style="background:@Model.AvailableColors.First()"></span>
+                            <span class="selected-color-name">@Model.AvailableColors.First()</span>
+                        </span>
+                    </div>
+                    <div class="color-options">
+                        @foreach (var color in Model.AvailableColors)
+                        {
+                            var isSelected = color == Model.AvailableColors.First();
+                            var selectedClass = isSelected ? "is-selected" : string.Empty;
+                            <button class="color-option @selectedClass" type="button" aria-label="@color" data-color="@color">
+                                <span class="color-swatch" style="background:@color;"></span>
+                            </button>
+                        }
+                    </div>
+                </div>
+            }
 
-            @* <div class="sizes">
-                <span>Size:</span>
-                @foreach (var size in Model.Sizes)
-                {
-                    <button class="size-btn">@size</button>
-                }
-            </div> *@
+            @if (Model.AvailableSizes.Any())
+            {
+                <div class="option-group">
+                    <div class="option-header">
+                        <span class="option-label">Size</span>
+                        <a class="size-guide" href="#">Size guide</a>
+                    </div>
+                    <div class="size-options">
+                        @foreach (var size in Model.AvailableSizes)
+                        {
+                            var isSelected = size == Model.AvailableSizes.First();
+                            var selectedClass = isSelected ? "is-selected" : string.Empty;
+                            <button class="size-option @selectedClass" type="button">@size</button>
+                        }
+                    </div>
+                </div>
+            }
 
-            <div class="quantity">
-                <button>-</button>
-                <input type="number" value="1" />
-                <button>+</button>
+            <div class="option-group">
+                <span class="option-label">Quantity</span>
+                <div class="quantity-control">
+                    <button class="qty-btn" type="button" data-qty="decrease">-</button>
+                    <input type="number" value="1" min="1" aria-label="Quantity" />
+                    <button class="qty-btn" type="button" data-qty="increase">+</button>
+                </div>
             </div>
 
             <div class="actions">
-                <button class="add-to-cart">Add to Cart</button>
-                <button class="buy-now">Buy Now</button>
+                <button class="primary-btn" type="button">Add to cart</button>
+                <button class="secondary-btn" type="button">Buy now</button>
             </div>
         </div>
     </div>
 
     <div class="tabs">
-        <ul class="tab-menu">
-            <li>Description</li>
-            <li>Product Details</li>
-        </ul>
+        <div class="tab-menu">
+            <button class="tab-link is-active" type="button" data-tab="description">Description</button>
+            <button class="tab-link" type="button" data-tab="details">Product details</button>
+            <button class="tab-link" type="button" data-tab="reviews">Reviews</button>
+        </div>
         <div class="tab-content">
-            <div class="description">@Html.Raw(Model.Description)</div>
-            @* <div class="product-details">@Html.Raw(Model.ProductDetails)</div> *@
+            <div class="tab-panel is-active" id="description">
+                <p>@product?.Description</p>
+            </div>
+            <div class="tab-panel" id="details">
+                <div class="details-grid">
+                    @if (!string.IsNullOrWhiteSpace(Model.Brand))
+                    {
+                        <div class="detail-item">
+                            <span class="detail-label">Brand</span>
+                            <span class="detail-value">@Model.Brand</span>
+                        </div>
+                    }
+                    @if (product?.Category != null)
+                    {
+                        <div class="detail-item">
+                            <span class="detail-label">Category</span>
+                            <span class="detail-value">@product.Category.Name</span>
+                        </div>
+                    }
+                    @if (Model.AvailableColors.Any())
+                    {
+                        <div class="detail-item">
+                            <span class="detail-label">Colors</span>
+                            <span class="detail-value">@string.Join(", ", Model.AvailableColors)</span>
+                        </div>
+                    }
+                    @if (Model.AvailableSizes.Any())
+                    {
+                        <div class="detail-item">
+                            <span class="detail-label">Sizes</span>
+                            <span class="detail-value">@string.Join(", ", Model.AvailableSizes)</span>
+                        </div>
+                    }
+                    @if (product?.Properties?.Any() == true)
+                    {
+                        @foreach (var property in product.Properties)
+                        {
+                            if (property.PropertyDefinition?.Name == "Brand")
+                            {
+                                continue;
+                            }
+                            <div class="detail-item">
+                                <span class="detail-label">@property.PropertyDefinition?.Name</span>
+                                <span class="detail-value">@property.Value</span>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="tab-panel" id="reviews">
+                <p>No reviews yet.</p>
+            </div>
         </div>
     </div>
 
-    <div class="related-products">
-        <h3>Customers also viewed</h3>
-        @* <div class="products">
+    <section class="related-products">
+        <div class="section-header">
+            <h2>Customers also viewed</h2>
+            <a href="#">View all</a>
+        </div>
+        <div class="card-row">
             @foreach (var related in Model.RelatedProducts)
             {
-                <div class="product-card">
-                    <img src="@related.ImageUrl" alt="@related.Name" />
-                    <p>@related.Name</p>
-                    <p>$@related.Price</p>
-                </div>
+                var relatedImage = related.Images?.OrderBy(i => i.SortOrder).FirstOrDefault()?.ImageUrl ?? related.ImageUrl;
+                <article class="product-card">
+                    @if (!string.IsNullOrWhiteSpace(relatedImage))
+                    {
+                        <img src="@relatedImage" alt="@related.Name" />
+                    }
+                    <div class="card-body">
+                        <h3>@related.Name</h3>
+                        <p class="card-price">$@related.Price.ToString("0.00")</p>
+                        <button class="mini-btn" type="button">Buy now</button>
+                    </div>
+                </article>
             }
-        </div> *@
-    </div>
+        </div>
+    </section>
+
+    <section class="feature-row">
+        <div class="feature">
+            <span class="feature-icon">🔒</span>
+            <div>
+                <h4>Secure Payments</h4>
+                <p>Your payments are safely encrypted.</p>
+            </div>
+        </div>
+        <div class="feature">
+            <span class="feature-icon">✅</span>
+            <div>
+                <h4>100% Original Products</h4>
+                <p>Verified brands only.</p>
+            </div>
+        </div>
+        <div class="feature">
+            <span class="feature-icon">💬</span>
+            <div>
+                <h4>24/7 Customer Support</h4>
+                <p>We are here to help.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="newsletter">
+        <div>
+            <h3>Don't miss the best deals</h3>
+            <p>Registered users get access to exclusive offers, order history, and faster checkout.</p>
+            <button class="primary-btn" type="button">Sign up free</button>
+        </div>
+        <div class="newsletter-graphic" aria-hidden="true">✦</div>
+    </section>
+
+    <section class="top-picks">
+        <div class="section-header">
+            <h2>Top Picks of the Month</h2>
+            <a href="#">Explore all</a>
+        </div>
+        <div class="card-row">
+            @foreach (var pick in Model.TopPicks)
+            {
+                var pickImage = pick.Images?.OrderBy(i => i.SortOrder).FirstOrDefault()?.ImageUrl ?? pick.ImageUrl;
+                <article class="product-card">
+                    @if (!string.IsNullOrWhiteSpace(pickImage))
+                    {
+                        <img src="@pickImage" alt="@pick.Name" />
+                    }
+                    <div class="card-body">
+                        <h3>@pick.Name</h3>
+                        <p class="card-price">$@pick.Price.ToString("0.00")</p>
+                        <button class="mini-btn" type="button">Buy now</button>
+                    </div>
+                </article>
+            }
+        </div>
+    </section>
 </div>
+
 @section Styles {
     <link rel="stylesheet" href="~/css/product.css" />
+}
+
+@section Scripts {
+    <script src="~/js/product.js" asp-append-version="true"></script>
 }

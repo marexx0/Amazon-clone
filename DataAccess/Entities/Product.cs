@@ -18,4 +18,6 @@ public class Product
     public ICollection<ProductProperty> Properties { get; set; }
 
     public ICollection<ProductVariant> Variants { get; set; }
+
+    public ICollection<ProductImage> Images { get; set; }
 }
