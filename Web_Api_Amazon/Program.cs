@@ -1,8 +1,9 @@
 ﻿using Amazon_clone.DataAccess.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -19,7 +20,15 @@ builder.Services.AddDbContext<ShopDbContext>(options =>
 
 // Identity
 builder.Services.AddIdentity<User, IdentityRole>(options =>
-        options.SignIn.RequireConfirmedAccount = false)
+{
+    options.SignIn.RequireConfirmedEmail = true;
+
+    options.Password.RequireDigit = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireNonAlphanumeric = false; 
+    options.Password.RequiredLength = 8;
+})
     .AddDefaultTokenProviders()
     .AddEntityFrameworkStores<ShopDbContext>();
 builder.Services.AddScoped<IEmailSender, EmailService>();

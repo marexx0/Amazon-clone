@@ -111,7 +111,11 @@ public class AccountController : Controller
         var result = await _userManager.ConfirmEmailAsync(user, token);
 
         if (result.Succeeded)
-            return View("WelcomeAllora"); // створи відповідну View
+        {
+            await _signInManager.SignInAsync(user, isPersistent: false);
+
+            return RedirectToAction("WelcomeAllora");
+        }
         else
             return View("Error"); // або якась сторінка помилки
     }
