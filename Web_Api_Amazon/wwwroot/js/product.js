@@ -44,30 +44,28 @@
     });
 
     const colorButtons = document.querySelectorAll('.color-option');
-    const selectedColorName = document.querySelector('.selected-color-name');
-    const selectedColorDot = document.querySelector('.selected-color-dot');
     colorButtons.forEach((btn) => {
         btn.addEventListener('click', () => {
             colorButtons.forEach((item) => item.classList.remove('is-selected'));
             btn.classList.add('is-selected');
             const color = btn.getAttribute('data-color');
+            const selectedColorName = btn.closest('.option-group')?.querySelector('.option-value');
+
             if (selectedColorName && color) {
                 selectedColorName.textContent = color;
-            }
-            if (selectedColorDot && color) {
-                selectedColorDot.style.background = color;
             }
         });
     });
 
     const sizeButtons = document.querySelectorAll('.size-option');
-    const selectedSize = document.querySelector('.selected-size');
     sizeButtons.forEach((btn) => {
         btn.addEventListener('click', () => {
             sizeButtons.forEach((item) => item.classList.remove('is-selected'));
             btn.classList.add('is-selected');
+            const selectedSize = btn.closest('.option-group')?.querySelector('.option-value');
+
             if (selectedSize) {
-                selectedSize.textContent = `• ${btn.textContent?.trim() ?? ''}`;
+                selectedSize.textContent = btn.textContent?.trim() ?? '';
             }
         });
     });

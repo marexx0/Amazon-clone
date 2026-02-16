@@ -319,7 +319,13 @@
 .primary-btn {
     background: #1b1b5a;
     color: white;
+    text-decoration: none;
 }
+
+    .primary-btn:hover,
+    .primary-btn:focus {
+        text-decoration: none;
+    }
 
 .secondary-btn {
     background: var(--accent);

@@ -1,16 +1,23 @@
-﻿@using System.Collections.Generic
+﻿@using System
+@using System.Collections.Generic
 @using System.Linq
 @model Web_Api_Amazon.Models.ProductDetailsViewModel
 @{
     var product = Model.Product;
     var images = Model.Images ?? new List<ProductImage>();
-    var uniqueImages = images
+    var orderedImages = images
         .Where(i => !string.IsNullOrWhiteSpace(i.ImageUrl))
-        .GroupBy(i => i.ImageUrl)
+        .OrderBy(i => i.SortOrder)
+        .ToList();
+
+    var mainImage = orderedImages.FirstOrDefault(i => i.IsPrimary) ?? orderedImages.FirstOrDefault();
+
+    var secondaryImages = orderedImages
+        .Where(i => mainImage == null || !string.Equals(i.ImageUrl, mainImage.ImageUrl, StringComparison.OrdinalIgnoreCase))
+        .GroupBy(i => i.ImageUrl, StringComparer.OrdinalIgnoreCase)
         .Select(g => g.First())
         .Take(4)
         .ToList();
-    var mainImage = uniqueImages.FirstOrDefault(i => i.IsPrimary) ?? uniqueImages.FirstOrDefault();
     var breadcrumbs = new List<Category>();
     var category = product?.Category;
     while (category != null)
@@ -45,13 +52,12 @@
                 <button class="ghost-action" type="button">View in 3D</button>
             </div>
 
-            @if (uniqueImages.Any())
+            @if (secondaryImages.Any())
             {
                 <div class="thumbnail-row">
-                    @foreach (var image in uniqueImages)
+                    @foreach (var image in secondaryImages)
                     {
-                        var isActive = image == mainImage ? "is-active" : string.Empty;
-                        <button class="thumbnail @isActive" type="button" data-image="@image.ImageUrl">
+                        <button class="thumbnail" type="button" data-image="@image.ImageUrl">
                             <img src="@image.ImageUrl" alt="@product?.Name" loading="lazy" />
                         </button>
                     }
@@ -245,7 +251,7 @@
         <div>
             <h3>Don't miss the best deals</h3>
             <p>Registered users get access to exclusive offers, order history, and faster checkout.</p>
-            <button class="primary-btn" type="button">Sign up free</button>
+            <a class="primary-btn" asp-controller="Account" asp-action="SelectAccountType">Sign up free</a>
         </div>
         <div class="newsletter-graphic" aria-hidden="true">
             <img src="~/images/products/ui/ProdDetailsSignIn.png" alt="" />
