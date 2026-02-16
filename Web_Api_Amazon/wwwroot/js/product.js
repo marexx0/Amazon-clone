@@ -69,4 +69,58 @@
             }
         });
     });
+
+    const addToCartTrigger = document.getElementById('add-to-cart-trigger');
+    const cartModal = document.getElementById('cart-modal');
+    const closeCartModalElements = document.querySelectorAll('[data-close-cart-modal]');
+
+    const selectedColorTarget = document.getElementById('modal-selected-color');
+    const selectedSizeTarget = document.getElementById('modal-selected-size');
+    const selectedQtyTarget = document.getElementById('modal-selected-qty');
+
+    const openCartModal = () => {
+        if (!cartModal) return;
+
+        const selectedColor = document.querySelector('.color-option.is-selected')?.getAttribute('data-color');
+        const selectedSize = document.querySelector('.size-option.is-selected')?.textContent?.trim();
+        const qty = qtyInput?.value || '1';
+
+        if (selectedColorTarget && selectedColor) {
+            selectedColorTarget.textContent = selectedColor;
+        }
+
+        if (selectedSizeTarget && selectedSize) {
+            selectedSizeTarget.textContent = selectedSize;
+        }
+
+        if (selectedQtyTarget) {
+            selectedQtyTarget.textContent = qty;
+        }
+
+        cartModal.hidden = false;
+        cartModal.classList.add('is-open');
+        cartModal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    };
+
+    const closeCartModal = () => {
+        if (!cartModal) return;
+        cartModal.classList.remove('is-open');
+        cartModal.setAttribute('aria-hidden', 'true');
+        cartModal.hidden = true;
+        document.body.style.overflow = '';
+    };
+
+    addToCartTrigger?.addEventListener('click', openCartModal);
+
+    closeCartModalElements.forEach((element) => {
+        element.addEventListener('click', closeCartModal);
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && cartModal?.classList.contains('is-open')) {
+            closeCartModal();
+        }
+    });
+
 })();

@@ -115,18 +115,82 @@
                 </div>
             }
 
-            <div class="option-group">
-                <div class="quantity-control">
-                    <button class="qty-btn" type="button" data-qty="decrease">−</button>
-                    <input type="number" value="1" min="1" aria-label="Quantity" />
-                    <button class="qty-btn" type="button" data-qty="increase">+</button>
-                </div>
-            </div>
+            <form asp-controller="Cart" asp-action="Add" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="productId" value="@product?.Id" />
+                <input type="hidden" name="returnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
 
-            <div class="actions">
-                <button class="primary-btn" type="button">Add to cart</button>
-                <button class="secondary-btn" type="button">Buy now</button>
-            </div>
+                <div class="option-group">
+                    <div class="quantity-control">
+                        <button class="qty-btn" type="button" data-qty="decrease">−</button>
+                        <input type="number" name="quantity" value="1" min="1" aria-label="Quantity" />
+                        <button class="qty-btn" type="button" data-qty="increase">+</button>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="primary-btn" type="button" id="add-to-cart-trigger">Add to cart</button>
+                    <button class="secondary-btn" type="button">Buy now</button>
+                    
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="cart-modal" id="cart-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="cart-modal-title" hidden>
+        <div class="cart-modal-backdrop" data-close-cart-modal></div>
+        <div class="cart-modal-content">
+            <button class="cart-modal-close" type="button" aria-label="Close" data-close-cart-modal>×</button>
+
+            <section class="cart-summary">
+                <h2 id="cart-modal-title">Added to cart</h2>
+                <div class="cart-summary-main">
+                    @if (mainImage != null)
+                    {
+                        <img src="@mainImage.ImageUrl" alt="@product?.Name" class="cart-summary-image" />
+                    }
+                    <div class="cart-summary-info">
+                        <h3>@product?.Name</h3>
+                        <p><span>Size:</span> <strong id="modal-selected-size">@Model.AvailableSizes.FirstOrDefault()</strong></p>
+                        <p><span>Color:</span> <strong id="modal-selected-color">@Model.AvailableColors.FirstOrDefault()</strong></p>
+                        <p><span>Quantity:</span> <strong id="modal-selected-qty">1</strong></p>
+                    </div>
+                </div>
+                <div class="cart-summary-price-row">
+                    <span>Item:</span>
+                    <strong>$@product?.Price.ToString("0.00")</strong>
+                </div>
+                <div class="cart-summary-price-row">
+                    <span>Shipping:</span>
+                    <strong>Free</strong>
+                </div>
+                <button class="summary-lime-btn" type="button">See in cart</button>
+                <button class="summary-dark-btn" type="button">Checkout 1 item</button>
+            </section>
+
+            <section class="cart-recommendations">
+                <div class="cart-recommendations-head">
+                    <h3>Customers also viewed</h3>
+                    <a href="#">See all</a>
+                </div>
+                <div class="cart-recommendations-row">
+                    @for (var i = 0; i < Math.Min(Model.RelatedProducts.Count, 3); i++)
+                    {
+                        var related = Model.RelatedProducts[i];
+                        var relatedImage = related.Images?.OrderBy(img => img.SortOrder).FirstOrDefault()?.ImageUrl ?? related.ImageUrl;
+                        <article class="cart-mini-card">
+                            @if (!string.IsNullOrWhiteSpace(relatedImage))
+                            {
+                                <img src="@relatedImage" alt="@related.Name" />
+                            }
+                            <div class="cart-mini-card-body">
+                                <p class="mini-card-price">$@related.Price.ToString("0.00")</p>
+                                <p class="mini-card-name">@related.Name</p>
+                                <button class="summary-lime-btn" type="button">Add to cart</button>
+                            </div>
+                        </article>
+                    }
+                </div>
+            </section>
         </div>
     </div>
 
@@ -283,7 +347,7 @@
 </div>
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/product.css" />
+    <link rel="stylesheet" href="~/css/product.css" asp-append-version="true" />
 }
 
 @section Scripts {
