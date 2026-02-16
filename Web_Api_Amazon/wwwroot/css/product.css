@@ -1,11 +1,24 @@
 ﻿:root {
-    --text-dark: #111827;
-    --text-muted: #6b7280;
-    --card-bg: #ffffff;
-    --soft-bg: #f5f6fa;
-    --accent: #c6f400;
-    --primary: #0f1a3a;
-    --border: #e5e7eb;
+    /* Mapped from your Colors palette */
+    --gray-200: #d5d5d5;
+    --gray-500: #757575;
+    --gray-800: #545454;
+    --gray-950: #292929;
+    --lime-400: #b5ed24;
+    --blue-50: #edf4fd;
+    --blue-500: #1D64CC;
+    --indigo-950: #15133a;
+    --base-white: #fcfcfc;
+    --purple-950: #290651;
+    /* Semantic mapping for the page */
+    --text-dark: var(--gray-950);
+    --text-muted: var(--gray-500);
+    --card-bg: var(--base-white);
+    --soft-bg: var(--blue-50);
+    --accent: var(--lime-400);
+    --primary: var(--indigo-950);
+    --border: var(--gray-200);
+    --link: var(--blue-500);
 }
 
 /* ================= PAGE ================= */
@@ -45,7 +58,6 @@
 }
 
 .main-image-card {
-    background: var(--soft-bg);
     border-radius: 12px;
     padding: 2rem;
     width: 100%;
@@ -53,7 +65,7 @@
     justify-content: center;
     align-items: center;
     min-height: 420px;
-    position: relative; /* Added for absolute positioning of the 3D button */
+    position: relative;
 }
 
     .main-image-card img {
@@ -64,8 +76,8 @@
 
 /* View in 3D button overlaid on the image */
 .ghost-action {
-    background: #1b1b5a;
-    color: white;
+    background: var(--purple-950);
+    color: var(--card-bg);
     padding: 0.55rem 1.4rem;
     border-radius: 6px;
     font-weight: 600;
@@ -89,7 +101,6 @@
 
 .thumbnail {
     border: 1px solid var(--border);
-    background: var(--soft-bg);
     border-radius: 10px;
     padding: 0.4rem;
     cursor: pointer;
@@ -121,7 +132,7 @@
 
 .shipping-note {
     font-size: 0.9rem;
-    color: var(--text-muted);
+    color: var(--gray-800);
 }
 
 .icon-button {
@@ -206,7 +217,7 @@
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    border: 1px solid #d1d5db;
+    border: 1px solid var(--border);
     display: block;
 }
 
@@ -229,7 +240,7 @@
 
 .size-option {
     border: 1px solid var(--border);
-    background: #fff;
+    background: var(--card-bg);
     border-radius: 8px;
     padding: 0.5rem 1rem;
     font-weight: 600;
@@ -243,14 +254,14 @@
     .size-option.is-selected {
         background: var(--accent);
         border-color: var(--accent);
-        color: #111827;
+        color: var(--text-dark);
     }
 
 .size-guide {
     display: inline-block;
     margin-top: -4px;
     font-size: 14px;
-    color: #2563eb;
+    color: var(--link);
     text-decoration: none;
     font-weight: 600;
 }
@@ -268,7 +279,7 @@
     border-radius: 8px;
     overflow: hidden;
     width: fit-content;
-    background: #fff;
+    background: var(--card-bg);
 }
 
     .quantity-control input {
@@ -279,6 +290,7 @@
         font-size: 1rem;
         outline: none;
         background: transparent;
+        color: var(--text-dark);
     }
 
         .quantity-control input::-webkit-outer-spin-button,
@@ -317,8 +329,8 @@
 }
 
 .primary-btn {
-    background: #1b1b5a;
-    color: white;
+    background: var(--purple-950);
+    color: var(--card-bg);
     text-decoration: none;
 }
 
@@ -333,7 +345,6 @@
 }
 
 /* ================= TABS & PRODUCT DETAILS ================= */
-
 .tabs {
     background: transparent;
     padding: 2rem 0;
@@ -342,9 +353,9 @@
 .tab-menu {
     display: flex;
     gap: 2.5rem;
-    border-bottom: none; /* Removed border to match the clean design */
+    border-bottom: none;
     padding-bottom: 0;
-    margin-bottom: 2rem; /* Creates the white gap below the tabs */
+    margin-bottom: 2rem;
 }
 
 .tab-link {
@@ -355,27 +366,29 @@
     cursor: pointer;
     position: relative;
     font-size: 1.05rem;
-    padding-bottom: 0.8rem; /* Distance from text to the lime underline */
+    padding-bottom: 0.8rem;
 }
 
+    /* Active text should be dark, not lime */
     .tab-link.is-active {
         color: var(--text-dark);
     }
 
+        /* The underline should be lime */
         .tab-link.is-active::after {
             content: "";
             position: absolute;
-            bottom: 0; /* Anchors the underline right at the bottom of the padding */
+            bottom: 0;
             left: 0;
             width: 100%;
             height: 3px;
-            background: var(--accent);
+            background-color: var(--accent); /* Ensure it uses the lime accent */
         }
 
 .tab-panel {
     display: none;
-    padding: 3rem 2.5rem; /* Generous padding inside the background */
-    background-color: #EEF4FD; /* Light blue background */
+    padding: 3rem 2.5rem;
+    background-color: var(--soft-bg);
     border-radius: 8px;
 }
 
@@ -387,14 +400,14 @@
 
 .details-grid-two-col {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Exactly 2 columns */
-    column-gap: 5rem; /* Large gap between the left and right columns */
-    row-gap: 1.25rem; /* Vertical spacing between rows */
+    grid-template-columns: 1fr 1fr;
+    column-gap: 5rem;
+    row-gap: 1.25rem;
 }
 
 .detail-item {
     display: grid;
-    grid-template-columns: 160px 1fr; /* 160px for the label, the rest for the value */
+    grid-template-columns: 160px 1fr;
     gap: 1rem;
     align-items: start;
 }
@@ -413,7 +426,7 @@
 /* Make it responsive so it stacks on mobile phones */
 @media (max-width: 900px) {
     .details-grid-two-col {
-        grid-template-columns: 1fr; /* Stacks into 1 column */
+        grid-template-columns: 1fr;
         column-gap: 0;
     }
 
@@ -432,7 +445,7 @@
 }
 
 .product-card {
-    background: #fff;
+    background: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: 8px;
     padding: 1rem;
@@ -460,6 +473,7 @@
 .card-price {
     font-weight: 700;
     margin-bottom: 0.2rem;
+    color: var(--text-dark);
 }
 
 .delivery {
@@ -482,7 +496,7 @@
 /* ================= FEATURE ROW ================= */
 
 .feature-row {
-    background-color: #EEF4FD;
+    background-color: var(--soft-bg);
     padding: 2.5rem 1.5rem;
     border-radius: 8px;
     display: grid;
@@ -512,6 +526,7 @@
 .feature h4 {
     margin: 0 0 0.25rem 0;
     font-size: 1rem;
+    color: var(--text-dark);
 }
 
 .feature p {
@@ -524,7 +539,7 @@
 
 .newsletter {
     background: var(--primary);
-    color: white;
+    color: var(--card-bg);
     padding: 3rem 2rem;
     display: flex;
     justify-content: space-between;
