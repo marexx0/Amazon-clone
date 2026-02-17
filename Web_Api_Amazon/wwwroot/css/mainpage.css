@@ -1,0 +1,147 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "DM Sans", sans-serif;
+    background: #F5F5F5;
+}
+
+.page-wrapper {
+    width: 100%;
+    max-width: 1920px;
+    margin: 0 auto;
+}
+
+
+/* HEADER */
+
+.main-header {
+    height: 68px;
+    width: 100%;
+    max-width: 1920px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 106px;
+    background: #0D1B34;
+    color: white;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 700;
+    color: #B5ED24;
+}
+
+.location {
+    font-size: 14px;
+    opacity: 0.8;
+}
+
+.header-center {
+    display: flex;
+    align-items: center;
+    width: 600px;
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.category-select {
+    border: none;
+    padding: 10px;
+    background: #f3f3f3;
+}
+
+.header-center input {
+    border: none;
+    flex: 1;
+    padding: 10px;
+}
+
+.search-btn {
+    border: none;
+    background: #B5ED24;
+    padding: 10px 16px;
+    cursor: pointer;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+
+/* HERO */
+
+.hero {
+    width: 100%;
+    max-width: 1705px;
+    height: 549px;
+    margin: 0 auto 40px auto;
+    padding: 10px;
+    background: linear-gradient( 180deg, #E5FF89 0%, #CFFA4E 49.53%, #A8EB13 100% );
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+}
+
+
+
+    .hero h1 {
+        font-size: 49px;
+        font-weight: 700;
+        color: #0D1B34;
+        
+    }
+
+
+
+/* CATEGORIES */
+
+.categories {
+    display: flex;
+    justify-content: space-between;
+    padding: 40px 106px;
+    font-weight: bold;
+    color: #0D1B34;
+    font-size: 39px;
+    
+}
+
+
+/* POPULAR */
+
+.popular {
+    padding: 0 106px 80px 106px;
+}
+
+    .popular h2 {
+        font-size: 28px;
+        margin-bottom: 30px;
+    }
+
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+}
+
+.product-card {
+    height: 260px;
+    background: white;
+    border-radius: 12px;
+}

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Web_Api_Amazon.Models;
-
+using DataAccess.Persistance;
 namespace Web_Api_Amazon.Controllers
 {
     public class HomeController : Controller
@@ -16,8 +16,10 @@ namespace Web_Api_Amazon.Controllers
 
         public IActionResult Index()
         {
+           
             return View();
         }
+
 
         public IActionResult Privacy()
         {

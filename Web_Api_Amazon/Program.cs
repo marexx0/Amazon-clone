@@ -21,7 +21,7 @@ builder.Services.AddDbContext<ShopDbContext>(options =>
 // Identity
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
-    options.SignIn.RequireConfirmedEmail = true;
+    options.SignIn.RequireConfirmedEmail = false;
 
     options.Password.RequireDigit = true;
     options.Password.RequireUppercase = true;
