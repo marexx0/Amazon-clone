@@ -118,6 +118,7 @@
             <form asp-controller="Cart" asp-action="Add" method="post">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="productId" value="@product?.Id" />
+                <input type="hidden" name="selectedOptionsJson" id="selected-options-json" value="{}" />
                 <input type="hidden" name="returnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
 
                 <div class="option-group">
@@ -129,7 +130,7 @@
                 </div>
 
                 <div class="actions">
-                    <button class="primary-btn" type="button" id="add-to-cart-trigger">Add to cart</button>
+                    <button class="primary-btn" type="submit" id="add-to-cart-trigger">Add to cart</button>
                     <button class="secondary-btn" type="button">Buy now</button>
                     
                 </div>

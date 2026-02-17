@@ -29,6 +29,7 @@
     });
 
     const qtyInput = document.querySelector('.quantity-control input');
+    const selectedOptionsInput = document.getElementById('selected-options-json');
     document.querySelectorAll('.qty-btn').forEach((btn) => {
         btn.addEventListener('click', () => {
             if (!qtyInput) return;
@@ -54,6 +55,9 @@
             if (selectedColorName && color) {
                 selectedColorName.textContent = color;
             }
+
+            updateSelectedOptionsJson();
+
         });
     });
 
@@ -67,16 +71,37 @@
             if (selectedSize) {
                 selectedSize.textContent = btn.textContent?.trim() ?? '';
             }
+
+            updateSelectedOptionsJson();
+
         });
     });
 
     const addToCartTrigger = document.getElementById('add-to-cart-trigger');
+    const addToCartForm = addToCartTrigger?.closest('form');
     const cartModal = document.getElementById('cart-modal');
     const closeCartModalElements = document.querySelectorAll('[data-close-cart-modal]');
 
     const selectedColorTarget = document.getElementById('modal-selected-color');
     const selectedSizeTarget = document.getElementById('modal-selected-size');
     const selectedQtyTarget = document.getElementById('modal-selected-qty');
+
+
+    const updateSelectedOptionsJson = () => {
+        if (!selectedOptionsInput) return;
+
+        const options = {};
+        document.querySelectorAll('.option-group').forEach((group) => {
+            const label = group.querySelector('.option-label')?.textContent?.trim();
+            const value = group.querySelector('.option-value')?.textContent?.trim();
+
+            if (label && value) {
+                options[label] = value;
+            }
+        });
+
+        selectedOptionsInput.value = JSON.stringify(options);
+    };
 
     const openCartModal = () => {
         if (!cartModal) return;
@@ -111,7 +136,33 @@
         document.body.style.overflow = '';
     };
 
-    addToCartTrigger?.addEventListener('click', openCartModal);
+    updateSelectedOptionsJson();
+
+    addToCartForm?.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        addToCartTrigger?.setAttribute('disabled', 'disabled');
+
+        try {
+            const response = await fetch(addToCartForm.action, {
+                method: 'POST',
+                body: new FormData(addToCartForm),
+                credentials: 'same-origin'
+            });
+
+            if (!response.ok) {
+                throw new Error(`Add to cart failed with status ${response.status}`);
+            }
+
+            openCartModal();
+        }
+        catch {
+            addToCartForm.submit();
+        }
+        finally {
+            addToCartTrigger?.removeAttribute('disabled');
+        }
+    });
 
     closeCartModalElements.forEach((element) => {
         element.addEventListener('click', closeCartModal);

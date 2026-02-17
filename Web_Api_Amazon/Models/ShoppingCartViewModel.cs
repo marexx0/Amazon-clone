@@ -20,8 +20,8 @@ public class CartProductViewModel
     public int ProductId { get; set; }
     public string Name { get; set; } = string.Empty;
     public string? ImageUrl { get; set; }
-    public string Color { get; set; } = "—";
-    public string Size { get; set; } = "—";
+    public string VariantKey { get; set; } = "Default";
+    public List<CartAttributeViewModel> Attributes { get; set; } = new();
     public int Quantity { get; set; }
     public decimal UnitPrice { get; set; }
     public bool InStock { get; set; }
@@ -37,4 +37,9 @@ public class ProductCardViewModel
     public decimal Price { get; set; }
     public bool InStock { get; set; }
     public double Rating { get; set; }
+}
+public class CartAttributeViewModel
+{
+    public string Name { get; set; } = string.Empty;
+    public string Value { get; set; } = string.Empty;
 }

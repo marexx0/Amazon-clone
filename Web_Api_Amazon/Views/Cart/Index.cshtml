@@ -11,13 +11,7 @@
     <div class="cart-main">
         <h1 class="cart-title">Shopping cart</h1>
 
-        @if (!Model.IsSignedIn)
-        {
-            <div class="cart-note">
-                Please <a asp-controller="Account" asp-action="Login">sign in</a> to view your cart data.
-            </div>
-        }
-        else if (!Model.CartItems.Any())
+        @if (!Model.CartItems.Any())
         {
             <div class="cart-note">Your cart is empty.</div>
         }
@@ -43,9 +37,35 @@
                             @(item.InStock ? "In stock" : "Out of stock")
                         </p>
 
-                        <div class="cart-item__meta">Size: <span>@item.Size</span></div>
-                        <div class="cart-item__meta">Color: <span>@item.Color</span></div>
-                        <div class="cart-item__meta">Quantity: <span>@item.Quantity</span></div>
+                        @if (item.Attributes.Any())
+                        {
+                            @foreach (var attr in item.Attributes)
+                            {
+                                <div class="cart-item__meta">@attr.Name: <span>@attr.Value</span></div>
+                            }
+                        }
+
+                        <div class="cart-item__footer">
+                            <div class="cart-qty-control" aria-label="Quantity selector">
+                                <button type="button" class="cart-qty-btn">−</button>
+                                <span class="cart-qty-value">@item.Quantity</span>
+                                <button type="button" class="cart-qty-btn">+</button>
+                            </div>
+
+                            <div class="cart-item__actions">
+                                <form asp-controller="Cart" asp-action="Delete" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                    <input type="hidden" name="variantKey" value="@item.VariantKey" />
+                                    <button class="action-link action-link--danger" type="submit">Delete</button>
+                                </form>
+
+                                <span class="action-divider" aria-hidden="true">|</span>
+                                <button class="action-link" type="button">Save for later</button>
+                                <span class="action-divider" aria-hidden="true">|</span>
+                                <button class="action-buy" type="button">Buy it now</button>
+                            </div>
+                        </div>
                     </div>
                 </article>
             }
@@ -116,7 +136,7 @@
             @foreach (var item in Model.CartItems)
             {
                 <div class="summary-row">
-                    <span>@item.Name</span>
+                    <span>@item.Name@(item.Attributes.Any() ? $" ({string.Join(", ", item.Attributes.Select(a => $"{a.Name}: {a.Value}"))})" : string.Empty)</span>
                     <span>@item.TotalPrice.ToString("C")</span>
                 </div>
             }
