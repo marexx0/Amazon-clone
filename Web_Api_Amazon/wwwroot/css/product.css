@@ -420,6 +420,24 @@
         color: var(--gray-950);
         font-size: 2rem;
     }
+.cart-modal-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.cart-modal-title-icon {
+    display: inline-flex;
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+}
+
+    .cart-modal-title-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
 
 .cart-summary-main {
     display: flex;
@@ -472,6 +490,12 @@
 .summary-lime-btn {
     background: var(--lime-cta);
     color: var(--gray-950);
+}
+a.summary-lime-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
 }
 
 .summary-dark-btn {
