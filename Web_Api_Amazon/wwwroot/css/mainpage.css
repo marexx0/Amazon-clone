@@ -6,7 +6,7 @@
 
 body {
     font-family: "DM Sans", sans-serif;
-    background: #F5F5F5;
+    background: #FCFCFC;
 }
 
 .page-wrapper {
@@ -53,9 +53,31 @@ body {
     align-items: center;
     width: 600px;
     background: white;
-    border-radius: 6px;
-    overflow: hidden;
+    border-radius: 12px;
+    overflow: visible;
+    height: 40px;
 }
+
+.cat-btn {
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+.search-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: #FCFCFC;
+    padding: 0 18px;
+    height: 40px;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    cursor: pointer;
+    transition: background .2s ease;
+}
+
+
 
 .category-select {
     border: none;
@@ -66,15 +88,13 @@ body {
 .header-center input {
     border: none;
     flex: 1;
-    padding: 10px;
+    padding: 0 14px;
+    height: 40px;
+    font-size: 14px;
+    outline: none;
 }
 
-.search-btn {
-    border: none;
-    background: #B5ED24;
-    padding: 10px 16px;
-    cursor: pointer;
-}
+
 
 .header-right {
     display: flex;
@@ -105,6 +125,7 @@ body {
         font-size: 49px;
         font-weight: 700;
         color: #0D1B34;
+        text-align:center;
         
     }
 
@@ -118,15 +139,60 @@ body {
     padding: 40px 106px;
     font-weight: bold;
     color: #0D1B34;
-    font-size: 39px;
+    font-size: 32px;
     
 }
+/* Батьківський блок категорії */
+.category-itemI {
+    position: relative; /* важливо для absolute меню */
+    display: inline-block;
+    cursor: pointer;
+}
 
+/* Підкатегорії */
+.cat-dropdownI {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: #FCFCFC;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 8px 0;
+    z-index: 100;
+    min-width: 180px;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    opacity: 0;
+    transform: translateY(-5px);
+}
 
+    .cat-dropdownI.open {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Стилі посилань */
+    .cat-dropdownI a {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        color: #333;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: normal;
+        transition: background 0.2s;
+    }
+
+        .cat-dropdownI a:hover {
+            background: #e0e0e0;
+        }
 /* POPULAR */
 
 .popular {
     padding: 0 106px 80px 106px;
+    margin-top: 180px;
 }
 
     .popular h2 {
@@ -145,3 +211,18 @@ body {
     background: white;
     border-radius: 12px;
 }
+.collection 
+{
+    padding: 0 106px 80px 106px;
+    margin-top: 90px;
+}
+.collection h2 {
+    font-size: 28px;
+    margin-bottom: 30px;
+}
+    .popular h2,
+    .collection h2 {
+        font-size: 28px;
+        margin-bottom: 30px;
+        color: #0D1B34; /* темний синій, добре контрастує */
+    }
