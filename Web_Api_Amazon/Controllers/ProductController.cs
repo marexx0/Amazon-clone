@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using Amazon_clone.DataAccess.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ namespace Web_Api_Amazon.Controllers
 {
     public class ProductController : Controller
     {
+        private const string FavoritesSessionKey = "FavoriteProductIds";
         private readonly ShopDbContext _context;
         private readonly IWebHostEnvironment _environment;
 
@@ -96,10 +98,70 @@ namespace Web_Api_Amazon.Controllers
                 TopPicks = topPicks,
                 AvailableColors = availableColors,
                 AvailableSizes = availableSizes,
-                Brand = brand
+                IsFavorite = GetFavoriteProductIds().Contains(product.Id)
             };
 
             return View(viewModel);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ToggleFavorite(int productId)
+        {
+            var productExists = _context.Products.Any(p => p.Id == productId);
+            if (!productExists)
+            {
+                return NotFound();
+            }
+
+            var favoriteIds = GetFavoriteProductIds();
+            var isFavorite = favoriteIds.Contains(productId);
+
+            if (isFavorite)
+            {
+                favoriteIds.Remove(productId);
+            }
+            else
+            {
+                favoriteIds.Add(productId);
+            }
+
+            SaveFavoriteProductIds(favoriteIds);
+
+            return Json(new
+            {
+                isFavorite = !isFavorite,
+                message = isFavorite ? "Removed from favorites." : "Added to favorites."
+            });
+        }
+
+        private List<int> GetFavoriteProductIds()
+        {
+            var rawValue = HttpContext.Session.GetString(FavoritesSessionKey);
+            if (string.IsNullOrWhiteSpace(rawValue))
+            {
+                return new List<int>();
+            }
+
+            try
+            {
+                var productIds = JsonSerializer.Deserialize<List<int>>(rawValue) ?? new List<int>();
+                return productIds.Distinct().ToList();
+            }
+            catch
+            {
+                return new List<int>();
+            }
+        }
+
+        private void SaveFavoriteProductIds(List<int> productIds)
+        {
+            if (!productIds.Any())
+            {
+                HttpContext.Session.Remove(FavoritesSessionKey);
+                return;
+            }
+
+            HttpContext.Session.SetString(FavoritesSessionKey, JsonSerializer.Serialize(productIds.Distinct().ToList()));
         }
 
         private List<ProductImage> EnrichImagesFromFiles(List<ProductImage> images, string primaryImageUrl, int productId)

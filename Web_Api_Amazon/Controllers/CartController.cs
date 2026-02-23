@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using System.Text.Json;
 using Amazon_clone.DataAccess.Data;
+using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Web_Api_Amazon.Models;
@@ -10,11 +11,14 @@ namespace Web_Api_Amazon.Controllers;
 public class CartController : Controller
 {
     private const string LocalCartSessionKey = "LocalCart";
+    private const string LocalSavedForLaterSessionKey = "LocalSavedForLater";
     private readonly ShopDbContext _context;
+    private readonly ISavedForLaterService _savedForLaterService;
 
-    public CartController(ShopDbContext context)
+    public CartController(ShopDbContext context, ISavedForLaterService savedForLaterService)
     {
         _context = context;
+        _savedForLaterService = savedForLaterService;
     }
 
     public async Task<IActionResult> Index()
@@ -24,6 +28,7 @@ public class CartController : Controller
         if (!string.IsNullOrWhiteSpace(userId))
         {
             await MergeLocalCartIntoUserCartAsync(userId);
+            await MergeLocalSavedIntoUserSavedAsync(userId);
         }
 
         var cartItems = new List<CartProductViewModel>();
@@ -73,12 +78,50 @@ public class CartController : Controller
             .AsNoTracking()
             .ToListAsync();
 
-        var savedForLater = products
-            .Where(product => !usedIds.Contains(product.Id))
-            .OrderBy(product => product.Name)
-            .Take(3)
-            .Select(BuildProductCard)
-            .ToList();
+        List<ProductCardViewModel> savedForLater;
+        if (!string.IsNullOrWhiteSpace(userId))
+        {
+            var savedDtos = await _savedForLaterService.GetSavedItemsAsync(userId);
+            savedForLater = savedDtos.Select(dto => new ProductCardViewModel
+            {
+                ProductId = dto.ProductId,
+                Name = dto.Name,
+                Description = dto.Description,
+                ImageUrl = dto.ImageUrl,
+                Price = dto.Price,
+                InStock = dto.InStock,
+                Rating = dto.Rating,
+                VariantKey = dto.VariantKey
+            }).ToList();
+        }
+        else
+        {
+            var localSaved = GetLocalSavedForLater();
+            if (localSaved.Count > 0)
+            {
+                var savedIds = localSaved.Select(item => item.ProductId).Distinct().ToList();
+                var savedProducts = products.Where(p => savedIds.Contains(p.Id)).ToDictionary(p => p.Id);
+
+                savedForLater = localSaved
+                    .Where(item => savedProducts.ContainsKey(item.ProductId))
+                    .Select(item =>
+                    {
+                        var card = BuildProductCard(savedProducts[item.ProductId]);
+                        card.VariantKey = item.VariantKey;
+                        return card;
+                    })
+                    .ToList();
+            }
+            else
+            {
+                savedForLater = products
+                    .Where(product => !usedIds.Contains(product.Id))
+                    .OrderBy(product => product.Name)
+                    .Take(3)
+                    .Select(BuildProductCard)
+                    .ToList();
+            }
+        }
 
         var recommendations = products
             .Where(product => !usedIds.Contains(product.Id))
@@ -96,6 +139,17 @@ public class CartController : Controller
         };
 
         return View(viewModel);
+    }
+
+    [HttpGet]
+    public IActionResult Add(string? returnUrl = null)
+    {
+        if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
+        {
+            return LocalRedirect(returnUrl);
+        }
+
+        return RedirectToAction(nameof(Index));
     }
 
     [HttpPost]
@@ -202,6 +256,117 @@ public class CartController : Controller
         return RedirectToAction(nameof(Index));
     }
 
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> SaveForLater(int productId, string? variantKey = null)
+    {
+        var normalizedVariantKey = string.IsNullOrWhiteSpace(variantKey) ? "Default" : variantKey.Trim();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            var localCart = GetLocalCart();
+            var localItem = localCart.FirstOrDefault(item =>
+                item.ProductId == productId &&
+                item.VariantKey == normalizedVariantKey);
+
+            if (localItem is null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            localCart.Remove(localItem);
+            SaveLocalCart(localCart);
+
+            var localSaved = GetLocalSavedForLater();
+            var existing = localSaved.FirstOrDefault(item =>
+                item.ProductId == localItem.ProductId &&
+                item.VariantKey == localItem.VariantKey);
+
+            if (existing is null)
+            {
+                localSaved.Add(localItem);
+            }
+            else
+            {
+                existing.Quantity += localItem.Quantity;
+                existing.SelectedOptionsJson = localItem.SelectedOptionsJson;
+            }
+
+            SaveLocalSavedForLater(localSaved);
+            return RedirectToAction(nameof(Index));
+        }
+
+        var cartItem = await _context.CartItems.FirstOrDefaultAsync(ci =>
+            ci.UserId == userId &&
+            ci.ProductId == productId &&
+            (ci.VariantKey ?? "Default") == normalizedVariantKey);
+
+        if (cartItem is null)
+        {
+            return RedirectToAction(nameof(Index));
+        }
+
+        await _savedForLaterService.SaveAsync(userId, cartItem.ProductId, cartItem.Quantity, cartItem.VariantKey, cartItem.SelectedOptionsJson);
+
+        _context.CartItems.Remove(cartItem);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> MoveSavedToCart(int productId, string? variantKey = null)
+    {
+        var normalizedVariantKey = string.IsNullOrWhiteSpace(variantKey) ? "Default" : variantKey.Trim();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            var localSaved = GetLocalSavedForLater();
+            var savedItem = localSaved.FirstOrDefault(item =>
+                item.ProductId == productId &&
+                item.VariantKey == normalizedVariantKey);
+
+            if (savedItem is not null)
+            {
+                localSaved.Remove(savedItem);
+                SaveLocalSavedForLater(localSaved);
+                AddToLocalCart(savedItem.ProductId, savedItem.Quantity, savedItem.VariantKey, savedItem.SelectedOptionsJson);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        await _savedForLaterService.MoveToCartAsync(userId, productId, variantKey);
+        return RedirectToAction(nameof(Index));
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteSaved(int productId, string? variantKey = null)
+    {
+        var normalizedVariantKey = string.IsNullOrWhiteSpace(variantKey) ? "Default" : variantKey.Trim();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (string.IsNullOrWhiteSpace(userId))
+        {
+            var localSaved = GetLocalSavedForLater();
+            var removed = localSaved.RemoveAll(item =>
+                item.ProductId == productId &&
+                item.VariantKey == normalizedVariantKey);
+
+            if (removed > 0)
+            {
+                SaveLocalSavedForLater(localSaved);
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        await _savedForLaterService.RemoveAsync(userId, productId, variantKey);
+        return RedirectToAction(nameof(Index));
+    }
+
     private List<LocalCartLine> GetLocalCart()
     {
         var raw = HttpContext.Session.GetString(LocalCartSessionKey);
@@ -249,6 +414,38 @@ public class CartController : Controller
         line.VariantKey = BuildVariantKey(options);
         line.SelectedOptionsJson = JsonSerializer.Serialize(options);
         return line;
+    }
+
+
+    private List<LocalCartLine> GetLocalSavedForLater()
+    {
+        var raw = HttpContext.Session.GetString(LocalSavedForLaterSessionKey);
+
+        if (string.IsNullOrWhiteSpace(raw))
+        {
+            return new List<LocalCartLine>();
+        }
+
+        try
+        {
+            var lines = JsonSerializer.Deserialize<List<LocalCartLine>>(raw) ?? new List<LocalCartLine>();
+            return lines.Select(NormalizeLocalLine).ToList();
+        }
+        catch
+        {
+            return new List<LocalCartLine>();
+        }
+    }
+
+    private void SaveLocalSavedForLater(List<LocalCartLine> localSaved)
+    {
+        if (localSaved.Count == 0)
+        {
+            HttpContext.Session.Remove(LocalSavedForLaterSessionKey);
+            return;
+        }
+
+        HttpContext.Session.SetString(LocalSavedForLaterSessionKey, JsonSerializer.Serialize(localSaved));
     }
 
     private void SaveLocalCart(List<LocalCartLine> localCart)
@@ -329,6 +526,23 @@ public class CartController : Controller
 
         await _context.SaveChangesAsync();
         HttpContext.Session.Remove(LocalCartSessionKey);
+    }
+
+
+    private async Task MergeLocalSavedIntoUserSavedAsync(string userId)
+    {
+        var localSaved = GetLocalSavedForLater();
+        if (localSaved.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var item in localSaved)
+        {
+            await _savedForLaterService.SaveAsync(userId, item.ProductId, item.Quantity, item.VariantKey, item.SelectedOptionsJson);
+        }
+
+        HttpContext.Session.Remove(LocalSavedForLaterSessionKey);
     }
 
     private static Dictionary<string, string> ParseOptions(string? selectedOptionsJson)

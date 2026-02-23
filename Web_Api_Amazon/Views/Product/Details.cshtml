@@ -68,10 +68,16 @@
         <div class="product-details">
             <div class="product-meta">
                 <span class="shipping-note">Free Shipping and Free Returns!</span>
-                <button class="icon-button" type="button" aria-label="Save product">
-                    <span aria-hidden="true">♡</span>
+                <button class="icon-button @(Model.IsFavorite ? "is-favorite" : string.Empty)"
+                        id="favorite-toggle"
+                        data-product-id="@product?.Id"
+                        data-is-favorite="@Model.IsFavorite.ToString().ToLowerInvariant()"
+                        type="button"
+                        aria-label="@(Model.IsFavorite ? "Remove from favorites" : "Add to favorites")">
+                    <span aria-hidden="true">@(Model.IsFavorite ? "♥" : "♡")</span>
                 </button>
             </div>
+            <p class="favorite-feedback" id="favorite-feedback" role="status" aria-live="polite"></p>
             <h1>@product?.Name</h1>
             <p class="reviews-status">No reviews yet.</p>
             <p class="price">$@product?.Price.ToString("0.00")</p>
@@ -212,13 +218,6 @@
             </div>
             <div class="tab-panel is-active" id="details">
                 <div class="details-grid details-grid-two-col">
-                    @if (!string.IsNullOrWhiteSpace(Model.Brand))
-                    {
-                        <div class="detail-item">
-                            <span class="detail-label">Brand:</span>
-                            <span class="detail-value">@Model.Brand</span>
-                        </div>
-                    }
                     @if (product?.Category != null)
                     {
                         <div class="detail-item">

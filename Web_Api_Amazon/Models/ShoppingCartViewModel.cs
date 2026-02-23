@@ -37,6 +37,7 @@ public class ProductCardViewModel
     public decimal Price { get; set; }
     public bool InStock { get; set; }
     public double Rating { get; set; }
+    public string VariantKey { get; set; } = "Default";
 }
 public class CartAttributeViewModel
 {

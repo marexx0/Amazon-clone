@@ -13,6 +13,8 @@ namespace Amazon_clone.DataAccess.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
+        public DbSet<FavoriteItem> FavoriteItems { get; set; }
+        public DbSet<SavedForLaterItem> SavedForLaterItems { get; set; }
 
         public ShopDbContext(DbContextOptions<ShopDbContext> options)
             : base(options)

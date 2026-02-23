@@ -69,7 +69,12 @@
                                 </form>
 
                                 <span class="action-divider" aria-hidden="true">|</span>
-                                <button class="action-link" type="button">Save for later</button>
+                                <form asp-controller="Cart" asp-action="SaveForLater" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                    <input type="hidden" name="variantKey" value="@item.VariantKey" />
+                                    <button class="action-link" type="submit">Save for later</button>
+                                </form>
                                 <span class="action-divider" aria-hidden="true">|</span>
                                 <button class="action-buy" type="button">Buy it now</button>
                             </div>
@@ -98,6 +103,23 @@
                                     <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">@item.Name</a>
                                 </h3>
                                 <p>@item.Description</p>
+                                <div class="cart-item__actions">
+                                    <form asp-controller="Cart" asp-action="MoveSavedToCart" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="productId" value="@item.ProductId" />
+                                        <input type="hidden" name="variantKey" value="@item.VariantKey" />
+                                        <button class="action-link" type="submit">Move to cart</button>
+                                    </form>
+
+                                    <span class="action-divider" aria-hidden="true">|</span>
+
+                                    <form asp-controller="Cart" asp-action="DeleteSaved" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="productId" value="@item.ProductId" />
+                                        <input type="hidden" name="variantKey" value="@item.VariantKey" />
+                                        <button class="action-link action-link--danger" type="submit">Delete</button>
+                                    </form>
+                                </div>
                             </div>
                         </article>
                     }

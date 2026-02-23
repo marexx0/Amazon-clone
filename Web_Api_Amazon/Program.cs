@@ -1,4 +1,5 @@
 ﻿using Amazon_clone.DataAccess.Data;
+using Core.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -30,7 +31,8 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
     options.IdleTimeout = TimeSpan.FromDays(7);
 });
-
+builder.Services.AddScoped<IFavoritesService, FavoritesService>();
+builder.Services.AddScoped<ISavedForLaterService, SavedForLaterService>();
 builder.Services.AddRazorPages();
 var app = builder.Build();
 
