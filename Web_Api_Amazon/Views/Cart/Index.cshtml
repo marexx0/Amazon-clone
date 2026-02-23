@@ -1,0 +1,193 @@
+﻿﻿@using System.Globalization
+@model Web_Api_Amazon.Models.ShoppingCartViewModel
+@{
+    ViewData["Title"] = "Shopping cart";
+}
+
+@functions {
+    private static string FormatUsd(decimal amount)
+    {
+        return $"${amount.ToString("0.00", CultureInfo.InvariantCulture)}";
+    }
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/cart.css" asp-append-version="true" />
+}
+
+<div class="cart-page">
+    <div class="cart-main">
+        <h1 class="cart-title">Shopping cart</h1>
+
+        @if (!Model.CartItems.Any())
+        {
+            <div class="cart-note">Your cart is empty.</div>
+        }
+        else
+        {
+            @foreach (var item in Model.CartItems)
+            {
+                <article class="cart-item">
+                    @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
+                    {
+                        <img src="@item.ImageUrl" alt="@item.Name" class="cart-item__image" />
+                    }
+
+                    <div class="cart-item__content">
+                        <div class="cart-item__head">
+                            <h2>
+                                <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">@item.Name</a>
+                            </h2>
+                            <strong>@FormatUsd(item.TotalPrice)</strong>
+                        </div>
+
+                        <p class="stock @(item.InStock ? "is-in" : "is-out")">
+                            @(item.InStock ? "In stock" : "Out of stock")
+                        </p>
+
+                        @if (item.Attributes.Any())
+                        {
+                            @foreach (var attr in item.Attributes)
+                            {
+                                <div class="cart-item__meta">@attr.Name: <span>@attr.Value</span></div>
+                            }
+                        }
+
+                        <div class="cart-item__footer">
+                            <div class="cart-qty-control" aria-label="Quantity selector">
+                                <button type="button" class="cart-qty-btn">−</button>
+                                <span class="cart-qty-value">@item.Quantity</span>
+                                <button type="button" class="cart-qty-btn">+</button>
+                            </div>
+
+                            <div class="cart-item__actions">
+                                <form asp-controller="Cart" asp-action="Delete" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                    <input type="hidden" name="variantKey" value="@item.VariantKey" />
+                                    <button class="action-link action-link--danger" type="submit">Delete</button>
+                                </form>
+
+                                <span class="action-divider" aria-hidden="true">|</span>
+                                <button class="action-link" type="button">Save for later</button>
+                                <span class="action-divider" aria-hidden="true">|</span>
+                                <button class="action-buy" type="button">Buy it now</button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            }
+        }
+
+        <section class="saved">
+            <div class="section-title">Saved for later (@Model.SavedForLater.Count)</div>
+
+            @if (Model.SavedForLater.Any())
+            {
+                <div class="card-grid">
+                    @foreach (var item in Model.SavedForLater)
+                    {
+                        <article class="product-card">
+                            @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
+                            {
+                                <img src="@item.ImageUrl" alt="@item.Name" />
+                            }
+                            <div class="product-card__body">
+                                <strong>@FormatUsd(item.Price)</strong>
+                                <h3>
+                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">@item.Name</a>
+                                </h3>
+                                <p>@item.Description</p>
+                            </div>
+                        </article>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="cart-note">No saved products available.</div>
+            }
+        </section>
+
+        <section class="saved">
+            <div class="section-title">Saved for later (@Model.SavedForLater.Count)</div>
+
+            @if (Model.SavedForLater.Any())
+            {
+                <div class="card-grid">
+                    @foreach (var item in Model.SavedForLater)
+                    {
+                        <article class="product-card">
+                            @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
+                            {
+                                <img src="@item.ImageUrl" alt="@item.Name" />
+                            }
+                            <div class="product-card__body">
+                                <strong>@FormatUsd(item.Price)</strong>
+                                <h3>
+                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">@item.Name</a>
+                                </h3>
+                                <p>@item.Description</p>
+                            </div>
+                        </article>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="cart-note">No saved products available.</div>
+            }
+        </section>
+
+        <section class="saved">
+            <div class="section-title">Customers also viewed</div>
+
+            @if (Model.Recommendations.Any())
+            {
+                <div class="card-grid card-grid--recommend">
+                    @foreach (var item in Model.Recommendations)
+                    {
+                        <article class="product-card">
+                            @if (!string.IsNullOrWhiteSpace(item.ImageUrl)) 
+                            {
+                                <img src="@item.ImageUrl" alt="@item.Name" />
+                            }
+                            <div class="product-card__body">
+                                <strong>@FormatUsd(item.Price)</strong>
+                                <h3>
+                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">@item.Name</a>
+                                </h3>
+                                <p>@item.Description</p>
+                            </div>
+                        </article>
+                    }
+                </div>
+            }
+        </section>
+    </div>
+
+    <aside class="summary">
+        <h3>Order summary</h3>
+
+        @if (Model.CartItems.Any())
+        {
+            @foreach (var item in Model.CartItems)
+            {
+                <div class="summary-row">
+                    <span>@item.Name@(item.Attributes.Any() ? $" ({string.Join(", ", item.Attributes.Select(a => $"{a.Name}: {a.Value}"))})" : string.Empty)</span>
+                    <span>@FormatUsd(item.TotalPrice)</span>
+                </div>
+            }
+
+            <hr />
+            <div class="summary-row"><span>Subtotal:</span><strong>@FormatUsd(Model.Subtotal)</strong></div>
+            <div class="summary-row"><span>Shipping:</span><span>@FormatUsd(Model.Shipping)</span></div>
+            <div class="summary-row total"><span>Total:</span><strong>@FormatUsd(Model.Total)</strong></div>
+            <button class="checkout" type="button">Proceed to checkout</button>
+        }
+        else
+        {
+            <div class="cart-note">No items in order summary.</div>
+        }
+    </aside>
+</div>
