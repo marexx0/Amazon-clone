@@ -1,6 +1,14 @@
-﻿@model Web_Api_Amazon.Models.ShoppingCartViewModel
+﻿﻿@using System.Globalization
+@model Web_Api_Amazon.Models.ShoppingCartViewModel
 @{
     ViewData["Title"] = "Shopping cart";
+}
+
+@functions {
+    private static string FormatUsd(decimal amount)
+    {
+        return $"${amount.ToString("0.00", CultureInfo.InvariantCulture)}";
+    }
 }
 
 @section Styles {
@@ -30,7 +38,7 @@
                             <h2>
                                 <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">@item.Name</a>
                             </h2>
-                            <strong>@item.TotalPrice.ToString("C")</strong>
+                            <strong>@FormatUsd(item.TotalPrice)</strong>
                         </div>
 
                         <p class="stock @(item.InStock ? "is-in" : "is-out")">
@@ -85,7 +93,37 @@
                                 <img src="@item.ImageUrl" alt="@item.Name" />
                             }
                             <div class="product-card__body">
-                                <strong>@item.Price.ToString("C")</strong>
+                                <strong>@FormatUsd(item.Price)</strong>
+                                <h3>
+                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">@item.Name</a>
+                                </h3>
+                                <p>@item.Description</p>
+                            </div>
+                        </article>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="cart-note">No saved products available.</div>
+            }
+        </section>
+
+        <section class="saved">
+            <div class="section-title">Saved for later (@Model.SavedForLater.Count)</div>
+
+            @if (Model.SavedForLater.Any())
+            {
+                <div class="card-grid">
+                    @foreach (var item in Model.SavedForLater)
+                    {
+                        <article class="product-card">
+                            @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
+                            {
+                                <img src="@item.ImageUrl" alt="@item.Name" />
+                            }
+                            <div class="product-card__body">
+                                <strong>@FormatUsd(item.Price)</strong>
                                 <h3>
                                     <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">@item.Name</a>
                                 </h3>
@@ -110,12 +148,12 @@
                     @foreach (var item in Model.Recommendations)
                     {
                         <article class="product-card">
-                            @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
+                            @if (!string.IsNullOrWhiteSpace(item.ImageUrl)) 
                             {
                                 <img src="@item.ImageUrl" alt="@item.Name" />
                             }
                             <div class="product-card__body">
-                                <strong>@item.Price.ToString("C")</strong>
+                                <strong>@FormatUsd(item.Price)</strong>
                                 <h3>
                                     <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">@item.Name</a>
                                 </h3>
@@ -137,14 +175,14 @@
             {
                 <div class="summary-row">
                     <span>@item.Name@(item.Attributes.Any() ? $" ({string.Join(", ", item.Attributes.Select(a => $"{a.Name}: {a.Value}"))})" : string.Empty)</span>
-                    <span>@item.TotalPrice.ToString("C")</span>
+                    <span>@FormatUsd(item.TotalPrice)</span>
                 </div>
             }
 
             <hr />
-            <div class="summary-row"><span>Subtotal:</span><strong>@Model.Subtotal.ToString("C")</strong></div>
-            <div class="summary-row"><span>Shipping:</span><span>@Model.Shipping.ToString("C")</span></div>
-            <div class="summary-row total"><span>Total:</span><strong>@Model.Total.ToString("C")</strong></div>
+            <div class="summary-row"><span>Subtotal:</span><strong>@FormatUsd(Model.Subtotal)</strong></div>
+            <div class="summary-row"><span>Shipping:</span><span>@FormatUsd(Model.Shipping)</span></div>
+            <div class="summary-row total"><span>Total:</span><strong>@FormatUsd(Model.Total)</strong></div>
             <button class="checkout" type="button">Proceed to checkout</button>
         }
         else
