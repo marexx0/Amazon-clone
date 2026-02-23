@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,8 +32,9 @@ namespace DataAccess.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AccountType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -536,32 +537,6 @@ namespace DataAccess.Migrations
                     { 6, 11, "Canon EOS R10 mirrorless camera kit with RF-S 18-45mm lens for versatile shooting.", "/images/products/canon_eos_r10.png", "Canon EOS R10 Mirrorless Camera with RF-S 18-45mm Lens", 999.0 },
                     { 7, 12, "PlayStation 5 console for next-gen gaming with ultra-high-speed SSD.", "/images/products/ps5_console.png", "PlayStation 5 Console", 499.99000000000001 },
                     { 22, 7, "Classic low-top silhouette with leather overlays, padded collar comfort, and durable rubber traction for daily wear.", "/images/products/nike_dunk_cacao_pair.jpg", "Nike Dunk Low Retro - Cacao Wow", 129.99000000000001 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "ProductImages",
-                columns: new[] { "Id", "ContentType", "FileName", "ImageData", "ImageUrl", "IsPrimary", "ProductId" },
-                values: new object[,]
-                {
-                    { 1, "image/png", "tshirt.png", null, "/images/products/tshirt.png", true, 1 },
-                    { 2, "image/png", "sneakers.png", null, "/images/products/sneakers.png", true, 2 },
-                    { 3, "image/png", "macbook_air_m2.png", null, "/images/products/macbook_air_m2.png", true, 3 },
-                    { 4, "image/png", "galaxy_s24.png", null, "/images/products/galaxy_s24.png", true, 4 },
-                    { 5, "image/png", "sony_xm5.png", null, "/images/products/sony_xm5.png", true, 5 },
-                    { 6, "image/png", "canon_r10.png", null, "/images/products/canon_r10.png", true, 6 },
-                    { 7, "image/png", "ps5.png", null, "/images/products/ps5.png", true, 7 },
-                    { 22, "image/jpeg", "nike_dunk_cacao_pair.jpg", null, "/images/products/nike_dunk_cacao_pair.jpg", true, 22 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "ProductImages",
-                columns: new[] { "Id", "ContentType", "FileName", "ImageData", "ImageUrl", "ProductId", "SortOrder" },
-                values: new object[,]
-                {
-                    { 23, "image/jpeg", "nike_dunk_cacao_outsole.jpg", null, "/images/products/nike_dunk_cacao_outsole.jpg", 22, 1 },
-                    { 24, "image/jpeg", "nike_dunk_cacao_top.jpg", null, "/images/products/nike_dunk_cacao_top.jpg", 22, 2 },
-                    { 25, "image/jpeg", "nike_dunk_cacao_side.jpg", null, "/images/products/nike_dunk_cacao_side.jpg", 22, 3 },
-                    { 26, "image/jpeg", "nike_dunk_cacao_angle.jpg", null, "/images/products/nike_dunk_cacao_angle.jpg", 22, 4 }
                 });
 
             migrationBuilder.InsertData(

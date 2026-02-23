@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Amazon_clone.DataAccess.Data;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Web_Api_Amazon.Models;
@@ -10,10 +11,12 @@ namespace Web_Api_Amazon.Controllers
     public class ProductController : Controller
     {
         private readonly ShopDbContext _context;
+        private readonly IWebHostEnvironment _environment;
 
-        public ProductController(ShopDbContext context)
+        public ProductController(ShopDbContext context, IWebHostEnvironment environment)
         {
             _context = context;
+            _environment = environment;
         }
 
         // GET: Product/Details/5
@@ -45,6 +48,11 @@ namespace Web_Api_Amazon.Controllers
                     IsPrimary = true,
                     SortOrder = 0
                 });
+            }
+
+            if (images.Count <= 1 && !string.IsNullOrWhiteSpace(product.ImageUrl))
+            {
+                images = EnrichImagesFromFiles(images, product.ImageUrl, product.Id);
             }
 
             var relatedProducts = await _context.Products
@@ -92,6 +100,72 @@ namespace Web_Api_Amazon.Controllers
             };
 
             return View(viewModel);
+        }
+
+        private List<ProductImage> EnrichImagesFromFiles(List<ProductImage> images, string primaryImageUrl, int productId)
+        {
+            var safePath = primaryImageUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
+            var primaryAbsolutePath = Path.Combine(_environment.WebRootPath, safePath);
+            var primaryDirectory = Path.GetDirectoryName(primaryAbsolutePath);
+            var primaryFileName = Path.GetFileNameWithoutExtension(primaryAbsolutePath);
+            var extension = Path.GetExtension(primaryAbsolutePath);
+
+            if (string.IsNullOrWhiteSpace(primaryDirectory) || string.IsNullOrWhiteSpace(primaryFileName) || !Directory.Exists(primaryDirectory))
+            {
+                return images;
+            }
+
+            var separatorIndex = primaryFileName.LastIndexOf('_');
+            if (separatorIndex <= 0)
+            {
+                return images;
+            }
+
+            var filePrefix = primaryFileName[..(separatorIndex + 1)];
+            var matchedFiles = Directory
+                .GetFiles(primaryDirectory, $"{filePrefix}*{extension}")
+                .OrderBy(path => path)
+                .ToList();
+
+            if (matchedFiles.Count <= 1)
+            {
+                return images;
+            }
+
+            var knownUrls = images
+                .Select(i => i.ImageUrl)
+                .Where(url => !string.IsNullOrWhiteSpace(url))
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            var sortOrder = images.Count;
+            foreach (var filePath in matchedFiles)
+            {
+                var relativePath = filePath
+                    .Replace(_environment.WebRootPath, string.Empty)
+                    .Replace(Path.DirectorySeparatorChar, '/');
+
+                if (!relativePath.StartsWith('/'))
+                {
+                    relativePath = $"/{relativePath}";
+                }
+
+                if (knownUrls.Contains(relativePath))
+                {
+                    continue;
+                }
+
+                images.Add(new ProductImage
+                {
+                    ProductId = productId,
+                    ImageUrl = relativePath,
+                    FileName = Path.GetFileName(filePath),
+                    ContentType = "image/jpeg",
+                    IsPrimary = false,
+                    SortOrder = sortOrder++
+                });
+            }
+
+            return images.OrderBy(i => i.SortOrder).ToList();
         }
     }
 }
