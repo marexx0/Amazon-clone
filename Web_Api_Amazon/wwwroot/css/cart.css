@@ -14,8 +14,10 @@
     --white: #fcfcfc;
 }
 
-.container {
+.cart-page-shell {
+    width: 100%;
     max-width: 1500px;
+    margin: 0 auto;
 }
 
 .cart-page {
@@ -147,11 +149,22 @@
     color: var(--white);
     border-radius: 6px;
     padding: 7px 12px;
+    white-space: nowrap;
 }
 
-.cart-item__actions form {
-    margin: 0;
+.cart-item__actions {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-left: auto;
+    white-space: nowrap;
 }
+
+    .cart-item__actions form {
+        margin: 0;
+        display: inline-flex;
+    }
 
 
 .saved {
@@ -173,13 +186,18 @@
     font-size: 1rem;
     font-weight: 500;
     border-bottom: 3px solid transparent;
-    cursor: default;
+    cursor: pointer;
 }
 
     .saved-tab.is-active {
         font-weight: 700;
         border-bottom-color: var(--lime-500);
     }
+
+.saved-panel {
+    min-height: 220px;
+}
+
 
 .saved-empty-state {
     background: #f2f4f7;

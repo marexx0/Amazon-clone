@@ -23,8 +23,7 @@ html {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-html {
-    position: relative;
+html, body {
     min-height: 100%;
 }
 
@@ -189,6 +188,15 @@ p, .text-b2 {
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
+}
+.site-shell {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.site-content {
+    flex: 1 0 auto;
 }
 
 .site-header {
@@ -400,7 +408,7 @@ p, .text-b2 {
     background: #0b1b3a;
     color: #d7deeb;
     padding: 48px 0 28px;
-    margin-top: 40px;
+    margin-top: auto;
 }
 
 .site-footer__title {

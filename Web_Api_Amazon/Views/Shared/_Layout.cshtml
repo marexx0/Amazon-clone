@@ -10,7 +10,7 @@
     @RenderSection("Styles", required: false)
     <link rel="stylesheet" href="~/Web_Api_Amazon.styles.css" asp-append-version="true" />
 </head>
-<body>
+<body class="site-shell">
     <header class="site-header">
         <div class="container-fluid site-header__inner">
             <a class="site-header__logo" asp-area="" asp-controller="Home" asp-action="Index" aria-label="Allora home">
@@ -54,13 +54,15 @@
                 </a>
             </div>
         </div>
-    <div class="container-fluid px-3 px-md-4">
+    </header>
+
+    <div class="site-content container-fluid px-3 px-md-4">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-        <footer class="site-footer">
+    <footer class="site-footer">
         <div class="container">
             <div class="row gy-4">
                 <div class="col-6 col-lg-2">
@@ -114,7 +116,6 @@
                 </div>
             </div>
                 <div class="site-footer__copy">&copy; 2026 Allora. All rights reserved</div>
-            </div>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

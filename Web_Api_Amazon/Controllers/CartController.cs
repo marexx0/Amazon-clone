@@ -12,13 +12,16 @@ public class CartController : Controller
 {
     private const string LocalCartSessionKey = "LocalCart";
     private const string LocalSavedForLaterSessionKey = "LocalSavedForLater";
+    private const string LocalFavoritesSessionKey = "LocalFavorites";
     private readonly ShopDbContext _context;
     private readonly ISavedForLaterService _savedForLaterService;
+    private readonly IFavoritesService _favoritesService;
 
-    public CartController(ShopDbContext context, ISavedForLaterService savedForLaterService)
+    public CartController(ShopDbContext context, ISavedForLaterService savedForLaterService, IFavoritesService favoritesService)
     {
         _context = context;
         _savedForLaterService = savedForLaterService;
+        _favoritesService = favoritesService;
     }
 
     public async Task<IActionResult> Index()
@@ -29,6 +32,7 @@ public class CartController : Controller
         {
             await MergeLocalCartIntoUserCartAsync(userId);
             await MergeLocalSavedIntoUserSavedAsync(userId);
+            await MergeLocalFavoritesIntoUserAsync(userId);
         }
 
         var cartItems = new List<CartProductViewModel>();
@@ -118,6 +122,32 @@ public class CartController : Controller
             }
         }
 
+        List<ProductCardViewModel> favorites;
+        if (!string.IsNullOrWhiteSpace(userId))
+        {
+            var favoriteDtos = await _favoritesService.GetFavoritesAsync(userId);
+            favorites = favoriteDtos.Select(dto => new ProductCardViewModel
+            {
+                ProductId = dto.ProductId,
+                Name = dto.Name,
+                Description = dto.Description,
+                ImageUrl = dto.ImageUrl,
+                Price = dto.Price,
+                InStock = dto.InStock,
+                Rating = dto.Rating,
+                VariantKey = dto.VariantKey
+            }).ToList();
+        }
+        else
+        {
+            var localFavoriteIds = GetLocalFavorites();
+            favorites = products
+                .Where(product => localFavoriteIds.Contains(product.Id))
+                .Select(BuildProductCard)
+                .OrderBy(product => product.Name)
+                .ToList();
+        }
+
         var recommendations = products
             .Where(product => !usedIds.Contains(product.Id))
             .OrderByDescending(product => product.Id)
@@ -129,6 +159,7 @@ public class CartController : Controller
         {
             CartItems = cartItems,
             SavedForLater = savedForLater,
+            Favorites = favorites,
             Recommendations = recommendations,
             IsSignedIn = User.Identity?.IsAuthenticated == true
         };
@@ -523,7 +554,40 @@ public class CartController : Controller
         HttpContext.Session.Remove(LocalCartSessionKey);
     }
 
+    private List<int> GetLocalFavorites()
+    {
+        var raw = HttpContext.Session.GetString(LocalFavoritesSessionKey);
 
+        if (string.IsNullOrWhiteSpace(raw))
+        {
+            return new List<int>();
+        }
+
+        try
+        {
+            return JsonSerializer.Deserialize<List<int>>(raw) ?? new List<int>();
+        }
+        catch
+        {
+            return new List<int>();
+        }
+    }
+
+    private async Task MergeLocalFavoritesIntoUserAsync(string userId)
+    {
+        var localFavorites = GetLocalFavorites();
+        if (localFavorites.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var productId in localFavorites.Distinct())
+        {
+            await _favoritesService.AddAsync(userId, productId);
+        }
+
+        HttpContext.Session.Remove(LocalFavoritesSessionKey);
+    }
     private async Task MergeLocalSavedIntoUserSavedAsync(string userId)
     {
         var localSaved = GetLocalSavedForLater();
