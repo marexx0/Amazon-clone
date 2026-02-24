@@ -560,6 +560,10 @@ public class CartController : Controller
 
         if (string.IsNullOrWhiteSpace(raw))
         {
+            raw = HttpContext.Session.GetString("FavoriteProductIds");
+        }
+        if (string.IsNullOrWhiteSpace(raw))
+        {
             return new List<int>();
         }
 
@@ -587,6 +591,7 @@ public class CartController : Controller
         }
 
         HttpContext.Session.Remove(LocalFavoritesSessionKey);
+        HttpContext.Session.Remove("FavoriteProductIds");
     }
     private async Task MergeLocalSavedIntoUserSavedAsync(string userId)
     {

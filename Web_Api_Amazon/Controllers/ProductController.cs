@@ -1,24 +1,28 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
-using Amazon_clone.DataAccess.Data;
+﻿using Amazon_clone.DataAccess.Data;
+using Core.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Text.Json;
 using Web_Api_Amazon.Models;
 
 namespace Web_Api_Amazon.Controllers
 {
     public class ProductController : Controller
     {
-        private const string FavoritesSessionKey = "FavoriteProductIds";
+        private const string LocalFavoritesSessionKey = "LocalFavorites";
         private readonly ShopDbContext _context;
         private readonly IWebHostEnvironment _environment;
+        private readonly IFavoritesService _favoritesService;
 
-        public ProductController(ShopDbContext context, IWebHostEnvironment environment)
+        public ProductController(ShopDbContext context, IWebHostEnvironment environment, IFavoritesService favoritesService)
         {
             _context = context;
             _environment = environment;
+            _favoritesService = favoritesService;
         }
 
         // GET: Product/Details/5
@@ -89,6 +93,10 @@ namespace Web_Api_Amazon.Controllers
             var brand = product.Properties?
                 .FirstOrDefault(pp => pp.PropertyDefinition?.Name == "Brand")
                 ?.Value;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var isFavorite = string.IsNullOrWhiteSpace(userId)
+                ? GetFavoriteProductIds().Contains(product.Id)
+                : (await _favoritesService.GetFavoritesAsync(userId)).Any(item => item.ProductId == product.Id);
 
             var viewModel = new ProductDetailsViewModel
             {
@@ -98,14 +106,14 @@ namespace Web_Api_Amazon.Controllers
                 TopPicks = topPicks,
                 AvailableColors = availableColors,
                 AvailableSizes = availableSizes,
-                IsFavorite = GetFavoriteProductIds().Contains(product.Id)
+                IsFavorite = isFavorite
             };
 
             return View(viewModel);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ToggleFavorite(int productId)
+        public async Task<IActionResult> ToggleFavorite(int productId)
         {
             var productExists = _context.Products.Any(p => p.Id == productId);
             if (!productExists)
@@ -113,19 +121,39 @@ namespace Web_Api_Amazon.Controllers
                 return NotFound();
             }
 
-            var favoriteIds = GetFavoriteProductIds();
-            var isFavorite = favoriteIds.Contains(productId);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            bool isFavorite;
 
-            if (isFavorite)
+            if (string.IsNullOrWhiteSpace(userId))
             {
-                favoriteIds.Remove(productId);
+                var favoriteIds = GetFavoriteProductIds();
+                isFavorite = favoriteIds.Contains(productId);
+
+                if (isFavorite)
+                {
+                    favoriteIds.Remove(productId);
+                }
+                else
+                {
+                    favoriteIds.Add(productId);
+                }
+
+                SaveFavoriteProductIds(favoriteIds);
             }
             else
             {
-                favoriteIds.Add(productId);
-            }
+                var userFavorites = await _favoritesService.GetFavoritesAsync(userId);
+                isFavorite = userFavorites.Any(item => item.ProductId == productId);
 
-            SaveFavoriteProductIds(favoriteIds);
+                if (isFavorite)
+                {
+                    await _favoritesService.RemoveAsync(userId, productId);
+                }
+                else
+                {
+                    await _favoritesService.AddAsync(userId, productId);
+                }
+            }
 
             return Json(new
             {
@@ -136,7 +164,12 @@ namespace Web_Api_Amazon.Controllers
 
         private List<int> GetFavoriteProductIds()
         {
-            var rawValue = HttpContext.Session.GetString(FavoritesSessionKey);
+            var rawValue = HttpContext.Session.GetString(LocalFavoritesSessionKey);
+            if (string.IsNullOrWhiteSpace(rawValue))
+            {
+                // Backward compatibility with previous session key
+                rawValue = HttpContext.Session.GetString("FavoriteProductIds");
+            }
             if (string.IsNullOrWhiteSpace(rawValue))
             {
                 return new List<int>();
@@ -157,11 +190,13 @@ namespace Web_Api_Amazon.Controllers
         {
             if (!productIds.Any())
             {
-                HttpContext.Session.Remove(FavoritesSessionKey);
+                HttpContext.Session.Remove(LocalFavoritesSessionKey);
+                HttpContext.Session.Remove("FavoriteProductIds");
                 return;
             }
 
-            HttpContext.Session.SetString(FavoritesSessionKey, JsonSerializer.Serialize(productIds.Distinct().ToList()));
+            HttpContext.Session.SetString(LocalFavoritesSessionKey, JsonSerializer.Serialize(productIds.Distinct().ToList()));
+            HttpContext.Session.Remove("FavoriteProductIds");
         }
 
         private List<ProductImage> EnrichImagesFromFiles(List<ProductImage> images, string primaryImageUrl, int productId)

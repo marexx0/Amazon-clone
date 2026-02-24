@@ -71,6 +71,7 @@
                 <button class="icon-button @(Model.IsFavorite ? "is-favorite" : string.Empty)"
                         id="favorite-toggle"
                         data-product-id="@product?.Id"
+                        data-toggle-url="@Url.Action("ToggleFavorite", "Product")"
                         data-is-favorite="@Model.IsFavorite.ToString().ToLowerInvariant()"
                         type="button"
                         aria-label="@(Model.IsFavorite ? "Remove from favorites" : "Add to favorites")">
