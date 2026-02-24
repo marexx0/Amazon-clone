@@ -114,12 +114,7 @@ public class CartController : Controller
             }
             else
             {
-                savedForLater = products
-                    .Where(product => !usedIds.Contains(product.Id))
-                    .OrderBy(product => product.Name)
-                    .Take(3)
-                    .Select(BuildProductCard)
-                    .ToList();
+                savedForLater = new List<ProductCardViewModel>();
             }
         }
 

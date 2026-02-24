@@ -85,7 +85,12 @@
         }
 
         <section class="saved">
-            <div class="section-title">Saved for later (@Model.SavedForLater.Count)</div>
+            <div class="saved-tabs" role="tablist" aria-label="Saved items">
+                <button class="saved-tab is-active" type="button" role="tab" aria-selected="true">
+                    Saved for later (@Model.SavedForLater.Count)
+                </button>
+                <button class="saved-tab" type="button" role="tab" aria-selected="false">Favorites</button>
+            </div>
 
             @if (Model.SavedForLater.Any())
             {
@@ -127,17 +132,21 @@
             }
             else
             {
-                <div class="cart-note">No saved products available.</div>
+                <div class="saved-empty-state" aria-live="polite">
+                    <div class="saved-empty-state__icon" aria-hidden="true">🧺</div>
+                    <h3>Save your items for later</h3>
+                    <p>If you aren't ready to buy, select Save for later. We'll keep the item safe here.</p>
+                </div>
             }
         </section>
 
-        <section class="saved">
-            <div class="section-title">Saved for later (@Model.SavedForLater.Count)</div>
+        @if (Model.SavedForLater.Any() && Model.Recommendations.Any())
+        {
+            <section class="saved">
+                <div class="section-title">Customers also viewed</div>
 
-            @if (Model.SavedForLater.Any())
-            {
-                <div class="card-grid">
-                    @foreach (var item in Model.SavedForLater)
+                <div class="card-grid card-grid--recommend">
+                    @foreach (var item in Model.Recommendations)
                     {
                         <article class="product-card">
                             @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
@@ -154,62 +163,53 @@
                         </article>
                     }
                 </div>
+            </section>
+        }
+    </div>
+
+    <aside class="summary-sidebar">
+        <section class="summary">
+            <h3>Order summary</h3>
+
+            @if (Model.CartItems.Any())
+            {
+                @foreach (var item in Model.CartItems)
+                {
+                    <div class="summary-row">
+                        <span>@item.Name</span>
+                        <span>@FormatUsd(item.TotalPrice)</span>
+                    </div>
+                }
+
+                <hr class="summary-separator" />
+                <div class="summary-row"><span>Subtotal:</span><strong>@FormatUsd(Model.Subtotal)</strong></div>
+                <div class="summary-row"><span>Shipping:</span><span>@FormatUsd(Model.Shipping)</span></div>
+                <div class="summary-row total"><span>Total:</span><strong>@FormatUsd(Model.Total)</strong></div>
+                <hr class="summary-separator" />
+
+                <label class="summary-gift">
+                    <input type="radio" name="orderGift" />
+                    <span>
+                        <strong>Order includes a gift</strong>
+                        <small>Add gift message at checkout</small>
+                    </span>
+                </label>
+
+                <button class="checkout" type="button">Proceed to checkout</button>
             }
             else
             {
-                <div class="cart-note">No saved products available.</div>
+                <div class="cart-note">No items in order summary.</div>
             }
         </section>
 
-        <section class="saved">
-            <div class="section-title">Customers also viewed</div>
-
-            @if (Model.Recommendations.Any())
-            {
-                <div class="card-grid card-grid--recommend">
-                    @foreach (var item in Model.Recommendations)
-                    {
-                        <article class="product-card">
-                            @if (!string.IsNullOrWhiteSpace(item.ImageUrl)) 
-                            {
-                                <img src="@item.ImageUrl" alt="@item.Name" />
-                            }
-                            <div class="product-card__body">
-                                <strong>@FormatUsd(item.Price)</strong>
-                                <h3>
-                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">@item.Name</a>
-                                </h3>
-                                <p>@item.Description</p>
-                            </div>
-                        </article>
-                    }
-                </div>
-            }
+        <section class="summary summary--promo" aria-label="Smart membership offer">
+            <h3>Unlock $20 OFF</h3>
+            <div class="promo-content">
+                <p>Join <strong>Smart+</strong> for free shipping &amp; discounts</p>
+                <img src="~/images/products/ui/DiscountTicket.svg" class="promo-icon" alt="" />
+            </div>
+            <button class="promo-btn" type="button">Try Smart+</button>
         </section>
-    </div>
-
-    <aside class="summary">
-        <h3>Order summary</h3>
-
-        @if (Model.CartItems.Any())
-        {
-            @foreach (var item in Model.CartItems)
-            {
-                <div class="summary-row">
-                    <span>@item.Name@(item.Attributes.Any() ? $" ({string.Join(", ", item.Attributes.Select(a => $"{a.Name}: {a.Value}"))})" : string.Empty)</span>
-                    <span>@FormatUsd(item.TotalPrice)</span>
-                </div>
-            }
-
-            <hr />
-            <div class="summary-row"><span>Subtotal:</span><strong>@FormatUsd(Model.Subtotal)</strong></div>
-            <div class="summary-row"><span>Shipping:</span><span>@FormatUsd(Model.Shipping)</span></div>
-            <div class="summary-row total"><span>Total:</span><strong>@FormatUsd(Model.Total)</strong></div>
-            <button class="checkout" type="button">Proceed to checkout</button>
-        }
-        else
-        {
-            <div class="cart-note">No items in order summary.</div>
-        }
     </aside>
 </div>
