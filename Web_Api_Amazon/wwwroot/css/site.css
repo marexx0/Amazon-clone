@@ -18,7 +18,10 @@ html {
     height: 100%;
     margin: 0;
 }
-
+html, body {
+    margin: 0;
+    padding: 0;
+}
 body {
     margin-bottom: 0;
     font-family: "DM Sans", sans-serif;
@@ -372,7 +375,50 @@ main {
             background: #FEF2F2;
             color: #DC2626;
         }
+.search-form {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    background: #ffffff;
+    border-radius: 0px;
+    overflow: hidden;
+    flex: 1;
+    border-radius: 0 8px 8px 0;
+}
 
+.search-input {
+    flex: 1;
+    height: 40px;
+    border: none;
+    padding: 0 14px;
+    font-size: 14px;
+    outline: none;
+    background: #ffffff;
+    color: #111827;
+   
+}
+
+.search-btn {
+    width: 48px;
+    height: 40px;
+    border: none;
+    background: #CFFA4E;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background .15s ease;
+    
+}
+
+    .search-btn:hover {
+        background: #B5ED24;
+    }
+
+    .search-btn img {
+        width: 18px;
+        height: 18px;
+    }
 
 /* Category dropdown */
 .cat-wrapper {
@@ -752,4 +798,8 @@ main {
     height: 1px;
     background: #F3F4F6;
     margin: 4px 12px;
+}
+.main-header {
+    background: #0D1B34; /* той самий що у футера */
+    margin: 0;
 }

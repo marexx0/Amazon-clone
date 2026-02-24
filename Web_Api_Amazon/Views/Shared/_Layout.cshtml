@@ -1,3 +1,10 @@
+@using Microsoft.AspNetCore.Identity
+@using Web_Api_Amazon.Entities
+@using Web_Api_Amazon.Models
+@using Web_Api_Amazon.Entities
+@using System.Collections.Generic
+@inject UserManager<User> UserManager
+@inject SignInManager<User> SignInManager
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,12 +33,13 @@
                 <img src="imagesmain/chevron-down.png" alt="down icon" class="icon-36">
             </div>
         </div>
-
         <div class="header-center">
+
             <div class="cat-wrapper">
                 <button class="cat-btn" id="catBtn">
                     Category <span class="cat-arrow">&#9660;</span>
                 </button>
+
                 <div class="cat-dropdown" id="catDropdown">
 
                     <a href="#" class="cat-item">
@@ -39,7 +47,7 @@
                         Clothing
                     </a>
 
-                    <a href="#" class="cat-item">
+                    <a href="#" data-category-id="7" class="cat-item">
                         <img src="imagesmain/icons/shoes.png" alt="">
                         Shoes
                     </a>
@@ -126,10 +134,24 @@
 
                 </div>
             </div>
-            <input type="text" placeholder="Search">
-            <button class="search-btn">
-                <img src="imagesmain/search.png" alt="search" class="icon-36">
-            </button>
+
+            <!--  SEARCH -->
+            <form asp-controller="Home"
+                  asp-action="Index"
+                  method="get"
+                  class="search-form">
+
+                <input type="text"
+                       name="searchString"
+                       value="@Context.Request.Query["searchString"]"
+                       placeholder="Search products..."
+                       class="search-input" />
+
+                <button type="submit" class="search-btn">
+                    <img src="imagesmain/search.png" alt="search" class="icon-36">
+                </button>
+            </form>
+
         </div>
 
         <div class="header-right">
@@ -148,11 +170,31 @@
                 </button>
 
                 <div class="profile-dropdown" id="profileDropdown">
-                    @if (User.Identity.IsAuthenticated)
+                    @{
+                        // Змінна оголошена зовні — тепер доступна у всьому блоці
+                        User? currentUser = null;
+
+                        if (User.Identity.IsAuthenticated)
+                        {
+                            currentUser = await UserManager.GetUserAsync(User);
+                        }
+                    }
+
+                    @if (currentUser != null)
                     {
                         <div class="dd-signin">
-                            <strong>@User.Identity.Name</strong>
+                            <strong>@currentUser.FirstName</strong>
                         </div>
+
+                        @if (await UserManager.IsInRoleAsync(currentUser, "Admin"))
+                        {
+                            <div class="dd-admin">
+                                <a asp-controller="AdminPanel" asp-action="Index" class="admin-btn">
+                                    Admin Panel
+                                </a>
+                            </div>
+                        }
+
                         <div class="dd-signout">
                             <a asp-controller="Account" asp-action="Logout" class="logout-btn">
                                 Sign out
@@ -162,7 +204,36 @@
                     else
                     {
                         <div class="dd-signin">
-                            <a asp-controller="Account" asp-action="Login" class="n-signin">
+                            <a asp-controller="Account" asp-action="Entry" class="n-signin">
+                                Sign in
+                            </a>
+                            <p class="dd-signin-sub">
+                                New customer?
+                                <a asp-controller="Account" asp-action="Register">Start here</a>
+                            </p>
+                        </div>
+                    }
+
+                        @* Лінк на адмінку лише для Admin *@
+                        @* @if (await UserManager.IsInRoleAsync(currentUser, "Admin"))
+                        {
+                            <div class="dd-admin">
+                                <a asp-controller="AdminPanel" asp-action="Index" class="admin-btn">
+                                    Admin Panel
+                                </a>
+                            </div>
+                        }
+
+                        <div class="dd-signout">
+                            <a asp-controller="Account" asp-action="Logout" class="logout-btn">
+                                Sign out
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="dd-signin">
+                            <a asp-controller="Account" asp-action="Entry" class="n-signin">
                                 Sign in
                             </a>
                             <p class="dd-signin-sub">
@@ -172,7 +243,7 @@
                         </div>
                     }
                 </div>
-            </div>
+            </div> *@
 
         </div>
     </header>

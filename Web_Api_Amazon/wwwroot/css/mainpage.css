@@ -13,8 +13,12 @@ body {
     width: 100%;
     max-width: 1920px;
     margin: 0 auto;
+    padding-top: 0;
 }
-
+html, body {
+    margin: 0;
+    padding: 0;
+}
 
 /* HEADER */
 
@@ -29,12 +33,14 @@ body {
     padding: 0 106px;
     background: #0D1B34;
     color: white;
+    padding-top: 0;
 }
 
 .header-left {
     display: flex;
     align-items: center;
     gap: 20px;
+    padding-top: 0;
 }
 
 .logo {

@@ -4,6 +4,7 @@ using Amazon_clone.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ShopDbContext))]
-    partial class ShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260223213716_AddProductPropertyAndVariantFields")]
+    partial class AddProductPropertyAndVariantFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -682,9 +685,6 @@ namespace DataAccess.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<byte[]>("Data")
-                        .HasColumnType("varbinary(max)");
-
                     b.Property<string>("FileName")
                         .IsRequired()
                         .HasMaxLength(255)
@@ -702,9 +702,6 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -735,7 +732,7 @@ namespace DataAccess.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PropertyDefinitionId")
+                    b.Property<int>("PropertyDefinitionId")
                         .HasColumnType("int");
 
                     b.Property<string>("Value")
@@ -749,7 +746,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("PropertyDefinitionId");
 
-                    b.ToTable("ProductProperties");
+                    b.ToTable("ProductProperty");
 
                     b.HasData(
                         new
@@ -925,7 +922,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductVariants");
+                    b.ToTable("ProductVariant");
 
                     b.HasData(
                         new
@@ -1001,7 +998,7 @@ namespace DataAccess.Migrations
                     b.Property<int>("ProductVariantId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PropertyDefinitionId")
+                    b.Property<int>("PropertyDefinitionId")
                         .HasColumnType("int");
 
                     b.Property<string>("Value")
@@ -1646,7 +1643,8 @@ namespace DataAccess.Migrations
                     b.HasOne("PropertyDefinition", "PropertyDefinition")
                         .WithMany("ProductProperties")
                         .HasForeignKey("PropertyDefinitionId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Product");
 
@@ -1675,7 +1673,8 @@ namespace DataAccess.Migrations
                     b.HasOne("PropertyDefinition", "PropertyDefinition")
                         .WithMany()
                         .HasForeignKey("PropertyDefinitionId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("ProductVariant");
 

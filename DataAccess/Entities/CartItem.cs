@@ -1,4 +1,5 @@
-﻿public class CartItem
+﻿using Web_Api_Amazon.Entities;
+public class CartItem
 {
     public int Id { get; set; }
 

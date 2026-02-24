@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-
+using Web_Api_Amazon.Entities;
 using System.Collections.Generic;
 
 namespace DataAccess.Persistance

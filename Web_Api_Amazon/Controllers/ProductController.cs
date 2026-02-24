@@ -4,6 +4,7 @@ using Amazon_clone.DataAccess.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Web_Api_Amazon.Models;
+using Web_Api_Amazon.Entities;
 
 namespace Web_Api_Amazon.Controllers
 {

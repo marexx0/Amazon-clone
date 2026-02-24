@@ -1,4 +1,5 @@
-﻿public class Order
+﻿using Web_Api_Amazon.Entities;
+public class Order
 {
     public int Id { get; set; }
 

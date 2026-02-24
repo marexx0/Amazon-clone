@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Web_Api_Amazon.Entities;
 
 namespace Web_Api_Amazon.Models
 {

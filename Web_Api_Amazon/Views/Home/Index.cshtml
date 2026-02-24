@@ -1,5 +1,4 @@
 ﻿
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -76,7 +75,27 @@
             </div>
 
         </section>
-
+        <div class="container mt-4">
+            <h2>Products</h2>
+            <div class="row">
+                @foreach (var product in Model)
+                {
+                    <div class="col-md-3 mb-4">
+                        <div class="card h-100">
+                            <img src="@Url.Action("Product", "Images", new { id = product.Id })"
+                                 class="card-img-top" alt="@product.Name"
+                                 style="height:200px; object-fit:cover;" />
+                            <div class="card-body">
+                                <h5 class="card-title">@product.Name</h5>
+                                <p class="card-text">@product.Description</p>
+                                <p class="card-text"><strong>$@product.Price</strong></p>
+                                <a href="#" class="btn btn-primary">Add to Cart</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
         <!-- POPULAR -->
         <section class="popular">
             <h2>Popular now</h2>

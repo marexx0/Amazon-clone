@@ -4,6 +4,7 @@ using Amazon_clone.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ShopDbContext))]
-    partial class ShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260224070804_Base")]
+    partial class Base
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -735,7 +738,7 @@ namespace DataAccess.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PropertyDefinitionId")
+                    b.Property<int>("PropertyDefinitionId")
                         .HasColumnType("int");
 
                     b.Property<string>("Value")
@@ -1001,7 +1004,7 @@ namespace DataAccess.Migrations
                     b.Property<int>("ProductVariantId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("PropertyDefinitionId")
+                    b.Property<int>("PropertyDefinitionId")
                         .HasColumnType("int");
 
                     b.Property<string>("Value")
@@ -1646,7 +1649,8 @@ namespace DataAccess.Migrations
                     b.HasOne("PropertyDefinition", "PropertyDefinition")
                         .WithMany("ProductProperties")
                         .HasForeignKey("PropertyDefinitionId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Product");
 
@@ -1675,7 +1679,8 @@ namespace DataAccess.Migrations
                     b.HasOne("PropertyDefinition", "PropertyDefinition")
                         .WithMany()
                         .HasForeignKey("PropertyDefinitionId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("ProductVariant");
 

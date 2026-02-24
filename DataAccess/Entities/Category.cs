@@ -1,4 +1,8 @@
-﻿public class Category
+﻿
+using System.ComponentModel.DataAnnotations.Schema;
+using Web_Api_Amazon.Entities;
+
+public class Category
 {
     public int Id { get; set; }
 

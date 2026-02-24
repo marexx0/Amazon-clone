@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-
+using Web_Api_Amazon.Entities;
 namespace Amazon_clone.DataAccess.Data
 {
     public class ShopDbContext : IdentityDbContext<User>
@@ -13,11 +13,16 @@ namespace Amazon_clone.DataAccess.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
+  
+        public DbSet<ProductProperty> ProductProperties { get; set; }
+        public DbSet<ProductVariant> ProductVariants { get; set; }
+       
 
         public ShopDbContext(DbContextOptions<ShopDbContext> options)
             : base(options)
         {
         }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
