@@ -46,7 +46,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("CartItems", (string)null);
                 });
 
             modelBuilder.Entity("Category", b =>
@@ -69,7 +69,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("ParentCategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
 
                     b.HasData(
                         new
@@ -225,7 +225,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("PropertyDefinitionId");
 
-                    b.ToTable("CategoryProperty");
+                    b.ToTable("CategoryProperty", (string)null);
 
                     b.HasData(
                         new
@@ -637,7 +637,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("OrderItem", b =>
@@ -666,7 +666,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("OrderItems", (string)null);
                 });
 
             modelBuilder.Entity("ProductImage", b =>
@@ -718,7 +718,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("ProductId", "IsPrimary");
 
-                    b.ToTable("ProductImages");
+                    b.ToTable("ProductImages", (string)null);
                 });
 
             modelBuilder.Entity("ProductProperty", b =>
@@ -749,7 +749,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("PropertyDefinitionId");
 
-                    b.ToTable("ProductProperties");
+                    b.ToTable("ProductProperties", (string)null);
 
                     b.HasData(
                         new
@@ -925,7 +925,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductVariants");
+                    b.ToTable("ProductVariants", (string)null);
 
                     b.HasData(
                         new
@@ -1015,7 +1015,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("PropertyDefinitionId");
 
-                    b.ToTable("ProductVariantValue");
+                    b.ToTable("ProductVariantValue", (string)null);
 
                     b.HasData(
                         new
@@ -1185,7 +1185,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("Name");
 
-                    b.ToTable("PropertyDefinition");
+                    b.ToTable("PropertyDefinition", (string)null);
 
                     b.HasData(
                         new
@@ -1344,7 +1344,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("Name");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
 
                     b.HasData(
                         new

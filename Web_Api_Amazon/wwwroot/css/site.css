@@ -30,7 +30,15 @@ body {
     flex-direction: column;
     color: #FCFCFC;
 }
-
+.icon-36 {
+    width: 24px;
+    height: 24px;
+    object-fit: contain; 
+}
+.icon-37 {
+    width: 44px;
+    height: 44px;
+}
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
     color: var(--bs-secondary-color);
     text-align: end;
@@ -77,88 +85,8 @@ main {
     text-align: start;
 }
 
-.site-footer {
-    background: #0D1B34;
-    color: #FCFCFC;
-    padding: 60px 0 25px 0;
-    font-size: 14px;
-    font-weight: 700;
-}
-
-    .site-footer a {
-        color: #FCFCFC;
-        text-decoration: none;
-    }
-
-        .site-footer a:hover {
-            text-decoration: none;
-            opacity: 0.85;
-        }
-
-/* Заголовки */
-.site-footer__title {
-    color: #FCFCFC;
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 12px;
-}
-
-/* Список */
-.site-footer__list {
-    color: #FCFCFC;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    font-size: 16px;
-    gap: 6px; 
-}
-
-    .site-footer__list a {
-        text-decoration: none;
-        color: #FCFCFC;
-    }
 
 
-.site-footer__bottom {
-    border-top: 1px solid rgba(255,255,255,0.15);
-    margin-top: 30px;
-    padding-top: 18px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center; 
-    align-items: center;
-    gap: 20px; 
-    text-align: center;
-    color: #FCFCFC;
-}
-
-
-.site-footer__brand img {
-    height: 28px;
-}
-
-
-.site-footer__meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 14px;
-    align-items: center;
-    color: #FCFCFC;
-}
-
-/* Чіпи */
-.footer-chip {
-    color: #FCFCFC;
-    font-weight: 700;
-}
-
-/* Копірайт */
-.site-footer__copy {
-    color: #FCFCFC;
-    font-size: 13px;
-}
 
 
 
@@ -503,7 +431,7 @@ main {
     text-decoration: none;
     font-size: 14px;
     font-weight: 500;
-    color: #374151;
+    color: #111827 !important;
     line-height: 1.2;
     transition: background .15s ease, color .15s ease;
 }
@@ -516,7 +444,7 @@ main {
 
     .cat-item:hover {
         background: #F3F4F6;
-        color: #111827;
+        color: #111827 !important;
     }
 
 .cat-divider {
@@ -773,13 +701,12 @@ main {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 7px 18px; 
+    padding: 8px 16px;
     text-decoration: none;
     font-size: 14px;
     font-weight: 500;
-    color: #374151;
-    line-height: 1.2; 
-
+    color: #111827; 
+    line-height: 1.2;
     transition: background .15s ease, color .15s ease;
 }
 
@@ -803,3 +730,110 @@ main {
     background: #0D1B34; /* той самий що у футера */
     margin: 0;
 }
+
+
+.site-footer {
+    background: #0D1B34;
+    color: #FCFCFC;
+    width: 100%;
+    padding: 60px 0 0 0;
+    font-size: 14px;
+}
+
+.footer-inner {
+    width: 100%;
+    max-width: 1920px;
+    margin: 0 auto;
+    padding: 0 106px;
+}
+
+.footer-links {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    padding-bottom: 40px;
+}
+
+.footer-col {
+    flex: 1;
+}
+
+.site-footer__title {
+    color: #FCFCFC;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+.site-footer__list {
+    color: #FCFCFC;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.site-footer .site-footer__list li a {
+    color: #FCFCFC;
+    font-family: 'DM Sans', sans-serif;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+    .site-footer .site-footer__list li a:hover {
+        color: #CFFA4E;
+    }
+
+.site-footer__bottom {
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding: 20px 0 24px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.footer-logo {
+    width: 60px;
+    height: auto;
+}
+
+.footer-bottom-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #FCFCFC;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.footer-copy {
+    color: rgba(255,255,255,0.6);
+    font-size: 13px;
+}
+/* ===== ADMIN   ===== */
+
+.dd-admin {
+    border-top: 1px solid #E5E7EB;
+    padding: 12px 18px;
+}
+
+    .dd-admin a {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        color: #6B7280;
+        text-decoration: none;
+        font-size: 13px;
+        padding: 6px 7px;
+        border-radius: 7px;
+        transition: background .15s ease, color .15s ease;
+    }
+
+        .dd-admin a:hover {
+            background: rgba(191, 242, 24, 0.15); 
+            color: #84cc16; 
+        }

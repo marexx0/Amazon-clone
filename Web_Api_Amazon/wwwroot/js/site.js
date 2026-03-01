@@ -74,3 +74,19 @@
         e.stopPropagation();
     });
 })();
+// Зберігаємо позицію скролу перед переходом
+document.querySelectorAll('.cat-dropdownI a').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+        e.stopPropagation();
+        sessionStorage.setItem('scrollPos', window.scrollY);
+    });
+});
+
+// Відновлюємо позицію після завантаження сторінки
+window.addEventListener('load', function () {
+    var scrollPos = sessionStorage.getItem('scrollPos');
+    if (scrollPos) {
+        window.scrollTo(0, parseInt(scrollPos));
+        sessionStorage.removeItem('scrollPos');
+    }
+});

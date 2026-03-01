@@ -1,11 +1,26 @@
-﻿
+﻿@using Web_Api_Amazon.Entities
+@model IEnumerable<Web_Api_Amazon.Entities.Product>
+@{
+    var allProducts = ViewBag.AllProducts as List<Product>;
+    var filteredProducts = ViewBag.FilteredProducts as List<Product>;
+    var selectedCategoryId = ViewBag.SelectedCategoryId as int?;
+   
+    var shuffled = allProducts.OrderBy(x => Guid.NewGuid()).ToList();
+
+
+    while (shuffled.Count < 24)
+        shuffled.AddRange(allProducts.OrderBy(x => Guid.NewGuid()));
+
+    var popularProducts = shuffled.Take(12).ToList();
+    var collectionProducts = shuffled.Skip(12).Take(12).ToList();
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Allora</title>
     <link rel="stylesheet" href="~/css/mainpage.css">
-    
+
 
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
@@ -14,114 +29,310 @@
 
     <div class="page-wrapper">
 
-       
+
 
         <!-- HERO -->
         <section class="hero">
             <h1>
-                Buy – quickly, with high quality,<br>
-                what you need, in just a few clicks
+                Buy – quickly, with high quality,<br> what you need,
+                <a href="#" class="highlight-link">in just a few clicks</a>
             </h1>
         </section>
-
+       
         <!-- CATEGORIES -->
         <section class="categories">
 
             <div class="category-itemI">
                 Lifestyle
                 <div class="cat-dropdownI">
-                    <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /></svg>Fashion</a>
-                    <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9,22 9,12 15,12 15,22" /></svg>Shoes</a>
-                    <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3" /><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14" /></svg>Accessories</a>
+                    <a href="/?categoryId=6">
+                        <img src="/imagesmain/clothe.png" alt="Clothing" width="24" height="24" />
+                        Clothing
+                    </a>
+                    <a href="/?categoryId=7">
+                        <img src="/imagesmain/shoes.png" alt="Shoes" width="24" height="24" />
+                        Shoes
+                    </a>
                 </div>
             </div>
 
             <div class="category-itemI">
                 Technology
                 <div class="cat-dropdownI">
-                    <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" /><line x1="8" y1="21" x2="16" y2="21" /><line x1="12" y1="17" x2="12" y2="21" /></svg>Computers / Laptops / Tablets</a>
-                    <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" /><line x1="12" y1="18" x2="12.01" y2="18" /></svg>Mobile Phones</a>
-                    <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6a9 9 0 0 1 18 0v6" /><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z" /><path d="M3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" /></svg>Headphones</a>
-                    <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" /><circle cx="12" cy="13" r="4" /></svg>Cameras / Photo Equipment</a>
-                    <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2" /><path d="M12 12h.01" /><path d="M17 12h.01" /><path d="M7 12h.01" /></svg>Gaming</a>
+                    <a href="/?categoryId=8">
+                        <img src="imagesmain/computer.png" alt="Computers / Laptops / Tablets" width="24" height="24" />
+                        Computers / Laptops / Tablets
+                    </a>
+                    <a href="/?categoryId=9">
+                        <img src="imagesmain/phone.png" alt="Mobile Phones" width="24" height="24" />
+                        Mobile Phones
+                    </a>
+                    <a href="/?categoryId=10">
+                        <img src="imagesmain/Audio.png" alt="Headphones" width="24" height="24" />
+                        Headphones
+                    </a>
+                    <a href="/?categoryId=11">
+                        <img src="imagesmain/photo.png" alt="Cameras / Photo Equipment" width="24" height="24" />
+                        Cameras / Photo Equipment
+                    </a>
+                    <a href="/?categoryId=12" >
+                        <img src="imagesmain/Game.png" alt="" style="width:24px; height:24px;">
+                        Gaming
+                    </a>
                 </div>
             </div>
 
             <div class="category-itemI">
                 Home
                 <div class="cat-dropdownI">
-                    <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 9V20H4V9" /><path d="M22 9H2L12 2z" /></svg>Furniture</a>
-                    <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg>Home Decor</a>
-                    <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /></svg>Lighting</a>
-                    <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20z" /></svg>Yard and Garden</a>
+                    <a href="/?categoryId=13">
+                        <img src="imagesmain/Home.png" alt="Home Decor" width="24" height="24" />
+                        Home Decor
+                    </a>
+                    <a href="/?categoryId=14">
+                        <img src="/imagesmain/Furniture.png" alt="Furniture" width="24" height="24" />
+                        Furniture
+                    </a>
+                    <a href="/?categoryId=15">
+                        <img src="/imagesmain/Light.png" alt="Lighting" width="24" height="24" />
+                        Lighting
+                    </a>
+                    <a href="/?categoryId=16">
+                        <img src="/imagesmain/Yard.png" alt="Yard and Garden" width="24" height="24" />
+                        Yard and Garden
+                    </a>
                 </div>
             </div>
 
             <div class="category-itemI">
                 Auto
                 <div class="cat-dropdownI">
-                    <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 17H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v3" /><rect x="9" y="11" width="14" height="10" rx="1" /></svg>Car Parts</a>
-                    <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3" /><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14" /></svg>Accessories</a>
+                    <a href="/?categoryId=19">
+                        <img src="/imagesmain/sport.png" alt="Sports / Outdoor / Fitness" width="24" height="24" />
+                        Sports / Outdoor / Fitness
+                    </a>
+                    
                 </div>
             </div>
 
             <div class="category-itemI">
                 Health
                 <div class="cat-dropdownI">
-                    <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" /></svg>Vitamins</a>
-                    <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1" /><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" /></svg>Fitness</a>
-                    <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>Wellness</a>
+                    <a href="/?categoryId=21">
+                        <img src="/imagesmain/toys.png" alt="Toys Kids" width="24" height="24" />
+                        Toys Kids
+                    </a>
+                    <a href="/?categoryId=22">
+                        <img src="/imagesmain/book.png" alt="Books / Media" width="24" height="24" />
+                        Books / Media
+                    </a>
+                    <a href="/?categoryId=23">
+                        <img src="/imagesmain/Health.png" alt="Health" width="24" height="24" />
+                        Health
+                    </a>
                 </div>
             </div>
 
         </section>
-        <div class="container mt-4">
-            <h2>Products</h2>
-            <div class="row">
-                @foreach (var product in Model)
+
+
+
+
+        @{
+    var searchString = ViewBag.SearchString as string;
+}
+
+@if (!string.IsNullOrEmpty(searchString))
+{
+    <section id="search-section" class="category-results">
+        <h2>Search results for "@searchString"</h2>
+
+        @if (filteredProducts.Any())
+        {
+            <div class="products-grid">
+                @foreach (var product in filteredProducts)
                 {
-                    <div class="col-md-3 mb-4">
-                        <div class="card h-100">
-                            <img src="@Url.Action("Product", "Images", new { id = product.Id })"
-                                 class="card-img-top" alt="@product.Name"
-                                 style="height:200px; object-fit:cover;" />
-                            <div class="card-body">
-                                <h5 class="card-title">@product.Name</h5>
-                                <p class="card-text">@product.Description</p>
-                                <p class="card-text"><strong>$@product.Price</strong></p>
-                                <a href="#" class="btn btn-primary">Add to Cart</a>
-                            </div>
-                        </div>
-                    </div>
+                    <partial name="_ProductCard" model="product" />
                 }
             </div>
+        }
+        else
+        {
+            <p>No products found.</p>
+        }
+    </section>
+}
+else if (selectedCategoryId.HasValue && filteredProducts.Any())
+{
+    <section id="category-section" class="category-results">
+        <h2>@filteredProducts.First().Category?.Name</h2>
+
+        <div class="products-grid">
+            @foreach (var product in filteredProducts)
+            {
+                <partial name="_ProductCard" model="product" />
+            }
         </div>
+    </section>
+}
+else
+{
+    <!-- ТУТ ВСЯ ГОЛОВНА СТОРІНКА -->
+}
+       @*  ---------------------- *@
+      
+
+       @*  @if (selectedCategoryId.HasValue)
+        {
+            <section id="category-section" class="category-results">
+                <h2>
+                    @filteredProducts.FirstOrDefault()?.Category?.Name
+                </h2>
+
+                <div class="products-grid">
+                    @foreach (var product in filteredProducts)
+                    {
+                        <partial name="_ProductCard" model="product" />
+                    }
+                </div>
+            </section>
+        } *@
         <!-- POPULAR -->
         <section class="popular">
             <h2>Popular now</h2>
-
             <div class="products-grid">
-                <div class="product-card"></div>
-                <div class="product-card"></div>
-                <div class="product-card"></div>
-                <div class="product-card"></div>
-                <div class="product-card"></div>
+                @foreach (var product in popularProducts)
+                {
+                    <partial name="_ProductCard" model="product" />
+                }
             </div>
-        </section>
 
-        <!-- POPULAR -->
-        <section class="collection">
+        </section>
+        @{
+            var clothingProducts = allProducts
+            .Where(p => p.CategoryId == 6)
+            .OrderBy(x => Guid.NewGuid())
+            .Take(12)
+            .ToList();
+
+            while (clothingProducts.Count < 12 && clothingProducts.Any())
+                clothingProducts.AddRange(
+                allProducts.Where(p => p.CategoryId == 6)
+                .OrderBy(x => Guid.NewGuid())
+                );
+
+            clothingProducts = clothingProducts.Take(12).ToList();
+        }
+        <!-- Colection-->
+       @*  <section class="collection">
             <h2>Shop Collection</h2>
 
             <div class="products-grid">
-                <div class="product-card"></div>
-                <div class="product-card"></div>
-                <div class="product-card"></div>
-                <div class="product-card"></div>
-                <div class="product-card"></div>
+                @foreach (var product in clothingProducts)
+                {
+                    <partial name="_ProductCard" model="product" />
+                }
+            </div>
+        </section> *@
+        @{
+            var selectedCategories = new List<int> { 6, 7, 9 }; // Clothing, Shoes, Mobile Phones
+
+            // Словник з картинками для цих категорій
+            var categoryImages = new Dictionary<int, string>
+                {
+                {6, "~/images/products/nike_dunk_cacao_top.jpg"},
+                {7, "~/images/products/nike_dunk_cacao_top.jpg"},
+                {9, "~/images/products/nike_dunk_cacao_top.jpg"},
+                };
+
+            var categoriesToShow = (ViewBag.Categories as List<Category>)
+            .Where(c => selectedCategories.Contains(c.Id))
+            .ToList();
+        }
+
+        <section class="collection shop-collection">
+            <h2>Shop Collection</h2>
+            <div class="collection-grid">
+                @foreach (var category in categoriesToShow)
+                {
+                    <a href="/?categoryId=@category.Id" class="category-card">
+                        <img src="@categoryImages[category.Id]" alt="@category.Name" />
+                        <div class="category-name">@category.Name</div>
+                    </a>
+                }
+            </div>
+        </section>
+        @{
+            var technologyCategoryIds = new List<int> { 8, 9, 10, 11, 12 };
+
+            var technologyProducts = allProducts
+            .Where(p => technologyCategoryIds.Contains(p.CategoryId))
+            .OrderBy(x => Guid.NewGuid())
+            .Take(12)
+            .ToList();
+
+            while (technologyProducts.Count < 12 && technologyProducts.Any())
+                technologyProducts.AddRange(
+                allProducts.Where(p => technologyCategoryIds.Contains(p.CategoryId))
+                .OrderBy(x => Guid.NewGuid())
+                );
+
+            technologyProducts = technologyProducts.Take(12).ToList();
+        }
+        
+        <!-- Gifts -->
+        <section class="collection">
+            <h2>Women's Day Gifts</h2>
+
+            <div class="products-grid">
+                @foreach (var product in technologyProducts)
+                {
+                    <partial name="_ProductCard" model="product" />
+                }
+            </div>
+        </section>
+        <!-- BANNER -->
+        <section class="promo-banner">
+            <div class="promo-banner__left">
+                <!-- Сюди свій SVG або img декоративний -->
+                <img src="~/imagesmain/Vector2.png" alt="" class="promo-banner__deco" />
+            </div>
+            <div class="promo-banner__center">
+                <h2>Allora Delivery for you</h2>
+                <p>Worldwide shopping. We ship to over 100+ countries<br>and regions, right to your doorstep</p>
+                <a href="#" class="promo-banner__btn">View more</a>
+            </div>
+            <div class="promo-banner__right">
+                <img src="~/imagesmain/Group.png" alt="" class="promo-banner__deco" />
             </div>
         </section>
 
+        <!-- RECENTLY REVIEWED -->
+        <section class="recently-reviewed">
+            <h2>Recently reviewed</h2>
+            <div class="products-grid">
+                @{
+                    var recentProducts = allProducts.OrderBy(x => Guid.NewGuid()).Take(6).ToList();
+                    while (recentProducts.Count < 6)
+                        recentProducts.AddRange(allProducts.OrderBy(x => Guid.NewGuid()));
+                    recentProducts = recentProducts.Take(6).ToList();
+                }
+                @foreach (var product in recentProducts)
+                {
+                    <partial name="_ProductCard" model="product" />
+                }
+            </div>
+        </section>
+        @section Scripts {
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const section = document.getElementById("category-section");
+                    if (section) {
+                        section.scrollIntoView({ behavior: "smooth" });
+                    }
+                });
+            </script>
+        }
     </div>
     <script src="~/js/mainpage.js" asp-append-version="true"></script>
 </body>

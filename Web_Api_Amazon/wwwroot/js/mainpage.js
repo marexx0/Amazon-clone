@@ -1,45 +1,45 @@
-﻿// Клік по категорії для показу підкатегорій
+﻿// Клік по категорії — тоглить дропдаун
 document.querySelectorAll('.category-itemI').forEach(function (catItem) {
     var dropdown = catItem.querySelector('.cat-dropdownI');
 
     catItem.addEventListener('click', function (e) {
-        e.stopPropagation(); // щоб клік не пішов далі
+        e.stopPropagation();
 
-        // Закриваємо всі інші підкатегорії
         document.querySelectorAll('.cat-dropdownI').forEach(function (dd) {
-            if (dd !== dropdown) {
-                dd.classList.remove('open');
-            }
+            if (dd !== dropdown) dd.classList.remove('open');
         });
 
-        // Відкриваємо/закриваємо свою
         dropdown.classList.toggle('open');
     });
 });
 
-// Закриття при кліку поза категоріями
+// Закриття при кліку поза
 document.addEventListener('click', function () {
     document.querySelectorAll('.cat-dropdownI').forEach(function (dd) {
         dd.classList.remove('open');
     });
 });
-// Клік по підкатегорії
+
+// Клік по підкатегорії — просто дозволяємо перейти за посиланням
 document.querySelectorAll('.cat-dropdownI a').forEach(function (link) {
     link.addEventListener('click', function (e) {
-        e.preventDefault(); // не йти за посиланням
-        var categoryId = this.getAttribute('data-category-id');
-
-        // Тут ми будемо показувати продукти цієї категорії
-        showProducts(categoryId);
+        e.stopPropagation(); // щоб не закрити дропдаун до переходу
+        // НЕ preventDefault — нехай href спрацює і контролер відфільтрує
     });
 });
-function showProducts(categoryId) {
-    document.querySelectorAll('.product-card').forEach(function (card) {
-        // У кожної карточки повинен бути data-category-id
-        if (card.getAttribute('data-category-id') === categoryId) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
-        }
+// Зберігаємо позицію скролу перед переходом
+document.querySelectorAll('.cat-dropdownI a').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+        e.stopPropagation();
+        sessionStorage.setItem('scrollPos', window.scrollY);
     });
-}
+});
+
+// Відновлюємо позицію після завантаження сторінки
+window.addEventListener('load', function () {
+    var scrollPos = sessionStorage.getItem('scrollPos');
+    if (scrollPos) {
+        window.scrollTo(0, parseInt(scrollPos));
+        sessionStorage.removeItem('scrollPos');
+    }
+});

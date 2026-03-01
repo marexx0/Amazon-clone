@@ -82,12 +82,11 @@ namespace Web_Api_Amazon.Controllers
                 model.ImageUrl = "sneakers.png";
             }
 
-            // Очищення порожніх Properties
             model.Properties = (model.Properties ?? new List<ProductProperty>())
                 .Where(p => !string.IsNullOrWhiteSpace(p.Name) && !string.IsNullOrWhiteSpace(p.Value))
                 .ToList();
 
-            // Очищення порожніх Variants
+           
             model.Variants = (model.Variants ?? new List<ProductVariant>())
                 .Where(v => !string.IsNullOrWhiteSpace(v.Name) && !string.IsNullOrWhiteSpace(v.Value))
                 .ToList();
@@ -120,7 +119,7 @@ namespace Web_Api_Amazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Product model, List<IFormFile> ImagesFiles)
         {
-            // Прибираємо з валідації поля що ми контролюємо самі
+            
             ModelState.Remove("ImageUrl");
             ModelState.Remove("Category");
 
@@ -132,7 +131,6 @@ namespace Web_Api_Amazon.Controllers
                 return View(model);
             }
 
-            // Завантажуємо існуючий продукт з БД
             var product = _context.Products
                 .Include(p => p.Properties)
                 .Include(p => p.Variants)
@@ -142,13 +140,13 @@ namespace Web_Api_Amazon.Controllers
             if (product == null)
                 return NotFound();
 
-            // Оновлення простих полів
+            
             product.Name = model.Name;
             product.Description = model.Description;
             product.Price = model.Price;
             product.CategoryId = model.CategoryId;
 
-            // Оновлення Properties — очищаємо і додаємо нові
+           
             product.Properties.Clear();
             if (model.Properties != null)
             {
@@ -164,7 +162,7 @@ namespace Web_Api_Amazon.Controllers
                 }
             }
 
-            // Оновлення Variants
+            
             product.Variants.Clear();
             if (model.Variants != null)
             {
@@ -180,7 +178,7 @@ namespace Web_Api_Amazon.Controllers
                 }
             }
 
-            // ФІХ: Оновлення зображень — додаємо до product, а не до model!
+            
             if (ImagesFiles != null && ImagesFiles.Count > 0)
             {
                 product.Images.Clear();
@@ -200,7 +198,7 @@ namespace Web_Api_Amazon.Controllers
                 }
                 product.ImageUrl = ImagesFiles[0].FileName;
             }
-            // else: нові фото не завантажені — залишаємо старі Images та ImageUrl без змін
+           
 
             await _context.SaveChangesAsync();
             TempData["Success"] = "Product updated successfully.";

@@ -1,10 +1,10 @@
 @using Microsoft.AspNetCore.Identity
 @using Web_Api_Amazon.Entities
 @using Web_Api_Amazon.Models
-@using Web_Api_Amazon.Entities
 @using System.Collections.Generic
 @inject UserManager<User> UserManager
 @inject SignInManager<User> SignInManager
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -25,13 +25,13 @@
     <header class="main-header">
         <div class="header-left">
             <div class="logo">
-                <img src="imagesmain/LogoGreen.png" alt="logo icon" class="icon-36">
+                <img src="imagesmain/Logo.png" alt="logo icon" style="width:60px; height:auto;">
             </div>
             <img src="imagesmain/map-pin.png" alt="location icon" class="icon-36">
-            <div class="location">
-                Vienna, Austria
-                <img src="imagesmain/chevron-down.png" alt="down icon" class="icon-36">
-            </div>
+            <span>Vienna, Austria</span>
+
+            <img src="imagesmain/chevron-down.png" alt="down icon" class="icon-36">
+        </div>
         </div>
         <div class="header-center">
 
@@ -41,94 +41,86 @@
                 </button>
 
                 <div class="cat-dropdown" id="catDropdown">
-
-                    <a href="#" class="cat-item">
-                        <img src="imagesmain/icons/tshirt.png" alt="">
+                    @{
+                        var activeCat = Context.Request.Query["categoryId"].ToString();
+                    }
+                    <a href="/?categoryId=6" class="cat-item">
+                        <img src="imagesmain/clothe.png" alt="">
                         Clothing
                     </a>
 
-                    <a href="#" data-category-id="7" class="cat-item">
-                        <img src="imagesmain/icons/shoes.png" alt="">
+                    <a href="/?categoryId=7" data-category-id="7" class="cat-item">
+                        <img src="imagesmain/shoes.png" alt="">
                         Shoes
                     </a>
 
-                    <a href="#" class="cat-item">
-                        <img src="imagesmain/icons/laptop.png" alt="">
+                    <a href="/?categoryId=8" class="cat-item">
+                        <img src="imagesmain/computer.png" alt="">
                         Computers / Laptops / Tablets
                     </a>
 
-                    <a href="#" class="cat-item">
-                        <img src="imagesmain/icons/phone.png" alt="">
+                    <a href="/?categoryId=9" class="cat-item">
+                        <img src="imagesmain/phone.png" alt="">
                         Mobile Phones
                     </a>
 
-                    <a href="#" class="cat-item">
-                        <img src="imagesmain/icons/headphones.png" alt="">
+                    <a href="/?categoryId=10" class="cat-item">
+                        <img src="imagesmain/Audio.png" alt="">
                         Headphone
                     </a>
 
-                    <a href="#" class="cat-item">
-                        <img src="imagesmain/icons/camera.png" alt="">
+                    <a href="/?categoryId=11" class="cat-item">
+                        <img src="imagesmain/photo.png" alt="">
                         Cameras / Photo Equipment
                     </a>
 
-                    <a href="#" class="cat-item">
-                        <img src="imagesmain/icons/gaming.png" alt="">
+                    <a href="/?categoryId=12" class="cat-item">
+                        <img src="imagesmain/Game.png" alt="">
                         Gaming
                     </a>
 
-                    <a href="#" class="cat-item">
-                        <img src="imagesmain/icons/home.png" alt="">
+                    <a href="/?categoryId=13" class="cat-item">
+                        <img src="imagesmain/Home.png" alt="">
                         Home Decor
                     </a>
 
-                    <a href="#" class="cat-item">
-                        <img src="imagesmain/icons/furniture.png" alt="">
+                    <a href="/?categoryId=14" class="cat-item">
+                        <img src="imagesmain/Furniture.png" alt="">
                         Furniture
                     </a>
 
-                    <a href="#" class="cat-item">
-                        <img src="imagesmain/icons/light.png" alt="">
+                    <a href="/?categoryId=15" class="cat-item">
+                        <img src="imagesmain/Light.png" alt="">
                         Lighting
                     </a>
 
-                    <a href="#" class="cat-item">
-                        <img src="imagesmain/icons/garden.png" alt="">
+                    <a href="/?categoryId=16" class="cat-item">
+                        <img src="imagesmain/Yard.png" alt="">
                         Yard and Garden
                     </a>
 
-                    <a href="#" class="cat-item">
-                        <img src="imagesmain/icons/tools.png" alt="">
+                    <a href="/?categoryId=17" class="cat-item">
+                        <img src="imagesmain/Plumbing.png" alt="">
                         Tools / Hardware / Plumbing
                     </a>
 
-                    <a href="#" class="cat-item">
-                        <img src="imagesmain/icons/building.png" alt="">
-                        Building Materials
-                    </a>
-
-                    <a href="#" class="cat-item">
-                        <img src="imagesmain/icons/sport.png" alt="">
+                    <a href="/?categoryId=19" class="cat-item">
+                        <img src="imagesmain/sport.png" alt="">
                         Sports / Outdoor / Fitness
                     </a>
 
-                    <a href="#" class="cat-item">
-                        <img src="imagesmain/icons/car.png" alt="">
-                        Auto Parts / Accessories
-                    </a>
-
-                    <a href="#" class="cat-item">
-                        <img src="imagesmain/icons/toys.png" alt="">
+                    <a href="/?categoryId=21" class="cat-item">
+                        <img src="imagesmain/toys.png" alt="">
                         Toys Kids
                     </a>
 
-                    <a href="#" class="cat-item">
-                        <img src="imagesmain/icons/books.png" alt="">
+                    <a href="/?categoryId=22" class="cat-item">
+                        <img src="imagesmain/book.png" alt="">
                         Books / Media
                     </a>
 
-                    <a href="#" class="cat-item">
-                        <img src="imagesmain/icons/health.png" alt="">
+                    <a href="/?categoryId=23" class="cat-item">
+                        <img src="imagesmain/Health.png" alt="">
                         Health
                     </a>
 
@@ -159,19 +151,19 @@
                 <img src="imagesmain/globe.png" alt="logo icon" class="icon-36">
             </div>
             <span>English<img src="imagesmain/chevron-down.png" alt="logo icon" class="icon-36"></span>
-            <span><img src="imagesmain/Button.png" alt="logo icon" class="icon-36"></span>
-            <span><img src="imagesmain/ButtonFAV.png" alt="logo icon" class="icon-36"></span>
-            <span><img src="imagesmain/ButtonCart.png" alt="logo icon" class="icon-36"></span>
+            <span><img src="imagesmain/bell.png" alt="logo icon" class="icon-36"></span>
+            <span><img src="imagesmain/heart.png" alt="logo icon" class="icon-36"></span>
+            <span><img src="imagesmain/shopping-cart.png" alt="logo icon" class="icon-36"></span>
 
             <!-- PROFILE з дропдауном -->
             <div class="profile-wrapper">
                 <button class="profile-btn" id="profileBtn" title="Account">
-                    <img src="imagesmain/ButtonProfile.png" alt="profile" class="icon-36">
+                    <img src="imagesmain/Account Photo.png" alt="profile" style="width:44px; height:44px;">
                 </button>
 
                 <div class="profile-dropdown" id="profileDropdown">
                     @{
-                        // Змінна оголошена зовні — тепер доступна у всьому блоці
+                      
                         User? currentUser = null;
 
                         if (User.Identity.IsAuthenticated)
@@ -189,7 +181,9 @@
                         @if (await UserManager.IsInRoleAsync(currentUser, "Admin"))
                         {
                             <div class="dd-admin">
-                                <a asp-controller="AdminPanel" asp-action="Index" class="admin-btn">
+                                <a asp-controller="AdminPanel"
+                                   asp-action="Index"
+                                   class="admin-link">
                                     Admin Panel
                                 </a>
                             </div>
@@ -214,38 +208,8 @@
                         </div>
                     }
 
-                        @* Лінк на адмінку лише для Admin *@
-                        @* @if (await UserManager.IsInRoleAsync(currentUser, "Admin"))
-                        {
-                            <div class="dd-admin">
-                                <a asp-controller="AdminPanel" asp-action="Index" class="admin-btn">
-                                    Admin Panel
-                                </a>
-                            </div>
-                        }
-
-                        <div class="dd-signout">
-                            <a asp-controller="Account" asp-action="Logout" class="logout-btn">
-                                Sign out
-                            </a>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="dd-signin">
-                            <a asp-controller="Account" asp-action="Entry" class="n-signin">
-                                Sign in
-                            </a>
-                            <p class="dd-signin-sub">
-                                New customer?
-                                <a asp-controller="Account" asp-action="Register">Start here</a>
-                            </p>
-                        </div>
-                    }
+                   
                 </div>
-            </div> *@
-
-        </div>
     </header>
 
     <div class="container">
@@ -255,9 +219,9 @@
     </div>
 
     <footer class="site-footer">
-        <div class="container">
-            <div class="row gy-4">
-                <div class="col-6 col-lg-2">
+        <div class="footer-inner">
+            <div class="footer-links">
+                <div class="footer-col">
                     <h5 class="site-footer__title">About Allora</h5>
                     <ul class="site-footer__list">
                         <li><a href="#">About Allora</a></li>
@@ -267,7 +231,7 @@
                         <li><a href="#">Accessibility Commitment</a></li>
                     </ul>
                 </div>
-                <div class="col-6 col-lg-2">
+                <div class="footer-col">
                     <h5 class="site-footer__title">For Business</h5>
                     <ul class="site-footer__list">
                         <li><a href="#">Sell with Allora</a></li>
@@ -277,7 +241,7 @@
                         <li><a href="#">Advertising Tools</a></li>
                     </ul>
                 </div>
-                <div class="col-6 col-lg-2">
+                <div class="footer-col">
                     <h5 class="site-footer__title">Payments &amp; Orders</h5>
                     <ul class="site-footer__list">
                         <li><a href="#">Payment Methods</a></li>
@@ -287,7 +251,7 @@
                         <li><a href="#">Delivery Information</a></li>
                     </ul>
                 </div>
-                <div class="col-6 col-lg-2">
+                <div class="footer-col">
                     <h5 class="site-footer__title">Help &amp; Support</h5>
                     <ul class="site-footer__list">
                         <li><a href="#">Help Center</a></li>
@@ -297,38 +261,40 @@
                         <li><a href="#">Report an Issue</a></li>
                     </ul>
                 </div>
-                <div class="col-6 col-lg-2">
+                <div class="footer-col">
                     <h5 class="site-footer__title">Legal</h5>
                     <ul class="site-footer__list">
                         <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#" style="color: #FCFCFC; font-family: 'DM Sans', sans-serif;">Privacy Policy</a></li>
                         <li><a href="#">Cookie Preferences</a></li>
                         <li><a href="#">Accessibility Statement</a></li>
                     </ul>
                 </div>
+            </div>
 
+            <div class="site-footer__bottom">
+                <img src="imagesmain/Logo.png" alt="Allora" class="footer-logo">
 
-                <div class="site-footer__bottom">
-                    <div class="site-footer__brand">
-                        <img src="imagesmain/LogoGreen.png" alt="">
-                    </div>
-                    <img src="imagesmain/map-pin.png" alt="location icon" class="site-footer__meta">
-                    <div class="footer-location">
-                        Vienna, Austria
-                        <img src="imagesmain/chevron-down.png" alt="down icon" class="icon-36">
-                    </div>
-                   
-
-                    <div class="footer-chip">
-                        <img src="imagesmain/globe.png" alt="logo icon" >
-                    </div>
-                    <span>English<img src="imagesmain/chevron-down.png" alt="logo icon" ></span>
-                    <img src="imagesmain/Euro.png" alt="logo icon">
-                    <span>Euro<img src="imagesmain/chevron-down.png" alt="logo icon"></span>
-                    <span class="footer-chip"> © 2026 Allora. All rights reserved</span>
-                    </div>
-             
+                <div class="footer-bottom-item">
+                    <img src="imagesmain/map-pin.png" alt="" class="icon-36">
+                    <span>Vienna, Austria</span>
+                    <img src="imagesmain/chevron-down.png" alt="" class="icon-36">
                 </div>
+
+                <div class="footer-bottom-item">
+                    <img src="imagesmain/globe.png" alt="" class="icon-36">
+                    <span>English</span>
+                    <img src="imagesmain/chevron-down.png" alt="" class="icon-36">
+                </div>
+
+                <div class="footer-bottom-item">
+                    <img src="imagesmain/Euro.png" alt="" class="icon-36">
+                    <span>Euro</span>
+                    <img src="imagesmain/chevron-down.png" alt="" class="icon-36">
+                </div>
+
+                <span>© 2026 Allora. All rights reserved</span>
+            </div>
         </div>
     </footer>
 

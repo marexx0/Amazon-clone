@@ -22,5 +22,6 @@ namespace Web_Api_Amazon.Entities
         public List<ProductVariant> Variants { get; set; } = new();
 
         public List<ProductImage> Images { get; set; } = new();
+
     }
 }
