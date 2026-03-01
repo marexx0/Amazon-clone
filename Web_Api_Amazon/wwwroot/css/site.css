@@ -207,6 +207,7 @@ p, .text-b2 {
 }
 
 .site-header__inner {
+    position: relative;
     height: 100%;
     width: 100%;
     min-width: 0;
@@ -258,15 +259,17 @@ p, .text-b2 {
 }
 
 .site-header__search {
-    flex: 1;
-    min-width: 0;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(920px, calc(100% - 680px));
+    min-width: 280px;
     max-width: 920px;
     height: 40px;
     border-radius: 4px;
     overflow: hidden;
     display: flex;
     background: #ffffff;
-    margin-left: 8px;
     justify-content: center;
 }
 
@@ -344,8 +347,9 @@ p, .text-b2 {
     }
 
     .site-header__search {
+        width: min(520px, calc(100% - 520px));
         max-width: 520px;
-        margin-left: 0;
+        min-width: 220px;
     }
 
     .site-header__actions {
@@ -384,9 +388,13 @@ p, .text-b2 {
     }
 
     .site-header__search {
+        position: static;
+        transform: none;
         order: 4;
         flex: 1 0 100%;
+        width: 100%;
         max-width: 100%;
+        min-width: 0;
         height: 36px;
     }
 }
