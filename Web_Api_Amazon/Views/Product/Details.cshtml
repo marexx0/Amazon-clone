@@ -25,7 +25,9 @@
         breadcrumbs.Insert(0, category);
         category = category.ParentCategory;
     }
+
 }
+
 
 <div class="product-page">
     <div class="product-breadcrumb">
@@ -189,18 +191,7 @@
                     @for (var i = 0; i < Math.Min(Model.RelatedProducts.Count, 3); i++)
                     {
                         var related = Model.RelatedProducts[i];
-                        var relatedImage = related.Images?.OrderBy(img => img.SortOrder).FirstOrDefault()?.ImageUrl ?? related.ImageUrl;
-                        <article class="cart-mini-card">
-                            @if (!string.IsNullOrWhiteSpace(relatedImage))
-                            {
-                                <img src="@relatedImage" alt="@related.Name" />
-                            }
-                            <div class="cart-mini-card-body">
-                                <p class="mini-card-price">$@related.Price.ToString("0.00")</p>
-                                <p class="mini-card-name">@related.Name</p>
-                                <button class="summary-lime-btn" type="button">Add to cart</button>
-                            </div>
-                        </article>
+                        <partial name="_ProductCard" model="related" />
                     }
                 </div>
             </section>
@@ -266,23 +257,11 @@
         <div class="section-header">
             <h2>Customers also viewed</h2>
         </div>
-        <div class="card-row">
+        <div class="product-cards-grid">
             @for (var i = 0; i < Model.RelatedProducts.Count; i++)
             {
                 var related = Model.RelatedProducts[i];
-                var relatedImage = related.Images?.OrderBy(img => img.SortOrder).FirstOrDefault()?.ImageUrl ?? related.ImageUrl;
-                <article class="product-card">
-                    @if (!string.IsNullOrWhiteSpace(relatedImage))
-                    {
-                        <img src="@relatedImage" alt="@related.Name" />
-                    }
-                    <div class="card-body">
-                        <p class="card-price">$@related.Price.ToString("0.00")</p>
-                        <h3>@related.Name</h3>
-                        <p class="delivery">Delivery tomorrow, 31 Jan</p>
-                        <button class="mini-btn" type="button">Buy now</button>
-                    </div>
-                </article>
+                <partial name="_ProductCard" model="related" />
             }
         </div>
     </section>
@@ -332,21 +311,10 @@
         <div class="section-header">
             <h2>Top Picks of the Month</h2>
         </div>
-        <div class="card-row">
+        <div class="card-row product-cards-grid">
             @foreach (var pick in Model.TopPicks)
             {
-                var pickImage = pick.Images?.OrderBy(img => img.SortOrder).FirstOrDefault()?.ImageUrl ?? pick.ImageUrl;
-                <article class="product-card">
-                    @if (!string.IsNullOrWhiteSpace(pickImage))
-                    {
-                        <img src="@pickImage" alt="@pick.Name" />
-                    }
-                    <div class="card-body">
-                        <h3>@pick.Name</h3>
-                        <p class="card-price">$@pick.Price.ToString("0.00")</p>
-                        <button class="mini-btn" type="button">Buy now</button>
-                    </div>
-                </article>
+                <partial name="_ProductCard" model="pick" />
             }
         </div>
     </section>

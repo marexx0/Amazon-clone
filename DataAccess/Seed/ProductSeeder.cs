@@ -81,8 +81,97 @@ namespace DataAccess.Persistance
                     Price = 129.99,
                     ImageUrl = "/images/products/nike_dunk_cacao_pair.jpg",
                     CategoryId = 7
+                                },
+                new Product
+                {
+                    Id = 23,
+                    Name = "Levi's 501 Original Fit Jeans",
+                    Description = "Iconic straight-leg men's jeans made with non-stretch denim and button fly construction for a timeless everyday fit.",
+                    Price = 59.50,
+                    ImageUrl = "/images/products/levis_501.png",
+                    CategoryId = 6
+                },
+                new Product
+                {
+                    Id = 24,
+                    Name = "ASICS Gel-Kayano 30 Running Shoes",
+                    Description = "Premium stability running shoe with FF BLAST PLUS ECO cushioning and 4D GUIDANCE SYSTEM support for long-distance comfort.",
+                    Price = 159.95,
+                    ImageUrl = "/images/products/asics_kayano_30.jpg",
+                    CategoryId = 7
+                },
+                new Product
+                {
+                    Id = 25,
+                    Name = "Dell XPS 13 Plus Laptop (13th Gen Intel, 16GB, 512GB)",
+                    Description = "Compact aluminum ultrabook featuring a 13.4-inch InfinityEdge display, 13th Gen Intel Core processor, 16GB RAM and fast 512GB SSD.",
+                    Price = 1399.99,
+                    ImageUrl = "/images/products/dell_xps_13_plus.png",
+                    CategoryId = 8
+                },
+                new Product
+                {
+                    Id = 26,
+                    Name = "Google Pixel 8 Pro Unlocked Smartphone",
+                    Description = "Google flagship phone with advanced AI camera tools, 6.7-inch Super Actua display and all-day battery life.",
+                    Price = 999.00,
+                    ImageUrl = "/images/products/pixel_8_pro.png",
+                    CategoryId = 9
+                },
+                new Product
+                {
+                    Id = 27,
+                    Name = "Apple Watch Series 9 GPS 45mm",
+                    Description = "Advanced smartwatch with bright Always-On Retina display, health sensors, workout tracking, and seamless iPhone integration.",
+                    Price = 429.00,
+                    ImageUrl = "/images/products/apple_watch_series_9.jpg",
+                    CategoryId = 10
+                },
+                new Product
+                {
+                    Id = 28,
+                    Name = "Nikon Z6 II Mirrorless Camera Body",
+                    Description = "Full-frame mirrorless camera with dual EXPEED 6 processors, robust autofocus, and strong low-light image quality.",
+                    Price = 1996.95,
+                    ImageUrl = "/images/products/nikon_z6_ii.png",
+                    CategoryId = 11
+                },
+                new Product
+                {
+                    Id = 29,
+                    Name = "Xbox Series X Console",
+                    Description = "Microsoft's most powerful Xbox with 1TB SSD, 4K gaming support, and quick resume across multiple games.",
+                    Price = 499.99,
+                    ImageUrl = "/images/products/xbox_series_x.png",
+                    CategoryId = 12
+                },
+                new Product
+                {
+                    Id = 30,
+                    Name = "IKEA MALM 6-Drawer Dresser",
+                    Description = "Minimalist bedroom dresser with six smooth-glide drawers and a clean Scandinavian profile suitable for modern spaces.",
+                    Price = 279.00,
+                    ImageUrl = "/images/products/malm_dresser.png",
+                    CategoryId = 14
+                },
+                new Product
+                {
+                    Id = 31,
+                    Name = "Bosch 12V Max Cordless Drill Driver Kit",
+                    Description = "Compact cordless drill/driver kit with two-speed transmission, 12V lithium-ion batteries, and durable carrying case.",
+                    Price = 129.00,
+                    ImageUrl = "/images/products/bosch_12v_drill.png",
+                    CategoryId = 17
+                },
+                new Product
+                {
+                    Id = 32,
+                    Name = "LEGO Classic Medium Creative Brick Box 10696",
+                    Description = "Creative building set with mixed LEGO bricks, wheels, and windows designed to inspire open-ended play for kids.",
+                    Price = 29.99,
+                    ImageUrl = "/images/products/lego_10696.png",
+                    CategoryId = 21
                 }
-                
             };
         }
     }
