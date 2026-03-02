@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ShopDbContext))]
-    [Migration("20260224070804_Base")]
-    partial class Base
+    [Migration("20260302142815_SomeeDb")]
+    partial class SomeeDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,9 +39,15 @@ namespace DataAccess.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<string>("SelectedOptionsJson")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("VariantKey")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -485,6 +491,34 @@ namespace DataAccess.Migrations
                         });
                 });
 
+            modelBuilder.Entity("FavoriteItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId", "ProductId")
+                        .IsUnique();
+
+                    b.ToTable("FavoriteItems");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -738,7 +772,7 @@ namespace DataAccess.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PropertyDefinitionId")
+                    b.Property<int?>("PropertyDefinitionId")
                         .HasColumnType("int");
 
                     b.Property<string>("Value")
@@ -1004,7 +1038,7 @@ namespace DataAccess.Migrations
                     b.Property<int>("ProductVariantId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PropertyDefinitionId")
+                    b.Property<int?>("PropertyDefinitionId")
                         .HasColumnType("int");
 
                     b.Property<string>("Value")
@@ -1312,6 +1346,46 @@ namespace DataAccess.Migrations
                         });
                 });
 
+            modelBuilder.Entity("SavedForLaterItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAtUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SelectedOptionsJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("VariantKey")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId", "ProductId", "VariantKey")
+                        .IsUnique();
+
+                    b.ToTable("SavedForLaterItems");
+                });
+
             modelBuilder.Entity("Web_Api_Amazon.Entities.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -1355,7 +1429,7 @@ namespace DataAccess.Migrations
                             Id = 1,
                             CategoryId = 6,
                             Description = "Amazon Essentials men's short-sleeve crewneck t-shirt in soft jersey knit.",
-                            ImageUrl = "/images/products/amazon_essentials_tshirt.png",
+                            ImageUrl = "/images/products/tshirt.png",
                             Name = "Amazon Essentials Men's Short-Sleeve Crewneck T-Shirt",
                             Price = 18.989999999999998
                         },
@@ -1364,7 +1438,7 @@ namespace DataAccess.Migrations
                             Id = 2,
                             CategoryId = 7,
                             Description = "adidas Grand Court 2.0 sneakers with a synthetic leather upper and rubber outsole.",
-                            ImageUrl = "/images/products/adidas_grand_court.png",
+                            ImageUrl = "/images/products/5_600.png",
                             Name = "adidas Men's Grand Court 2.0 Sneakers",
                             Price = 69.989999999999995
                         },
@@ -1373,7 +1447,7 @@ namespace DataAccess.Migrations
                             Id = 3,
                             CategoryId = 8,
                             Description = "Apple MacBook Air 13-inch laptop with M2 chip, 8GB RAM, and 256GB SSD storage.",
-                            ImageUrl = "/images/products/macbook_air_m2.png",
+                            ImageUrl = "/images/products/macbook.jfif",
                             Name = "Apple MacBook Air 13-inch Laptop (M2, 8GB, 256GB)",
                             Price = 1099.0
                         },
@@ -1382,7 +1456,7 @@ namespace DataAccess.Migrations
                             Id = 4,
                             CategoryId = 9,
                             Description = "Samsung Galaxy S24 unlocked smartphone with advanced camera system.",
-                            ImageUrl = "/images/products/galaxy_s24.png",
+                            ImageUrl = "/images/productsphone1.jfif",
                             Name = "Samsung Galaxy S24 Unlocked Smartphone",
                             Price = 799.99000000000001
                         },
@@ -1391,7 +1465,7 @@ namespace DataAccess.Migrations
                             Id = 5,
                             CategoryId = 10,
                             Description = "Sony WH-1000XM5 wireless noise canceling headphones with premium sound.",
-                            ImageUrl = "/images/products/sony_wh1000xm5.png",
+                            ImageUrl = "/images/products/headphones.jfif",
                             Name = "Sony WH-1000XM5 Wireless Noise Canceling Headphones",
                             Price = 398.0
                         },
@@ -1400,7 +1474,7 @@ namespace DataAccess.Migrations
                             Id = 6,
                             CategoryId = 11,
                             Description = "Canon EOS R10 mirrorless camera kit with RF-S 18-45mm lens for versatile shooting.",
-                            ImageUrl = "/images/products/canon_eos_r10.png",
+                            ImageUrl = "/images/products/canon_.jpg",
                             Name = "Canon EOS R10 Mirrorless Camera with RF-S 18-45mm Lens",
                             Price = 999.0
                         },
@@ -1409,7 +1483,7 @@ namespace DataAccess.Migrations
                             Id = 7,
                             CategoryId = 12,
                             Description = "PlayStation 5 console for next-gen gaming with ultra-high-speed SSD.",
-                            ImageUrl = "/images/products/ps5_console.png",
+                            ImageUrl = "/images/products/play.jfif",
                             Name = "PlayStation 5 Console",
                             Price = 499.99000000000001
                         },
@@ -1546,6 +1620,25 @@ namespace DataAccess.Migrations
                     b.Navigation("PropertyDefinition");
                 });
 
+            modelBuilder.Entity("FavoriteItem", b =>
+                {
+                    b.HasOne("Web_Api_Amazon.Entities.Product", "Product")
+                        .WithMany("FavoriteItems")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Web_Api_Amazon.Entities.User", "User")
+                        .WithMany("FavoriteItems")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -1649,8 +1742,7 @@ namespace DataAccess.Migrations
                     b.HasOne("PropertyDefinition", "PropertyDefinition")
                         .WithMany("ProductProperties")
                         .HasForeignKey("PropertyDefinitionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Product");
 
@@ -1679,12 +1771,30 @@ namespace DataAccess.Migrations
                     b.HasOne("PropertyDefinition", "PropertyDefinition")
                         .WithMany()
                         .HasForeignKey("PropertyDefinitionId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("ProductVariant");
 
                     b.Navigation("PropertyDefinition");
+                });
+
+            modelBuilder.Entity("SavedForLaterItem", b =>
+                {
+                    b.HasOne("Web_Api_Amazon.Entities.Product", "Product")
+                        .WithMany("SavedForLaterItems")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Web_Api_Amazon.Entities.User", "User")
+                        .WithMany("SavedForLaterItems")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Web_Api_Amazon.Entities.Product", b =>
@@ -1728,11 +1838,15 @@ namespace DataAccess.Migrations
                 {
                     b.Navigation("CartItems");
 
+                    b.Navigation("FavoriteItems");
+
                     b.Navigation("Images");
 
                     b.Navigation("OrderItems");
 
                     b.Navigation("Properties");
+
+                    b.Navigation("SavedForLaterItems");
 
                     b.Navigation("Variants");
                 });
@@ -1741,7 +1855,11 @@ namespace DataAccess.Migrations
                 {
                     b.Navigation("CartItems");
 
+                    b.Navigation("FavoriteItems");
+
                     b.Navigation("Orders");
+
+                    b.Navigation("SavedForLaterItems");
                 });
 #pragma warning restore 612, 618
         }

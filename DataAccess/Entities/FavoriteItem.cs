@@ -1,4 +1,7 @@
-﻿public class FavoriteItem : IFavoriteItem
+﻿
+using Web_Api_Amazon.Entities;
+
+public class FavoriteItem : IFavoriteItem
 {
     public int Id { get; set; }
 

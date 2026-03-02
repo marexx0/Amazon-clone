@@ -52,7 +52,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("CartItems", (string)null);
+                    b.ToTable("CartItems");
                 });
 
             modelBuilder.Entity("Category", b =>
@@ -75,11 +75,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("ParentCategoryId");
 
-<<<<<<< main-page
-                    b.ToTable("Categories", (string)null);
-=======
                     b.ToTable("Categories");
->>>>>>> develop
 
                     b.HasData(
                         new
@@ -235,7 +231,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("PropertyDefinitionId");
 
-                    b.ToTable("CategoryProperty", (string)null);
+                    b.ToTable("CategoryProperty");
 
                     b.HasData(
                         new
@@ -675,7 +671,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("OrderItem", b =>
@@ -704,7 +700,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderItems", (string)null);
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("ProductImage", b =>
@@ -756,11 +752,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("ProductId", "IsPrimary");
 
-<<<<<<< main-page
-                    b.ToTable("ProductImages", (string)null);
-=======
                     b.ToTable("ProductImages");
->>>>>>> develop
                 });
 
             modelBuilder.Entity("ProductProperty", b =>
@@ -791,7 +783,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("PropertyDefinitionId");
 
-                    b.ToTable("ProductProperties", (string)null);
+                    b.ToTable("ProductProperties");
 
                     b.HasData(
                         new
@@ -967,7 +959,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductVariants", (string)null);
+                    b.ToTable("ProductVariants");
 
                     b.HasData(
                         new
@@ -1057,7 +1049,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("PropertyDefinitionId");
 
-                    b.ToTable("ProductVariantValue", (string)null);
+                    b.ToTable("ProductVariantValue");
 
                     b.HasData(
                         new
@@ -1227,7 +1219,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("Name");
 
-                    b.ToTable("PropertyDefinition", (string)null);
+                    b.ToTable("PropertyDefinition");
 
                     b.HasData(
                         new
@@ -1351,11 +1343,7 @@ namespace DataAccess.Migrations
                         });
                 });
 
-<<<<<<< main-page
-            modelBuilder.Entity("Web_Api_Amazon.Entities.Product", b =>
-=======
             modelBuilder.Entity("SavedForLaterItem", b =>
->>>>>>> develop
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -1363,22 +1351,6 @@ namespace DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-<<<<<<< main-page
-                    b.Property<int>("CategoryId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(2000)
-                        .HasColumnType("nvarchar(2000)");
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Name")
-=======
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("datetime2");
 
@@ -1397,12 +1369,46 @@ namespace DataAccess.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("VariantKey")
->>>>>>> develop
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-<<<<<<< main-page
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId", "ProductId", "VariantKey")
+                        .IsUnique();
+
+                    b.ToTable("SavedForLaterItems");
+                });
+
+            modelBuilder.Entity("Web_Api_Amazon.Entities.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
@@ -1412,7 +1418,7 @@ namespace DataAccess.Migrations
 
                     b.HasIndex("Name");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
 
                     b.HasData(
                         new
@@ -1420,7 +1426,7 @@ namespace DataAccess.Migrations
                             Id = 1,
                             CategoryId = 6,
                             Description = "Amazon Essentials men's short-sleeve crewneck t-shirt in soft jersey knit.",
-                            ImageUrl = "/images/products/amazon_essentials_tshirt.png",
+                            ImageUrl = "/images/products/tshirt.png",
                             Name = "Amazon Essentials Men's Short-Sleeve Crewneck T-Shirt",
                             Price = 18.989999999999998
                         },
@@ -1429,7 +1435,7 @@ namespace DataAccess.Migrations
                             Id = 2,
                             CategoryId = 7,
                             Description = "adidas Grand Court 2.0 sneakers with a synthetic leather upper and rubber outsole.",
-                            ImageUrl = "/images/products/adidas_grand_court.png",
+                            ImageUrl = "/images/products/5_600.png",
                             Name = "adidas Men's Grand Court 2.0 Sneakers",
                             Price = 69.989999999999995
                         },
@@ -1438,7 +1444,7 @@ namespace DataAccess.Migrations
                             Id = 3,
                             CategoryId = 8,
                             Description = "Apple MacBook Air 13-inch laptop with M2 chip, 8GB RAM, and 256GB SSD storage.",
-                            ImageUrl = "/images/products/macbook_air_m2.png",
+                            ImageUrl = "/images/products/macbook.jfif",
                             Name = "Apple MacBook Air 13-inch Laptop (M2, 8GB, 256GB)",
                             Price = 1099.0
                         },
@@ -1447,7 +1453,7 @@ namespace DataAccess.Migrations
                             Id = 4,
                             CategoryId = 9,
                             Description = "Samsung Galaxy S24 unlocked smartphone with advanced camera system.",
-                            ImageUrl = "/images/products/galaxy_s24.png",
+                            ImageUrl = "/images/productsphone1.jfif",
                             Name = "Samsung Galaxy S24 Unlocked Smartphone",
                             Price = 799.99000000000001
                         },
@@ -1456,7 +1462,7 @@ namespace DataAccess.Migrations
                             Id = 5,
                             CategoryId = 10,
                             Description = "Sony WH-1000XM5 wireless noise canceling headphones with premium sound.",
-                            ImageUrl = "/images/products/sony_wh1000xm5.png",
+                            ImageUrl = "/images/products/headphones.jfif",
                             Name = "Sony WH-1000XM5 Wireless Noise Canceling Headphones",
                             Price = 398.0
                         },
@@ -1465,7 +1471,7 @@ namespace DataAccess.Migrations
                             Id = 6,
                             CategoryId = 11,
                             Description = "Canon EOS R10 mirrorless camera kit with RF-S 18-45mm lens for versatile shooting.",
-                            ImageUrl = "/images/products/canon_eos_r10.png",
+                            ImageUrl = "/images/products/canon_.jpg",
                             Name = "Canon EOS R10 Mirrorless Camera with RF-S 18-45mm Lens",
                             Price = 999.0
                         },
@@ -1474,7 +1480,7 @@ namespace DataAccess.Migrations
                             Id = 7,
                             CategoryId = 12,
                             Description = "PlayStation 5 console for next-gen gaming with ultra-high-speed SSD.",
-                            ImageUrl = "/images/products/ps5_console.png",
+                            ImageUrl = "/images/products/play.jfif",
                             Name = "PlayStation 5 Console",
                             Price = 499.99000000000001
                         },
@@ -1490,19 +1496,6 @@ namespace DataAccess.Migrations
                 });
 
             modelBuilder.Entity("Web_Api_Amazon.Entities.User", b =>
-=======
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId", "ProductId", "VariantKey")
-                        .IsUnique();
-
-                    b.ToTable("SavedForLaterItems");
-                });
-
-            modelBuilder.Entity("User", b =>
->>>>>>> develop
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -1626,13 +1619,13 @@ namespace DataAccess.Migrations
 
             modelBuilder.Entity("FavoriteItem", b =>
                 {
-                    b.HasOne("Product", "Product")
+                    b.HasOne("Web_Api_Amazon.Entities.Product", "Product")
                         .WithMany("FavoriteItems")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("User", "User")
+                    b.HasOne("Web_Api_Amazon.Entities.User", "User")
                         .WithMany("FavoriteItems")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1724,20 +1717,6 @@ namespace DataAccess.Migrations
                     b.Navigation("Product");
                 });
 
-<<<<<<< main-page
-=======
-            modelBuilder.Entity("Product", b =>
-                {
-                    b.HasOne("Category", "Category")
-                        .WithMany("Products")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-                });
-
->>>>>>> develop
             modelBuilder.Entity("ProductImage", b =>
                 {
                     b.HasOne("Web_Api_Amazon.Entities.Product", "Product")
@@ -1796,7 +1775,25 @@ namespace DataAccess.Migrations
                     b.Navigation("PropertyDefinition");
                 });
 
-<<<<<<< main-page
+            modelBuilder.Entity("SavedForLaterItem", b =>
+                {
+                    b.HasOne("Web_Api_Amazon.Entities.Product", "Product")
+                        .WithMany("SavedForLaterItems")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Web_Api_Amazon.Entities.User", "User")
+                        .WithMany("SavedForLaterItems")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Web_Api_Amazon.Entities.Product", b =>
                 {
                     b.HasOne("Category", "Category")
@@ -1806,25 +1803,6 @@ namespace DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
-=======
-            modelBuilder.Entity("SavedForLaterItem", b =>
-                {
-                    b.HasOne("Product", "Product")
-                        .WithMany("SavedForLaterItems")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("User", "User")
-                        .WithMany("SavedForLaterItems")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("User");
->>>>>>> develop
                 });
 
             modelBuilder.Entity("Category", b =>
@@ -1832,35 +1810,13 @@ namespace DataAccess.Migrations
                     b.Navigation("CategoryProperties");
 
                     b.Navigation("Products");
-<<<<<<< main-page
-=======
-
-                    b.Navigation("SubCategories");
-                });
->>>>>>> develop
 
                     b.Navigation("SubCategories");
                 });
 
             modelBuilder.Entity("Order", b =>
                 {
-<<<<<<< main-page
                     b.Navigation("OrderItems");
-=======
-                    b.Navigation("CartItems");
-
-                    b.Navigation("FavoriteItems");
-
-                    b.Navigation("Images");
-
-                    b.Navigation("OrderItems");
-
-                    b.Navigation("Properties");
-
-                    b.Navigation("SavedForLaterItems");
-
-                    b.Navigation("Variants");
->>>>>>> develop
                 });
 
             modelBuilder.Entity("ProductVariant", b =>
@@ -1879,11 +1835,15 @@ namespace DataAccess.Migrations
                 {
                     b.Navigation("CartItems");
 
+                    b.Navigation("FavoriteItems");
+
                     b.Navigation("Images");
 
                     b.Navigation("OrderItems");
 
                     b.Navigation("Properties");
+
+                    b.Navigation("SavedForLaterItems");
 
                     b.Navigation("Variants");
                 });
