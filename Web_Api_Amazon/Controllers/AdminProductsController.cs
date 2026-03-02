@@ -46,10 +46,12 @@ namespace Web_Api_Amazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Product model, List<IFormFile> ImagesFiles)
         {
-            // Прибираємо ImageUrl з валідації — ми самі його встановимо
-            ModelState.Remove("ImageUrl");
-            // Прибираємо навігаційні властивості з валідації
-            ModelState.Remove("Category");
+            RemoveNonFormModelStateEntries();
+
+            if (model.CategoryId <= 0)
+            {
+                ModelState.AddModelError(nameof(Product.CategoryId), "Please select a category.");
+            }
 
             if (!ModelState.IsValid)
             {
@@ -122,9 +124,13 @@ namespace Web_Api_Amazon.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Product model, List<IFormFile> ImagesFiles)
         {
-            
-            ModelState.Remove("ImageUrl");
-            ModelState.Remove("Category");
+
+            RemoveNonFormModelStateEntries();
+
+            if (model.CategoryId <= 0)
+            {
+                ModelState.AddModelError(nameof(Product.CategoryId), "Please select a category.");
+            }
 
             if (!ModelState.IsValid)
             {
@@ -206,6 +212,15 @@ namespace Web_Api_Amazon.Controllers
             await _context.SaveChangesAsync();
             TempData["Success"] = "Product updated successfully.";
             return RedirectToAction("Index", "AdminProducts");
+        }
+        private void RemoveNonFormModelStateEntries()
+        {
+            ModelState.Remove(nameof(Product.ImageUrl));
+            ModelState.Remove(nameof(Product.Category));
+            ModelState.Remove(nameof(Product.CartItems));
+            ModelState.Remove(nameof(Product.OrderItems));
+            ModelState.Remove(nameof(Product.FavoriteItems));
+            ModelState.Remove(nameof(Product.SavedForLaterItems));
         }
 
         // DELETE
