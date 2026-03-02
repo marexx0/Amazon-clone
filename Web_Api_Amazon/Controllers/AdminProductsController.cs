@@ -103,7 +103,10 @@ namespace Web_Api_Amazon.Controllers
         {
             var product = _context.Products
                 .Include(p => p.Properties)
+                .ThenInclude(pp => pp.PropertyDefinition)
                 .Include(p => p.Variants)
+                .ThenInclude(v => v.VariantValues)
+                .ThenInclude(vv => vv.PropertyDefinition)
                 .Include(p => p.Images)
                 .FirstOrDefault(p => p.Id == id);
 

@@ -48,9 +48,10 @@
                 {
                     for (int i = 0; i < Model.Properties.Count; i++)
                     {
+                        var propertyName = Model.Properties[i].Name ?? Model.Properties[i].PropertyDefinition?.Name ?? string.Empty;
                         <div class="d-flex mb-2">
                             <input type="text" name="Properties[@i].Name"
-                                   value="@Model.Properties[i].Name"
+                                   value="@propertyName"
                                    class="form-control me-2" />
 
                             <input type="text" name="Properties[@i].Value"
@@ -75,13 +76,16 @@
                 {
                     for (int i = 0; i < Model.Variants.Count; i++)
                     {
+                        var fallbackVariantValue = Model.Variants[i].VariantValues?.FirstOrDefault();
+                        var variantName = Model.Variants[i].Name ?? fallbackVariantValue?.PropertyDefinition?.Name ?? string.Empty;
+                        var variantValue = Model.Variants[i].Value ?? fallbackVariantValue?.Value ?? string.Empty;
                         <div class="d-flex mb-2">
                             <input type="text" name="Variants[@i].Name"
-                                   value="@Model.Variants[i].Name"
+                                   value="@variantName"
                                    class="form-control me-2" />
 
                             <input type="text" name="Variants[@i].Value"
-                                   value="@Model.Variants[i].Value"
+                                   value="@variantValue"
                                    class="form-control me-2" />
 
                             <button type="button" class="btn btn-danger btn-sm removeVariant">X</button>
@@ -129,6 +133,17 @@
             `;
             container.appendChild(div);
             variantIndex++;
+        });
+        document.getElementById('propertiesContainer').addEventListener('click', function (e) {
+            if (e.target.classList.contains('removeProperty')) {
+                e.target.parentElement.remove();
+            }
+        });
+
+        document.getElementById('variantsContainer').addEventListener('click', function (e) {
+            if (e.target.classList.contains('removeVariant')) {
+                e.target.parentElement.remove();
+            }
         });
     </script>
 }
