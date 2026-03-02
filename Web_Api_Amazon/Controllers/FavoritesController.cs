@@ -4,6 +4,7 @@ using Amazon_clone.DataAccess.Data;
 using Core.Dtos;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Web_Api_Amazon.Models;
 
@@ -71,16 +72,19 @@ public class FavoritesController : Controller
 
         if (string.IsNullOrWhiteSpace(userId))
         {
-            var localFavorites = GetLocalFavorites();
-            if (!localFavorites.Contains(productId))
-            {
-                localFavorites.Add(productId);
-                SaveLocalFavorites(localFavorites);
-            }
+            return BuildAuthRequiredResult(returnUrl);
         }
-        else
+
+        await _favoritesService.AddAsync(userId, productId);
+
+        if (IsAjaxRequest())
         {
-            await _favoritesService.AddAsync(userId, productId);
+            return Json(new
+            {
+                success = true,
+                isFavorite = true,
+                message = "Added to favorites."
+            });
         }
 
         if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
@@ -99,13 +103,19 @@ public class FavoritesController : Controller
 
         if (string.IsNullOrWhiteSpace(userId))
         {
-            var localFavorites = GetLocalFavorites();
-            localFavorites.RemoveAll(id => id == productId);
-            SaveLocalFavorites(localFavorites);
+            return BuildAuthRequiredResult(returnUrl);
         }
-        else
+
+        await _favoritesService.RemoveAsync(userId, productId);
+
+        if (IsAjaxRequest())
         {
-            await _favoritesService.RemoveAsync(userId, productId);
+            return Json(new
+            {
+                success = true,
+                isFavorite = false,
+                message = "Removed from favorites."
+            });
         }
 
         if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
@@ -161,6 +171,28 @@ public class FavoritesController : Controller
         HttpContext.Session.Remove(LocalFavoritesSessionKey);
     }
 
+    private IActionResult BuildAuthRequiredResult(string? returnUrl)
+    {
+        var loginUrl = Url.Action("Entry", "Account", new
+        {
+            returnUrl = string.IsNullOrWhiteSpace(returnUrl) ? $"{Request.Path}{Request.QueryString}" : returnUrl
+        }) ?? "/Account/Entry";
+
+        if (IsAjaxRequest())
+        {
+            Response.StatusCode = StatusCodes.Status401Unauthorized;
+            return Json(new
+            {
+                success = false,
+                requiresLogin = true,
+                message = "Please sign in to manage favorites.",
+                redirectUrl = loginUrl
+            });
+        }
+
+        return Redirect(loginUrl);
+    }
+
     private static ProductCardViewModel MapToViewModel(ProductCardDto dto)
     {
         return new ProductCardViewModel
@@ -174,5 +206,10 @@ public class FavoritesController : Controller
             Rating = dto.Rating,
             VariantKey = dto.VariantKey
         };
+    }
+
+    private bool IsAjaxRequest()
+    {
+        return string.Equals(Request.Headers["X-Requested-With"], "XMLHttpRequest", StringComparison.OrdinalIgnoreCase);
     }
 }

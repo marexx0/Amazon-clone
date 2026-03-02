@@ -7,7 +7,8 @@
 @inject IFavoritesService FavoritesService
 <link rel="stylesheet" href="~/css/cardproduct.css" asp-append-version="true" />
 @{
-    var favoriteProductIds = ViewData["FavoriteProductIds"] as HashSet<int>;
+    const string favoritesCacheKey = "FavoriteProductIds";
+    var favoriteProductIds = Context.Items[favoritesCacheKey] as HashSet<int>;
 
     if (favoriteProductIds is null)
     {
@@ -29,7 +30,7 @@
                 : (JsonSerializer.Deserialize<List<int>>(favoriteIdsRaw) ?? new List<int>()).ToHashSet();
         }
 
-        ViewData["FavoriteProductIds"] = favoriteProductIds;
+        Context.Items[favoritesCacheKey] = favoriteProductIds;
     }
 
     var isFavorite = favoriteProductIds.Contains(Model.Id);

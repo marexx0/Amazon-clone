@@ -30,6 +30,7 @@ namespace Web_Api_Amazon.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var product = await _context.Products
+                .AsNoTracking()
                 .Include(p => p.Category)
                 .ThenInclude(c => c.ParentCategory)
                 .Include(p => p.Images)
@@ -63,6 +64,7 @@ namespace Web_Api_Amazon.Controllers
             }
 
             var relatedProducts = await _context.Products
+                .AsNoTracking()
                 .Include(p => p.Images)
                 .Where(p => p.CategoryId == product.CategoryId && p.Id != product.Id)
                 .OrderBy(p => p.Name)
@@ -71,6 +73,7 @@ namespace Web_Api_Amazon.Controllers
 
             var relatedIds = relatedProducts.Select(p => p.Id).ToHashSet();
             var topPicks = await _context.Products
+                .AsNoTracking()
                 .Include(p => p.Images)
                 .Where(p => p.Id != product.Id && !relatedIds.Contains(p.Id))
                 .OrderByDescending(p => p.Id)
@@ -97,7 +100,7 @@ namespace Web_Api_Amazon.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var isFavorite = string.IsNullOrWhiteSpace(userId)
                 ? GetFavoriteProductIds().Contains(product.Id)
-                : (await _favoritesService.GetFavoritesAsync(userId)).Any(item => item.ProductId == product.Id);
+                : await _favoritesService.IsFavoriteAsync(userId, product.Id);
 
             var viewModel = new ProductDetailsViewModel
             {
@@ -143,8 +146,7 @@ namespace Web_Api_Amazon.Controllers
             }
             else
             {
-                var userFavorites = await _favoritesService.GetFavoritesAsync(userId);
-                isFavorite = userFavorites.Any(item => item.ProductId == productId);
+                isFavorite = await _favoritesService.IsFavoriteAsync(userId, productId);
 
                 if (isFavorite)
                 {
@@ -162,7 +164,6 @@ namespace Web_Api_Amazon.Controllers
                 message = isFavorite ? "Removed from favorites." : "Added to favorites."
             });
         }
-
         private List<int> GetFavoriteProductIds()
         {
             var rawValue = HttpContext.Session.GetString(LocalFavoritesSessionKey);

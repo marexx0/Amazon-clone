@@ -261,6 +261,16 @@
             tabs.forEach((tab) => {
                 tab.addEventListener("click", () => activateTab(tab));
             });
+
+            let isRefreshingFavorites = false;
+            document.addEventListener('favorites:changed', () => {
+                if (isRefreshingFavorites) {
+                    return;
+                }
+
+                isRefreshingFavorites = true;
+                window.location.reload();
+            });
         })();
     </script>
 }
