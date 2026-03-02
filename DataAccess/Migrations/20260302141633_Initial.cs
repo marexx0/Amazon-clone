@@ -274,7 +274,9 @@ namespace DataAccess.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false)
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    VariantKey = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SelectedOptionsJson = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -287,6 +289,33 @@ namespace DataAccess.Migrations
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_CartItems_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FavoriteItems",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FavoriteItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FavoriteItems_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FavoriteItems_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id",
@@ -333,7 +362,9 @@ namespace DataAccess.Migrations
                     ImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     ImageData = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     IsPrimary = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
-                    SortOrder = table.Column<int>(type: "int", nullable: false, defaultValue: 0)
+                    SortOrder = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Data = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -347,26 +378,27 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductProperty",
+                name: "ProductProperties",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    PropertyDefinitionId = table.Column<int>(type: "int", nullable: false),
+                    PropertyDefinitionId = table.Column<int>(type: "int", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Value = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductProperty", x => x.Id);
+                    table.PrimaryKey("PK_ProductProperties", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductProperty_Products_ProductId",
+                        name: "FK_ProductProperties_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProductProperty_PropertyDefinition_PropertyDefinitionId",
+                        name: "FK_ProductProperties_PropertyDefinition_PropertyDefinitionId",
                         column: x => x.PropertyDefinitionId,
                         principalTable: "PropertyDefinition",
                         principalColumn: "Id",
@@ -374,19 +406,51 @@ namespace DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductVariant",
+                name: "ProductVariants",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    Quantity = table.Column<int>(type: "int", nullable: false)
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductVariant", x => x.Id);
+                    table.PrimaryKey("PK_ProductVariants", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductVariant_Products_ProductId",
+                        name: "FK_ProductVariants_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SavedForLaterItems",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    VariantKey = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    SelectedOptionsJson = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SavedForLaterItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SavedForLaterItems_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SavedForLaterItems_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "Id",
@@ -400,16 +464,16 @@ namespace DataAccess.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductVariantId = table.Column<int>(type: "int", nullable: false),
-                    PropertyDefinitionId = table.Column<int>(type: "int", nullable: false),
+                    PropertyDefinitionId = table.Column<int>(type: "int", nullable: true),
                     Value = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ProductVariantValue", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductVariantValue_ProductVariant_ProductVariantId",
+                        name: "FK_ProductVariantValue_ProductVariants_ProductVariantId",
                         column: x => x.ProductVariantId,
-                        principalTable: "ProductVariant",
+                        principalTable: "ProductVariants",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -529,59 +593,59 @@ namespace DataAccess.Migrations
                 columns: new[] { "Id", "CategoryId", "Description", "ImageUrl", "Name", "Price" },
                 values: new object[,]
                 {
-                    { 1, 6, "Amazon Essentials men's short-sleeve crewneck t-shirt in soft jersey knit.", "/images/products/amazon_essentials_tshirt.png", "Amazon Essentials Men's Short-Sleeve Crewneck T-Shirt", 18.989999999999998 },
-                    { 2, 7, "adidas Grand Court 2.0 sneakers with a synthetic leather upper and rubber outsole.", "/images/products/adidas_grand_court.png", "adidas Men's Grand Court 2.0 Sneakers", 69.989999999999995 },
-                    { 3, 8, "Apple MacBook Air 13-inch laptop with M2 chip, 8GB RAM, and 256GB SSD storage.", "/images/products/macbook_air_m2.png", "Apple MacBook Air 13-inch Laptop (M2, 8GB, 256GB)", 1099.0 },
-                    { 4, 9, "Samsung Galaxy S24 unlocked smartphone with advanced camera system.", "/images/products/galaxy_s24.png", "Samsung Galaxy S24 Unlocked Smartphone", 799.99000000000001 },
-                    { 5, 10, "Sony WH-1000XM5 wireless noise canceling headphones with premium sound.", "/images/products/sony_wh1000xm5.png", "Sony WH-1000XM5 Wireless Noise Canceling Headphones", 398.0 },
-                    { 6, 11, "Canon EOS R10 mirrorless camera kit with RF-S 18-45mm lens for versatile shooting.", "/images/products/canon_eos_r10.png", "Canon EOS R10 Mirrorless Camera with RF-S 18-45mm Lens", 999.0 },
-                    { 7, 12, "PlayStation 5 console for next-gen gaming with ultra-high-speed SSD.", "/images/products/ps5_console.png", "PlayStation 5 Console", 499.99000000000001 },
+                    { 1, 6, "Amazon Essentials men's short-sleeve crewneck t-shirt in soft jersey knit.", "/images/products/tshirt.png", "Amazon Essentials Men's Short-Sleeve Crewneck T-Shirt", 18.989999999999998 },
+                    { 2, 7, "adidas Grand Court 2.0 sneakers with a synthetic leather upper and rubber outsole.", "/images/products/5_600.png", "adidas Men's Grand Court 2.0 Sneakers", 69.989999999999995 },
+                    { 3, 8, "Apple MacBook Air 13-inch laptop with M2 chip, 8GB RAM, and 256GB SSD storage.", "/images/products/macbook.jfif", "Apple MacBook Air 13-inch Laptop (M2, 8GB, 256GB)", 1099.0 },
+                    { 4, 9, "Samsung Galaxy S24 unlocked smartphone with advanced camera system.", "/images/productsphone1.jfif", "Samsung Galaxy S24 Unlocked Smartphone", 799.99000000000001 },
+                    { 5, 10, "Sony WH-1000XM5 wireless noise canceling headphones with premium sound.", "/images/products/headphones.jfif", "Sony WH-1000XM5 Wireless Noise Canceling Headphones", 398.0 },
+                    { 6, 11, "Canon EOS R10 mirrorless camera kit with RF-S 18-45mm lens for versatile shooting.", "/images/products/canon_.jpg", "Canon EOS R10 Mirrorless Camera with RF-S 18-45mm Lens", 999.0 },
+                    { 7, 12, "PlayStation 5 console for next-gen gaming with ultra-high-speed SSD.", "/images/products/play.jfif", "PlayStation 5 Console", 499.99000000000001 },
                     { 22, 7, "Classic low-top silhouette with leather overlays, padded collar comfort, and durable rubber traction for daily wear.", "/images/products/nike_dunk_cacao_pair.jpg", "Nike Dunk Low Retro - Cacao Wow", 129.99000000000001 }
                 });
 
             migrationBuilder.InsertData(
-                table: "ProductProperty",
-                columns: new[] { "Id", "ProductId", "PropertyDefinitionId", "Value" },
+                table: "ProductProperties",
+                columns: new[] { "Id", "Name", "ProductId", "PropertyDefinitionId", "Value" },
                 values: new object[,]
                 {
-                    { 1, 1, 1, "Generic Brand" },
-                    { 2, 2, 1, "RunFast" },
-                    { 3, 3, 1, "Apple" },
-                    { 4, 4, 1, "Samsung" },
-                    { 5, 5, 1, "Sony" },
-                    { 6, 7, 1, "Sony" },
-                    { 7, 22, 1, "Nike" },
-                    { 8, 22, 4, "Dunk Low Retro" },
-                    { 9, 22, 5, "DD1503-124" },
-                    { 10, 22, 6, "Nike Sportswear" },
-                    { 11, 22, 7, "Leather upper with synthetic overlays" },
-                    { 12, 22, 8, "Soft textile lining" },
-                    { 13, 22, 9, "Cushioned foam insole" },
-                    { 14, 22, 10, "Lightweight EVA midsole" },
-                    { 15, 22, 11, "Durable rubber outsole with circular traction" },
-                    { 16, 22, 12, "Round" },
-                    { 17, 22, 13, "Vietnam" },
-                    { 18, 22, 14, "Lifestyle / Casual" },
-                    { 19, 22, 15, "All-season" },
-                    { 20, 22, 16, "Approx. 820 g per pair (EU 42)" },
-                    { 21, 22, 17, "3 cm" }
+                    { 1, null, 1, 1, "Generic Brand" },
+                    { 2, null, 2, 1, "RunFast" },
+                    { 3, null, 3, 1, "Apple" },
+                    { 4, null, 4, 1, "Samsung" },
+                    { 5, null, 5, 1, "Sony" },
+                    { 6, null, 7, 1, "Sony" },
+                    { 7, null, 22, 1, "Nike" },
+                    { 8, null, 22, 4, "Dunk Low Retro" },
+                    { 9, null, 22, 5, "DD1503-124" },
+                    { 10, null, 22, 6, "Nike Sportswear" },
+                    { 11, null, 22, 7, "Leather upper with synthetic overlays" },
+                    { 12, null, 22, 8, "Soft textile lining" },
+                    { 13, null, 22, 9, "Cushioned foam insole" },
+                    { 14, null, 22, 10, "Lightweight EVA midsole" },
+                    { 15, null, 22, 11, "Durable rubber outsole with circular traction" },
+                    { 16, null, 22, 12, "Round" },
+                    { 17, null, 22, 13, "Vietnam" },
+                    { 18, null, 22, 14, "Lifestyle / Casual" },
+                    { 19, null, 22, 15, "All-season" },
+                    { 20, null, 22, 16, "Approx. 820 g per pair (EU 42)" },
+                    { 21, null, 22, 17, "3 cm" }
                 });
 
             migrationBuilder.InsertData(
-                table: "ProductVariant",
-                columns: new[] { "Id", "ProductId", "Quantity" },
+                table: "ProductVariants",
+                columns: new[] { "Id", "Name", "ProductId", "Quantity", "Value" },
                 values: new object[,]
                 {
-                    { 1, 1, 20 },
-                    { 2, 1, 15 },
-                    { 3, 2, 10 },
-                    { 4, 2, 5 },
-                    { 5, 22, 12 },
-                    { 6, 22, 14 },
-                    { 7, 22, 11 },
-                    { 8, 22, 9 },
-                    { 9, 22, 8 },
-                    { 10, 22, 7 }
+                    { 1, null, 1, 20, null },
+                    { 2, null, 1, 15, null },
+                    { 3, null, 2, 10, null },
+                    { 4, null, 2, 5, null },
+                    { 5, null, 22, 12, null },
+                    { 6, null, 22, 14, null },
+                    { 7, null, 22, 11, null },
+                    { 8, null, 22, 9, null },
+                    { 9, null, 22, 8, null },
+                    { 10, null, 22, 7, null }
                 });
 
             migrationBuilder.InsertData(
@@ -671,6 +735,17 @@ namespace DataAccess.Migrations
                 column: "PropertyDefinitionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_FavoriteItems_ProductId",
+                table: "FavoriteItems",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FavoriteItems_UserId_ProductId",
+                table: "FavoriteItems",
+                columns: new[] { "UserId", "ProductId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_OrderId",
                 table: "OrderItems",
                 column: "OrderId");
@@ -691,13 +766,13 @@ namespace DataAccess.Migrations
                 columns: new[] { "ProductId", "IsPrimary" });
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductProperty_ProductId",
-                table: "ProductProperty",
+                name: "IX_ProductProperties_ProductId",
+                table: "ProductProperties",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductProperty_PropertyDefinitionId",
-                table: "ProductProperty",
+                name: "IX_ProductProperties_PropertyDefinitionId",
+                table: "ProductProperties",
                 column: "PropertyDefinitionId");
 
             migrationBuilder.CreateIndex(
@@ -711,8 +786,8 @@ namespace DataAccess.Migrations
                 column: "Name");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductVariant_ProductId",
-                table: "ProductVariant",
+                name: "IX_ProductVariants_ProductId",
+                table: "ProductVariants",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
@@ -729,6 +804,17 @@ namespace DataAccess.Migrations
                 name: "IX_PropertyDefinition_Name",
                 table: "PropertyDefinition",
                 column: "Name");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SavedForLaterItems_ProductId",
+                table: "SavedForLaterItems",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SavedForLaterItems_UserId_ProductId_VariantKey",
+                table: "SavedForLaterItems",
+                columns: new[] { "UserId", "ProductId", "VariantKey" },
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -756,16 +842,22 @@ namespace DataAccess.Migrations
                 name: "CategoryProperty");
 
             migrationBuilder.DropTable(
+                name: "FavoriteItems");
+
+            migrationBuilder.DropTable(
                 name: "OrderItems");
 
             migrationBuilder.DropTable(
                 name: "ProductImages");
 
             migrationBuilder.DropTable(
-                name: "ProductProperty");
+                name: "ProductProperties");
 
             migrationBuilder.DropTable(
                 name: "ProductVariantValue");
+
+            migrationBuilder.DropTable(
+                name: "SavedForLaterItems");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -774,7 +866,7 @@ namespace DataAccess.Migrations
                 name: "Orders");
 
             migrationBuilder.DropTable(
-                name: "ProductVariant");
+                name: "ProductVariants");
 
             migrationBuilder.DropTable(
                 name: "PropertyDefinition");

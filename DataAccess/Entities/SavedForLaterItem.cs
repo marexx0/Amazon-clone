@@ -1,4 +1,7 @@
-﻿public class SavedForLaterItem : ISavedForLaterItem
+﻿
+using Web_Api_Amazon.Entities;
+
+public class SavedForLaterItem : ISavedForLaterItem
 {
     public int Id { get; set; }
 
