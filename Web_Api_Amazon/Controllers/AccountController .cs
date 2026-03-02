@@ -49,6 +49,8 @@ public class AccountController : Controller
     [HttpPost]
     public async Task<IActionResult> Register(RegisterViewModel model)
     {
+        ViewBag.AccountType = string.IsNullOrWhiteSpace(model.AccountType) ? "Personal" : model.AccountType;
+
         if (!ModelState.IsValid)
             return View(model);
 

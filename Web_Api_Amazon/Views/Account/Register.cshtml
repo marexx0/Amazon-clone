@@ -319,6 +319,7 @@
             <form asp-action="Register" asp-controller="Account" method="post">
 
                 <input type="hidden" asp-for="AccountType" value="@ViewBag.AccountType" />
+                <div asp-validation-summary="ModelOnly" class="validation-error"></div>
                 <!-- EMAIL -->
                 <div class="input-group">
                     <label asp-for="Email">Email</label>

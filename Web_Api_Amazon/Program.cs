@@ -1,10 +1,12 @@
 ﻿using Amazon_clone.DataAccess.Data;
+using Core.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Web_Api_Amazon.Entities;
+using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -34,7 +36,15 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     .AddEntityFrameworkStores<ShopDbContext>();
 builder.Services.AddScoped<IEmailSender, EmailService>();
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+    options.IdleTimeout = TimeSpan.FromDays(7);
+});
+builder.Services.AddScoped<IFavoritesService, FavoritesService>();
+builder.Services.AddScoped<ISavedForLaterService, SavedForLaterService>();
 builder.Services.AddRazorPages();
 var app = builder.Build();
 
@@ -56,6 +66,7 @@ else
 
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
 

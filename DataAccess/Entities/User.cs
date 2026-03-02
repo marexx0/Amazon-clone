@@ -12,8 +12,13 @@ namespace Web_Api_Amazon.Entities  // <- тут твій namespace
         // Orders made by user
         public ICollection<Order> Orders { get; set; }
 
-        // Cart items
-        public ICollection<CartItem> CartItems { get; set; }
+    // Cart items
+    public ICollection<CartItem> CartItems { get; set; }
 
-    }
+    // Favorite products
+    public ICollection<FavoriteItem> FavoriteItems { get; set; }
+
+    // Saved for later products
+    public ICollection<SavedForLaterItem> SavedForLaterItems { get; set; }
+
 }

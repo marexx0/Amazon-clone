@@ -15,8 +15,10 @@ namespace Web_Api_Amazon.Entities
 
       
 
-        public List<CartItem> CartItems { get; set; } = new();
-        public List<OrderItem> OrderItems { get; set; } = new();
+    public ICollection<CartItem> CartItems { get; set; }
+    public ICollection<OrderItem> OrderItems { get; set; }
+    public ICollection<FavoriteItem> FavoriteItems { get; set; }
+    public ICollection<SavedForLaterItem> SavedForLaterItems { get; set; }
 
         public List<ProductProperty> Properties { get; set; } = new();
         public List<ProductVariant> Variants { get; set; } = new();
