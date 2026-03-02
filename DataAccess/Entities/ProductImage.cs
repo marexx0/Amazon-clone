@@ -1,4 +1,6 @@
-﻿public class ProductImage
+﻿using Web_Api_Amazon.Entities;
+
+public class ProductImage
 {
     public int Id { get; set; }
 
@@ -12,4 +14,6 @@
 
     public bool IsPrimary { get; set; }
     public int SortOrder { get; set; }
+    public string? Name { get; set; }
+    public byte[]? Data { get; set; }
 }

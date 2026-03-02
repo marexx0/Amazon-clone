@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-
+using Web_Api_Amazon.Entities;
 using System.Collections.Generic;
 
 namespace DataAccess.Persistance
@@ -16,7 +16,7 @@ namespace DataAccess.Persistance
                     Name = "Amazon Essentials Men's Short-Sleeve Crewneck T-Shirt",
                     Description = "Amazon Essentials men's short-sleeve crewneck t-shirt in soft jersey knit.",
                     Price = 18.99,
-                    ImageUrl = "/images/products/amazon_essentials_tshirt.png",
+                    ImageUrl = "/images/products/tshirt.png",
                     CategoryId = 6
                 },
                 new Product
@@ -25,7 +25,7 @@ namespace DataAccess.Persistance
                     Name = "adidas Men's Grand Court 2.0 Sneakers",
                     Description = "adidas Grand Court 2.0 sneakers with a synthetic leather upper and rubber outsole.",
                     Price = 69.99,
-                    ImageUrl = "/images/products/adidas_grand_court.png",
+                    ImageUrl = "/images/products/5_600.png",
                     CategoryId = 7
                 },
                 new Product
@@ -34,7 +34,7 @@ namespace DataAccess.Persistance
                     Name = "Apple MacBook Air 13-inch Laptop (M2, 8GB, 256GB)",
                     Description = "Apple MacBook Air 13-inch laptop with M2 chip, 8GB RAM, and 256GB SSD storage.",
                     Price = 1099.00,
-                    ImageUrl = "/images/products/macbook_air_m2.png",
+                    ImageUrl = "/images/products/macbook.jfif",
                     CategoryId = 8
                 },
                 new Product
@@ -43,7 +43,7 @@ namespace DataAccess.Persistance
                     Name = "Samsung Galaxy S24 Unlocked Smartphone",
                     Description = "Samsung Galaxy S24 unlocked smartphone with advanced camera system.",
                     Price = 799.99,
-                    ImageUrl = "/images/products/galaxy_s24.png",
+                    ImageUrl = "/images/productsphone1.jfif",
                     CategoryId = 9
                 },
                 new Product
@@ -52,7 +52,7 @@ namespace DataAccess.Persistance
                     Name = "Sony WH-1000XM5 Wireless Noise Canceling Headphones",
                     Description = "Sony WH-1000XM5 wireless noise canceling headphones with premium sound.",
                     Price = 398.00,
-                    ImageUrl = "/images/products/sony_wh1000xm5.png",
+                    ImageUrl = "/images/products/headphones.jfif",
                     CategoryId = 10
                 },
                 new Product
@@ -61,7 +61,7 @@ namespace DataAccess.Persistance
                     Name = "Canon EOS R10 Mirrorless Camera with RF-S 18-45mm Lens",
                     Description = "Canon EOS R10 mirrorless camera kit with RF-S 18-45mm lens for versatile shooting.",
                     Price = 999.00,
-                    ImageUrl = "/images/products/canon_eos_r10.png",
+                    ImageUrl = "/images/products/canon_.jpg",
                     CategoryId = 11
                 },
                 new Product
@@ -70,7 +70,7 @@ namespace DataAccess.Persistance
                     Name = "PlayStation 5 Console",
                     Description = "PlayStation 5 console for next-gen gaming with ultra-high-speed SSD.",
                     Price = 499.99,
-                    ImageUrl = "/images/products/ps5_console.png",
+                    ImageUrl = "/images/products/play.jfif",
                     CategoryId = 12
                 },
                 new Product

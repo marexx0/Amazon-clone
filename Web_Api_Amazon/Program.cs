@@ -2,6 +2,10 @@
 using Core.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Web_Api_Amazon.Entities;
 using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +23,15 @@ builder.Services.AddDbContext<ShopDbContext>(options =>
 
 // Identity
 builder.Services.AddIdentity<User, IdentityRole>(options =>
-        options.SignIn.RequireConfirmedAccount = false)
+{
+    options.SignIn.RequireConfirmedEmail = false;
+
+    options.Password.RequireDigit = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireNonAlphanumeric = false; 
+    options.Password.RequiredLength = 8;
+})
     .AddDefaultTokenProviders()
     .AddEntityFrameworkStores<ShopDbContext>();
 builder.Services.AddScoped<IEmailSender, EmailService>();
@@ -66,6 +78,36 @@ app.MapControllerRoute(
     .WithStaticAssets();
 
 //app.MapRazorPages()
-  // .WithStaticAssets();
+// .WithStaticAssets();
+async Task SeedAdminAsync(IServiceProvider services)
+{
+    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = services.GetRequiredService<UserManager<User>>();
 
+    // 1. Створюємо роль Admin якщо її нема
+    if (!await roleManager.RoleExistsAsync("Admin"))
+    {
+        await roleManager.CreateAsync(new IdentityRole("Admin"));
+    }
+
+    // 2. Твій email
+    var adminEmail = "vikaschool26yurchyk@gmail.com";
+
+    var adminUser = await userManager.FindByEmailAsync(adminEmail);
+
+    if (adminUser != null)
+    {
+        if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
+        {
+            await userManager.AddToRoleAsync(adminUser, "Admin");
+        }
+    }
+}
+
+// --- Виклик в Program.cs ---
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await SeedAdminAsync(services);
+}
 app.Run();

@@ -1,71 +1,227 @@
+@using Microsoft.AspNetCore.Identity
+@using Web_Api_Amazon.Entities
+@using Web_Api_Amazon.Models
+@using System.Collections.Generic
+@inject UserManager<User> UserManager
+@inject SignInManager<User> SignInManager
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Web_Api_Amazon</title>
+    <title>@ViewData["Title"] Allora</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     @RenderSection("Styles", required: false)
     <link rel="stylesheet" href="~/Web_Api_Amazon.styles.css" asp-append-version="true" />
 </head>
-<body class="site-shell">
-    <header class="site-header">
-        <div class="container-fluid site-header__inner">
-            <a class="site-header__logo" asp-area="" asp-controller="Home" asp-action="Index" aria-label="Allora home">
-                <img src="~/images/ui/Logo.png" alt="Allora" />
-            </a>
+<body>
 
-            <button type="button" class="site-header__location" aria-label="Select location">
-                <img src="~/images/ui/map-pin.png" alt="" aria-hidden="true" />
-                <span class="site-header__location-text">Vienna, Austria</span>
-                <span class="site-header__chevron"><img src="~/images/ui/chevron-down.png" alt="" aria-hidden="true" /></span>
-            </button>
+    <!-- Overlay � ��� ���� ���������� ������� ���� -->
+    <div id="profileOverlay"></div>
 
-            <form class="site-header__search" role="search">
-                <label class="visually-hidden" for="site-search">Search</label>
-                <select aria-label="Category">
-                    <option selected>Category</option>
-                </select>
-                <input id="site-search" type="search" placeholder="Search" aria-label="Search" />
-                <button type="submit" aria-label="Submit search">
-                    <img src="~/images/ui/Search.png" alt="" aria-hidden="true" />
+    <header class="main-header">
+        <div class="header-left">
+            <div class="logo">
+                <img src="imagesmain/Logo.png" alt="logo icon" style="width:60px; height:auto;">
+            </div>
+            <img src="imagesmain/map-pin.png" alt="location icon" class="icon-36">
+            <span>Vienna, Austria</span>
+
+            <img src="imagesmain/chevron-down.png" alt="down icon" class="icon-36">
+        </div>
+        </div>
+        <div class="header-center">
+
+            <div class="cat-wrapper">
+                <button class="cat-btn" id="catBtn">
+                    Category <span class="cat-arrow">&#9660;</span>
+                </button>
+
+                <div class="cat-dropdown" id="catDropdown">
+                    @{
+                        var activeCat = Context.Request.Query["categoryId"].ToString();
+                    }
+                    <a href="/?categoryId=6" class="cat-item">
+                        <img src="imagesmain/clothe.png" alt="">
+                        Clothing
+                    </a>
+
+                    <a href="/?categoryId=7" data-category-id="7" class="cat-item">
+                        <img src="imagesmain/shoes.png" alt="">
+                        Shoes
+                    </a>
+
+                    <a href="/?categoryId=8" class="cat-item">
+                        <img src="imagesmain/computer.png" alt="">
+                        Computers / Laptops / Tablets
+                    </a>
+
+                    <a href="/?categoryId=9" class="cat-item">
+                        <img src="imagesmain/phone.png" alt="">
+                        Mobile Phones
+                    </a>
+
+                    <a href="/?categoryId=10" class="cat-item">
+                        <img src="imagesmain/Audio.png" alt="">
+                        Headphone
+                    </a>
+
+                    <a href="/?categoryId=11" class="cat-item">
+                        <img src="imagesmain/photo.png" alt="">
+                        Cameras / Photo Equipment
+                    </a>
+
+                    <a href="/?categoryId=12" class="cat-item">
+                        <img src="imagesmain/Game.png" alt="">
+                        Gaming
+                    </a>
+
+                    <a href="/?categoryId=13" class="cat-item">
+                        <img src="imagesmain/Home.png" alt="">
+                        Home Decor
+                    </a>
+
+                    <a href="/?categoryId=14" class="cat-item">
+                        <img src="imagesmain/Furniture.png" alt="">
+                        Furniture
+                    </a>
+
+                    <a href="/?categoryId=15" class="cat-item">
+                        <img src="imagesmain/Light.png" alt="">
+                        Lighting
+                    </a>
+
+                    <a href="/?categoryId=16" class="cat-item">
+                        <img src="imagesmain/Yard.png" alt="">
+                        Yard and Garden
+                    </a>
+
+                    <a href="/?categoryId=17" class="cat-item">
+                        <img src="imagesmain/Plumbing.png" alt="">
+                        Tools / Hardware / Plumbing
+                    </a>
+
+                    <a href="/?categoryId=19" class="cat-item">
+                        <img src="imagesmain/sport.png" alt="">
+                        Sports / Outdoor / Fitness
+                    </a>
+
+                    <a href="/?categoryId=21" class="cat-item">
+                        <img src="imagesmain/toys.png" alt="">
+                        Toys Kids
+                    </a>
+
+                    <a href="/?categoryId=22" class="cat-item">
+                        <img src="imagesmain/book.png" alt="">
+                        Books / Media
+                    </a>
+
+                    <a href="/?categoryId=23" class="cat-item">
+                        <img src="imagesmain/Health.png" alt="">
+                        Health
+                    </a>
+
+                </div>
+            </div>
+
+            <!--  SEARCH -->
+            <form asp-controller="Home"
+                  asp-action="Index"
+                  method="get"
+                  class="search-form">
+
+                <input type="text"
+                       name="searchString"
+                       value="@Context.Request.Query["searchString"]"
+                       placeholder="Search products..."
+                       class="search-input" />
+
+                <button type="submit" class="search-btn">
+                    <img src="imagesmain/search.png" alt="search" class="icon-36">
                 </button>
             </form>
 
-            <div class="site-header__actions">
-                <button type="button" class="site-header__action site-header__lang" aria-label="Language">
-                    <span aria-hidden="true"><img src="~/images/ui/Globe.png" alt="" aria-hidden="true" /></span>
-                    <span class="site-header__language-text">English</span>
-                    <span class="site-header__chevron"><img src="~/images/ui/chevron-down.png" alt="" aria-hidden="true" /></span>
-                </button>
-                <button type="button" class="site-header__action" aria-label="Notifications">
-                    <img src="~/images/ui/Notifications.png" alt="" aria-hidden="true" />
-                </button>
-                <button type="button" class="site-header__action" aria-label="Favorites">
-                    <img src="~/images/ui/Favorites.png" alt="" aria-hidden="true" />
-                </button>
-                <a class="site-header__action" asp-controller="Cart" asp-action="Index" aria-label="Cart">
-                    <img src="~/images/ui/Cart.png" alt="" aria-hidden="true" />
-                </a>
-                <a class="site-header__action" asp-controller="Account" asp-action="Login" aria-label="Profile">
-                    <img src="~/images/ui/Profile.png" alt="" aria-hidden="true" />
-                </a>
-            </div>
         </div>
+
+        <div class="header-right">
+            <div class="globe">
+                <img src="imagesmain/globe.png" alt="logo icon" class="icon-36">
+            </div>
+            <span>English<img src="imagesmain/chevron-down.png" alt="logo icon" class="icon-36"></span>
+            <span><img src="imagesmain/bell.png" alt="logo icon" class="icon-36"></span>
+            <span><img src="imagesmain/heart.png" alt="logo icon" class="icon-36"></span>
+            <span><img src="imagesmain/shopping-cart.png" alt="logo icon" class="icon-36"></span>
+
+            <!-- PROFILE � ���������� -->
+            <div class="profile-wrapper">
+                <button class="profile-btn" id="profileBtn" title="Account">
+                    <img src="imagesmain/Account Photo.png" alt="profile" style="width:44px; height:44px;">
+                </button>
+
+                <div class="profile-dropdown" id="profileDropdown">
+                    @{
+                      
+                        User? currentUser = null;
+
+                        if (User.Identity.IsAuthenticated)
+                        {
+                            currentUser = await UserManager.GetUserAsync(User);
+                        }
+                    }
+
+                    @if (currentUser != null)
+                    {
+                        <div class="dd-signin">
+                            <strong>@currentUser.FirstName</strong>
+                        </div>
+
+                        @if (await UserManager.IsInRoleAsync(currentUser, "Admin"))
+                        {
+                            <div class="dd-admin">
+                                <a asp-controller="AdminPanel"
+                                   asp-action="Index"
+                                   class="admin-link">
+                                    Admin Panel
+                                </a>
+                            </div>
+                        }
+
+                        <div class="dd-signout">
+                            <a asp-controller="Account" asp-action="Logout" class="logout-btn">
+                                Sign out
+                            </a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="dd-signin">
+                            <a asp-controller="Account" asp-action="Entry" class="n-signin">
+                                Sign in
+                            </a>
+                            <p class="dd-signin-sub">
+                                New customer?
+                                <a asp-controller="Account" asp-action="Register">Start here</a>
+                            </p>
+                        </div>
+                    }
+
+                   
+                </div>
     </header>
 
-    <div class="site-content container-fluid px-3 px-md-4">
+    <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
     <footer class="site-footer">
-        <div class="container">
-            <div class="row gy-4">
-                <div class="col-6 col-lg-2">
+        <div class="footer-inner">
+            <div class="footer-links">
+                <div class="footer-col">
                     <h5 class="site-footer__title">About Allora</h5>
                     <ul class="site-footer__list">
                         <li><a href="#">About Allora</a></li>
@@ -75,7 +231,7 @@
                         <li><a href="#">Accessibility Commitment</a></li>
                     </ul>
                 </div>
-                <div class="col-6 col-lg-2">
+                <div class="footer-col">
                     <h5 class="site-footer__title">For Business</h5>
                     <ul class="site-footer__list">
                         <li><a href="#">Sell with Allora</a></li>
@@ -85,7 +241,7 @@
                         <li><a href="#">Advertising Tools</a></li>
                     </ul>
                 </div>
-                <div class="col-6 col-lg-2">
+                <div class="footer-col">
                     <h5 class="site-footer__title">Payments &amp; Orders</h5>
                     <ul class="site-footer__list">
                         <li><a href="#">Payment Methods</a></li>
@@ -95,7 +251,7 @@
                         <li><a href="#">Delivery Information</a></li>
                     </ul>
                 </div>
-                <div class="col-6 col-lg-2">
+                <div class="footer-col">
                     <h5 class="site-footer__title">Help &amp; Support</h5>
                     <ul class="site-footer__list">
                         <li><a href="#">Help Center</a></li>
@@ -105,19 +261,43 @@
                         <li><a href="#">Report an Issue</a></li>
                     </ul>
                 </div>
-                <div class="col-6 col-lg-2">
+                <div class="footer-col">
                     <h5 class="site-footer__title">Legal</h5>
                     <ul class="site-footer__list">
                         <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#" style="color: #FCFCFC; font-family: 'DM Sans', sans-serif;">Privacy Policy</a></li>
                         <li><a href="#">Cookie Preferences</a></li>
                         <li><a href="#">Accessibility Statement</a></li>
                     </ul>
                 </div>
             </div>
-                <div class="site-footer__copy">&copy; 2026 Allora. All rights reserved</div>
+
+            <div class="site-footer__bottom">
+                <img src="imagesmain/Logo.png" alt="Allora" class="footer-logo">
+
+                <div class="footer-bottom-item">
+                    <img src="imagesmain/map-pin.png" alt="" class="icon-36">
+                    <span>Vienna, Austria</span>
+                    <img src="imagesmain/chevron-down.png" alt="" class="icon-36">
+                </div>
+
+                <div class="footer-bottom-item">
+                    <img src="imagesmain/globe.png" alt="" class="icon-36">
+                    <span>English</span>
+                    <img src="imagesmain/chevron-down.png" alt="" class="icon-36">
+                </div>
+
+                <div class="footer-bottom-item">
+                    <img src="imagesmain/Euro.png" alt="" class="icon-36">
+                    <span>Euro</span>
+                    <img src="imagesmain/chevron-down.png" alt="" class="icon-36">
+                </div>
+
+                <span>� 2026 Allora. All rights reserved</span>
+            </div>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

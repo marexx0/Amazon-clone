@@ -1,4 +1,92 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿// Profile dropdown
+(function () {
+    var btn = document.getElementById('profileBtn');
+    var dropdown = document.getElementById('profileDropdown');
+    var overlay = document.getElementById('profileOverlay');
 
-// Write your JavaScript code.
+    if (!btn || !dropdown || !overlay) return;
+
+    function open() {
+        dropdown.classList.add('open');
+        btn.classList.add('active');
+        overlay.classList.add('active');
+    }
+
+    function close() {
+        dropdown.classList.remove('open');
+        btn.classList.remove('active');
+        overlay.classList.remove('active');
+    }
+
+    btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        dropdown.classList.contains('open') ? close() : open();
+    });
+
+    overlay.addEventListener('click', close);
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') close();
+    });
+
+    dropdown.addEventListener('click', function (e) {
+        e.stopPropagation();
+    });
+})();
+// Category dropdown
+(function () {
+    var btn = document.getElementById('catBtn');
+    var dropdown = document.getElementById('catDropdown');
+    var profileDropdown = document.getElementById('profileDropdown');
+    var profileBtn = document.getElementById('profileBtn');
+    var overlay = document.getElementById('profileOverlay');
+
+    if (!btn || !dropdown) return;
+
+    function openCat() {
+        // закрити profile якщо відкритий
+        if (profileDropdown) profileDropdown.classList.remove('open');
+        if (profileBtn) profileBtn.classList.remove('active');
+
+        dropdown.classList.add('open');
+        btn.classList.add('active');
+        if (overlay) overlay.classList.add('active');
+    }
+
+    function closeCat() {
+        dropdown.classList.remove('open');
+        btn.classList.remove('active');
+        if (overlay) overlay.classList.remove('active');
+    }
+
+    btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        dropdown.classList.contains('open') ? closeCat() : openCat();
+    });
+
+    overlay.addEventListener('click', closeCat);
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeCat();
+    });
+
+    dropdown.addEventListener('click', function (e) {
+        e.stopPropagation();
+    });
+})();
+// Зберігаємо позицію скролу перед переходом
+document.querySelectorAll('.cat-dropdownI a').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+        e.stopPropagation();
+        sessionStorage.setItem('scrollPos', window.scrollY);
+    });
+});
+
+// Відновлюємо позицію після завантаження сторінки
+window.addEventListener('load', function () {
+    var scrollPos = sessionStorage.getItem('scrollPos');
+    if (scrollPos) {
+        window.scrollTo(0, parseInt(scrollPos));
+        sessionStorage.removeItem('scrollPos');
+    }
+});

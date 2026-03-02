@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Admin Panel";
+}
+@{
+    Layout = "_Layout";
+}
+<link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+<h2>@ViewData["Title"]</h2>
+
+<div class="list-group">
+    <a asp-controller="AdminUsers" asp-action="Index" class="list-group-item list-group-item-action">
+        Manage Users
+    </a>
+    <a asp-controller="AdminProducts" asp-action="Index" class="list-group-item list-group-item-action">
+        Manage Products
+    </a>
+</div>

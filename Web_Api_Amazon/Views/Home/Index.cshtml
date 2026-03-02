@@ -1,10 +1,339 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using Web_Api_Amazon.Entities
+@model IEnumerable<Web_Api_Amazon.Entities.Product>
+@{
+    var allProducts = ViewBag.AllProducts as List<Product>;
+    var filteredProducts = ViewBag.FilteredProducts as List<Product>;
+    var selectedCategoryId = ViewBag.SelectedCategoryId as int?;
+   
+    var shuffled = allProducts.OrderBy(x => Guid.NewGuid()).ToList();
+
+
+    while (shuffled.Count < 24)
+        shuffled.AddRange(allProducts.OrderBy(x => Guid.NewGuid()));
+
+    var popularProducts = shuffled.Take(12).ToList();
+    var collectionProducts = shuffled.Skip(12).Take(12).ToList();
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Allora</title>
+    <link rel="stylesheet" href="~/css/mainpage.css">
+
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+
+
+
+        <!-- HERO -->
+        <section class="hero">
+            <h1>
+                Buy – quickly, with high quality,<br> what you need,
+                <a href="#" class="highlight-link">in just a few clicks</a>
+            </h1>
+        </section>
+       
+        <!-- CATEGORIES -->
+        <section class="categories">
+
+            <div class="category-itemI">
+                Lifestyle
+                <div class="cat-dropdownI">
+                    <a href="/?categoryId=6">
+                        <img src="/imagesmain/clothe.png" alt="Clothing" width="24" height="24" />
+                        Clothing
+                    </a>
+                    <a href="/?categoryId=7">
+                        <img src="/imagesmain/shoes.png" alt="Shoes" width="24" height="24" />
+                        Shoes
+                    </a>
+                </div>
+            </div>
+
+            <div class="category-itemI">
+                Technology
+                <div class="cat-dropdownI">
+                    <a href="/?categoryId=8">
+                        <img src="imagesmain/computer.png" alt="Computers / Laptops / Tablets" width="24" height="24" />
+                        Computers / Laptops / Tablets
+                    </a>
+                    <a href="/?categoryId=9">
+                        <img src="imagesmain/phone.png" alt="Mobile Phones" width="24" height="24" />
+                        Mobile Phones
+                    </a>
+                    <a href="/?categoryId=10">
+                        <img src="imagesmain/Audio.png" alt="Headphones" width="24" height="24" />
+                        Headphones
+                    </a>
+                    <a href="/?categoryId=11">
+                        <img src="imagesmain/photo.png" alt="Cameras / Photo Equipment" width="24" height="24" />
+                        Cameras / Photo Equipment
+                    </a>
+                    <a href="/?categoryId=12" >
+                        <img src="imagesmain/Game.png" alt="" style="width:24px; height:24px;">
+                        Gaming
+                    </a>
+                </div>
+            </div>
+
+            <div class="category-itemI">
+                Home
+                <div class="cat-dropdownI">
+                    <a href="/?categoryId=13">
+                        <img src="imagesmain/Home.png" alt="Home Decor" width="24" height="24" />
+                        Home Decor
+                    </a>
+                    <a href="/?categoryId=14">
+                        <img src="/imagesmain/Furniture.png" alt="Furniture" width="24" height="24" />
+                        Furniture
+                    </a>
+                    <a href="/?categoryId=15">
+                        <img src="/imagesmain/Light.png" alt="Lighting" width="24" height="24" />
+                        Lighting
+                    </a>
+                    <a href="/?categoryId=16">
+                        <img src="/imagesmain/Yard.png" alt="Yard and Garden" width="24" height="24" />
+                        Yard and Garden
+                    </a>
+                </div>
+            </div>
+
+            <div class="category-itemI">
+                Auto
+                <div class="cat-dropdownI">
+                    <a href="/?categoryId=19">
+                        <img src="/imagesmain/sport.png" alt="Sports / Outdoor / Fitness" width="24" height="24" />
+                        Sports / Outdoor / Fitness
+                    </a>
+                    
+                </div>
+            </div>
+
+            <div class="category-itemI">
+                Health
+                <div class="cat-dropdownI">
+                    <a href="/?categoryId=21">
+                        <img src="/imagesmain/toys.png" alt="Toys Kids" width="24" height="24" />
+                        Toys Kids
+                    </a>
+                    <a href="/?categoryId=22">
+                        <img src="/imagesmain/book.png" alt="Books / Media" width="24" height="24" />
+                        Books / Media
+                    </a>
+                    <a href="/?categoryId=23">
+                        <img src="/imagesmain/Health.png" alt="Health" width="24" height="24" />
+                        Health
+                    </a>
+                </div>
+            </div>
+
+        </section>
+
+
+
+
+        @{
+    var searchString = ViewBag.SearchString as string;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-   
+@if (!string.IsNullOrEmpty(searchString))
+{
+    <section id="search-section" class="category-results">
+        <h2>Search results for "@searchString"</h2>
 
-</div>
+        @if (filteredProducts.Any())
+        {
+            <div class="products-grid">
+                @foreach (var product in filteredProducts)
+                {
+                    <partial name="_ProductCard" model="product" />
+                }
+            </div>
+        }
+        else
+        {
+            <p>No products found.</p>
+        }
+    </section>
+}
+else if (selectedCategoryId.HasValue && filteredProducts.Any())
+{
+    <section id="category-section" class="category-results">
+        <h2>@filteredProducts.First().Category?.Name</h2>
+
+        <div class="products-grid">
+            @foreach (var product in filteredProducts)
+            {
+                <partial name="_ProductCard" model="product" />
+            }
+        </div>
+    </section>
+}
+else
+{
+    <!-- ТУТ ВСЯ ГОЛОВНА СТОРІНКА -->
+}
+       @*  ---------------------- *@
+      
+
+       @*  @if (selectedCategoryId.HasValue)
+        {
+            <section id="category-section" class="category-results">
+                <h2>
+                    @filteredProducts.FirstOrDefault()?.Category?.Name
+                </h2>
+
+                <div class="products-grid">
+                    @foreach (var product in filteredProducts)
+                    {
+                        <partial name="_ProductCard" model="product" />
+                    }
+                </div>
+            </section>
+        } *@
+        <!-- POPULAR -->
+        <section class="popular">
+            <h2>Popular now</h2>
+            <div class="products-grid">
+                @foreach (var product in popularProducts)
+                {
+                    <partial name="_ProductCard" model="product" />
+                }
+            </div>
+
+        </section>
+        @{
+            var clothingProducts = allProducts
+            .Where(p => p.CategoryId == 6)
+            .OrderBy(x => Guid.NewGuid())
+            .Take(12)
+            .ToList();
+
+            while (clothingProducts.Count < 12 && clothingProducts.Any())
+                clothingProducts.AddRange(
+                allProducts.Where(p => p.CategoryId == 6)
+                .OrderBy(x => Guid.NewGuid())
+                );
+
+            clothingProducts = clothingProducts.Take(12).ToList();
+        }
+        <!-- Colection-->
+       @*  <section class="collection">
+            <h2>Shop Collection</h2>
+
+            <div class="products-grid">
+                @foreach (var product in clothingProducts)
+                {
+                    <partial name="_ProductCard" model="product" />
+                }
+            </div>
+        </section> *@
+        @{
+            var selectedCategories = new List<int> { 6, 7, 9 }; // Clothing, Shoes, Mobile Phones
+
+            // Словник з картинками для цих категорій
+            var categoryImages = new Dictionary<int, string>
+                {
+                {6, "~/images/products/nike_dunk_cacao_top.jpg"},
+                {7, "~/images/products/nike_dunk_cacao_top.jpg"},
+                {9, "~/images/products/nike_dunk_cacao_top.jpg"},
+                };
+
+            var categoriesToShow = (ViewBag.Categories as List<Category>)
+            .Where(c => selectedCategories.Contains(c.Id))
+            .ToList();
+        }
+
+        <section class="collection shop-collection">
+            <h2>Shop Collection</h2>
+            <div class="collection-grid">
+                @foreach (var category in categoriesToShow)
+                {
+                    <a href="/?categoryId=@category.Id" class="category-card">
+                        <img src="@categoryImages[category.Id]" alt="@category.Name" />
+                        <div class="category-name">@category.Name</div>
+                    </a>
+                }
+            </div>
+        </section>
+        @{
+            var technologyCategoryIds = new List<int> { 8, 9, 10, 11, 12 };
+
+            var technologyProducts = allProducts
+            .Where(p => technologyCategoryIds.Contains(p.CategoryId))
+            .OrderBy(x => Guid.NewGuid())
+            .Take(12)
+            .ToList();
+
+            while (technologyProducts.Count < 12 && technologyProducts.Any())
+                technologyProducts.AddRange(
+                allProducts.Where(p => technologyCategoryIds.Contains(p.CategoryId))
+                .OrderBy(x => Guid.NewGuid())
+                );
+
+            technologyProducts = technologyProducts.Take(12).ToList();
+        }
+        
+        <!-- Gifts -->
+        <section class="collection">
+            <h2>Women's Day Gifts</h2>
+
+            <div class="products-grid">
+                @foreach (var product in technologyProducts)
+                {
+                    <partial name="_ProductCard" model="product" />
+                }
+            </div>
+        </section>
+        <!-- BANNER -->
+        <section class="promo-banner">
+            <div class="promo-banner__left">
+                <!-- Сюди свій SVG або img декоративний -->
+                <img src="~/imagesmain/Vector2.png" alt="" class="promo-banner__deco" />
+            </div>
+            <div class="promo-banner__center">
+                <h2>Allora Delivery for you</h2>
+                <p>Worldwide shopping. We ship to over 100+ countries<br>and regions, right to your doorstep</p>
+                <a href="#" class="promo-banner__btn">View more</a>
+            </div>
+            <div class="promo-banner__right">
+                <img src="~/imagesmain/Group.png" alt="" class="promo-banner__deco" />
+            </div>
+        </section>
+
+        <!-- RECENTLY REVIEWED -->
+        <section class="recently-reviewed">
+            <h2>Recently reviewed</h2>
+            <div class="products-grid">
+                @{
+                    var recentProducts = allProducts.OrderBy(x => Guid.NewGuid()).Take(6).ToList();
+                    while (recentProducts.Count < 6)
+                        recentProducts.AddRange(allProducts.OrderBy(x => Guid.NewGuid()));
+                    recentProducts = recentProducts.Take(6).ToList();
+                }
+                @foreach (var product in recentProducts)
+                {
+                    <partial name="_ProductCard" model="product" />
+                }
+            </div>
+        </section>
+        @section Scripts {
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const section = document.getElementById("category-section");
+                    if (section) {
+                        section.scrollIntoView({ behavior: "smooth" });
+                    }
+                });
+            </script>
+        }
+    </div>
+    <script src="~/js/mainpage.js" asp-append-version="true"></script>
+</body>
+</html>

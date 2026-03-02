@@ -1,0 +1,63 @@
+﻿@model Web_Api_Amazon.Entities.Product
+<link rel="stylesheet" href="~/css/cardproduct.css" asp-append-version="true" />
+<div class="product-card">
+
+    <div class="product-image">
+        <a asp-controller="Product"
+           asp-action="Details"
+           asp-route-id="@Model.Id">
+
+            <img src="@Model.ImageUrl" alt="@Model.Name" />
+        </a>
+
+        <button class="wishlist-btn">
+            <img src="~/imagesmain/heartBL.png" alt="logo" style="width:15px; height:15px; " />
+        </button>
+
+        <div class="rating">
+            <img src="~/imagesmain/Vector.png" alt="logo" style="width:15px; height:15px; " />
+        </div>
+    </div>
+
+    <div class="product-body">
+
+        <div class="product-price">
+            $@Model.Price.ToString("0.00")
+        </div>
+
+        <div class="product-brand">
+            @Model.Category?.Name
+        </div>
+
+        <div class="product-title">
+            @Model.Name
+        </div>
+
+        <div class="product-delivery">
+            Delivery tomorrow
+        </div>
+
+        <div class="product-bottom">
+
+            <form asp-controller="Cart"
+                  asp-action="Add"
+                  method="post">
+
+                <input type="hidden" name="productId" value="@Model.Id" />
+
+                <button type="submit" class="cart-btn">
+                    <img src="~/imagesmain/shopping-cartBL.png" alt="logo" style="width:15px; height:15px; " />
+                </button>
+            </form>
+
+            <a asp-controller="Orders"
+               asp-action="BuyNow"
+               asp-route-id="@Model.Id"
+               class="buy-btn">
+                Buy now
+            </a>
+
+        </div>
+    </div>
+
+</div>

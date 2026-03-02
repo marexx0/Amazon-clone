@@ -8,6 +8,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
 using Web_Api_Amazon.Models;
+using Web_Api_Amazon.Entities;
 
 namespace Web_Api_Amazon.Controllers
 {

@@ -22,6 +22,10 @@ namespace DataAccess.Persistance
                 new ProductImage { Id = 24, ProductId = 22, FileName = "nike_dunk_cacao_top.jpg", ContentType = "image/jpeg", ImageUrl = "/images/products/nike_dunk_cacao_top.jpg", ImageData = null, IsPrimary = false, SortOrder = 2 },
                 new ProductImage { Id = 25, ProductId = 22, FileName = "nike_dunk_cacao_side.jpg", ContentType = "image/jpeg", ImageUrl = "/images/products/nike_dunk_cacao_side.jpg", ImageData = null, IsPrimary = false, SortOrder = 3 },
                 new ProductImage { Id = 26, ProductId = 22, FileName = "nike_dunk_cacao_angle.jpg", ContentType = "image/jpeg", ImageUrl = "/images/products/nike_dunk_cacao_angle.jpg", ImageData = null, IsPrimary = false, SortOrder = 4 }
+            
+                
+                
+
             };
         }
     }

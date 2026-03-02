@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text;
-
+using Web_Api_Amazon.Entities;
 
 public class AccountController : Controller
 {
@@ -113,7 +113,11 @@ public class AccountController : Controller
         var result = await _userManager.ConfirmEmailAsync(user, token);
 
         if (result.Succeeded)
-            return View("WelcomeAllora"); // створи відповідну View
+        {
+            await _signInManager.SignInAsync(user, isPersistent: false);
+
+            return RedirectToAction("WelcomeAllora");
+        }
         else
             return View("Error"); // або якась сторінка помилки
     }
