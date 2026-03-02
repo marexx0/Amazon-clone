@@ -8,31 +8,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    @RenderSection("Styles", required: false)
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] Allora</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    @RenderSection("Styles", required: false)
+    
     <link rel="stylesheet" href="~/Web_Api_Amazon.styles.css" asp-append-version="true" />
 </head>
 <body>
 
-    <!-- Overlay � ��� ���� ���������� ������� ���� -->
+    <!-- Overlay -->
     <div id="profileOverlay"></div>
 
     <header class="main-header">
         <div class="header-left">
             <div class="logo">
-                <img src="imagesmain/Logo.png" alt="logo icon" style="width:60px; height:auto;">
+                <img src="~/imagesmain/Logo.png" asp-append-version="true" style="width:60px; height:auto;">
+               
             </div>
-            <img src="imagesmain/map-pin.png" alt="location icon" class="icon-36">
+            <img src="~/imagesmain/map-pin.png" asp-append-version="true" class="icon-36">
+            
             <span>Vienna, Austria</span>
 
-            <img src="imagesmain/chevron-down.png" alt="down icon" class="icon-36">
+            <img src="~/imagesmain/chevron-down.png" asp-append-version="true" class="icon-36">
         </div>
-        </div>
+      
         <div class="header-center">
 
             <div class="cat-wrapper">
@@ -45,82 +48,82 @@
                         var activeCat = Context.Request.Query["categoryId"].ToString();
                     }
                     <a href="/?categoryId=6" class="cat-item">
-                        <img src="imagesmain/clothe.png" alt="">
+                        <img src="~/imagesmain/clothe.png" alt="" asp-append-version="true">
                         Clothing
                     </a>
 
                     <a href="/?categoryId=7" data-category-id="7" class="cat-item">
-                        <img src="imagesmain/shoes.png" alt="">
+                        <img src="~/imagesmain/shoes.png" alt="" asp-append-version="true">
                         Shoes
                     </a>
 
                     <a href="/?categoryId=8" class="cat-item">
-                        <img src="imagesmain/computer.png" alt="">
+                        <img src="~/imagesmain/computer.png" alt="" asp-append-version="true">
                         Computers / Laptops / Tablets
                     </a>
 
                     <a href="/?categoryId=9" class="cat-item">
-                        <img src="imagesmain/phone.png" alt="">
+                        <img src="~/imagesmain/phone.png" alt="" asp-append-version="true">
                         Mobile Phones
                     </a>
 
                     <a href="/?categoryId=10" class="cat-item">
-                        <img src="imagesmain/Audio.png" alt="">
+                        <img src="~/imagesmain/Audio.png" alt="" asp-append-version="true">
                         Headphone
                     </a>
 
                     <a href="/?categoryId=11" class="cat-item">
-                        <img src="imagesmain/photo.png" alt="">
+                        <img src="~/imagesmain/photo.png" alt="" asp-append-version="true">
                         Cameras / Photo Equipment
                     </a>
 
                     <a href="/?categoryId=12" class="cat-item">
-                        <img src="imagesmain/Game.png" alt="">
+                        <img src="~/imagesmain/Game.png" alt="" asp-append-version="true">
                         Gaming
                     </a>
 
                     <a href="/?categoryId=13" class="cat-item">
-                        <img src="imagesmain/Home.png" alt="">
+                        <img src="~/imagesmain/Home.png" alt="" asp-append-version="true">
                         Home Decor
                     </a>
 
                     <a href="/?categoryId=14" class="cat-item">
-                        <img src="imagesmain/Furniture.png" alt="">
+                        <img src="~/imagesmain/Furniture.png" alt="" asp-append-version="true">
                         Furniture
                     </a>
 
                     <a href="/?categoryId=15" class="cat-item">
-                        <img src="imagesmain/Light.png" alt="">
+                        <img src="~/imagesmain/Light.png" alt="" asp-append-version="true">
                         Lighting
                     </a>
 
                     <a href="/?categoryId=16" class="cat-item">
-                        <img src="imagesmain/Yard.png" alt="">
+                        <img src="~/imagesmain/Yard.png" alt="" asp-append-version="true">
                         Yard and Garden
                     </a>
 
                     <a href="/?categoryId=17" class="cat-item">
-                        <img src="imagesmain/Plumbing.png" alt="">
+                        <img src="~/imagesmain/Plumbing.png" alt="" asp-append-version="true">
                         Tools / Hardware / Plumbing
                     </a>
 
                     <a href="/?categoryId=19" class="cat-item">
-                        <img src="imagesmain/sport.png" alt="">
+                        <img src="~/imagesmain/sport.png" alt="" asp-append-version="true">
                         Sports / Outdoor / Fitness
                     </a>
 
                     <a href="/?categoryId=21" class="cat-item">
-                        <img src="imagesmain/toys.png" alt="">
+                        <img src="~/imagesmain/toys.png" alt="" asp-append-version="true">
                         Toys Kids
                     </a>
 
                     <a href="/?categoryId=22" class="cat-item">
-                        <img src="imagesmain/book.png" alt="">
+                        <img src="~/imagesmain/book.png" alt="" asp-append-version="true">
                         Books / Media
                     </a>
 
                     <a href="/?categoryId=23" class="cat-item">
-                        <img src="imagesmain/Health.png" alt="">
+                        <img src="~/imagesmain/Health.png" alt="" asp-append-version="true">
                         Health
                     </a>
 
@@ -140,7 +143,7 @@
                        class="search-input" />
 
                 <button type="submit" class="search-btn">
-                    <img src="imagesmain/search.png" alt="search" class="icon-36">
+                    <img src="~/imagesmain/search.png" asp-append-version="true" class="icon-36">
                 </button>
             </form>
 
@@ -148,17 +151,17 @@
 
         <div class="header-right">
             <div class="globe">
-                <img src="imagesmain/globe.png" alt="logo icon" class="icon-36">
+                <img src="~/imagesmain/globe.png" alt="logo icon" asp-append-version="true" class="icon-36">
             </div>
-            <span>English<img src="imagesmain/chevron-down.png" alt="logo icon" class="icon-36"></span>
-            <span><img src="imagesmain/bell.png" alt="logo icon" class="icon-36"></span>
-            <span><img src="imagesmain/heart.png" alt="logo icon" class="icon-36"></span>
-            <span><img src="imagesmain/shopping-cart.png" alt="logo icon" class="icon-36"></span>
+            <span>English <img src="~/imagesmain/chevron-down.png" asp-append-version="true" class="icon-36"></span>
+            <span> <img src="~/imagesmain/bell.png" asp-append-version="true" class="icon-36"></span>
+            <span> <img src="~/imagesmain/heart.png" asp-append-version="true" class="icon-36"></span>
+            <span> <img src="~/imagesmain/shopping-cart.png" asp-append-version="true" class="icon-36"></span>
 
             <!-- PROFILE � ���������� -->
             <div class="profile-wrapper">
                 <button class="profile-btn" id="profileBtn" title="Account">
-                    <img src="imagesmain/Account Photo.png" alt="profile" style="width:44px; height:44px;">
+                    <img src="~/imagesmain/Account Photo.png" asp-append-version="true" alt="profile" style="width:44px; height:44px;">
                 </button>
 
                 <div class="profile-dropdown" id="profileDropdown">
@@ -188,7 +191,12 @@
                                 </a>
                             </div>
                         }
-
+                        <!-- Нова кнопка Profile -->
+                        <div class="dd-profile">
+                            <a asp-controller="Home" asp-action="Profile" class="profile-btn-link">
+                                Profile
+                            </a>
+                        </div>
                         <div class="dd-signout">
                             <a asp-controller="Account" asp-action="Logout" class="logout-btn">
                                 Sign out
@@ -210,6 +218,9 @@
 
                    
                 </div>
+           
+        </div> <!-- profile-wrapper -->
+        </div> <!-- header-right -->
     </header>
 
     <div class="container">
@@ -273,27 +284,27 @@
             </div>
 
             <div class="site-footer__bottom">
-                <img src="imagesmain/Logo.png" alt="Allora" class="footer-logo">
+                <img src="~/imagesmain/Logo.png" alt="Allora" asp-append-version="true" class="footer-logo">
 
                 <div class="footer-bottom-item">
-                    <img src="imagesmain/map-pin.png" alt="" class="icon-36">
+                    <img src="~/imagesmain/map-pin.png" alt="" asp-append-version="true" class="icon-36">
                     <span>Vienna, Austria</span>
-                    <img src="imagesmain/chevron-down.png" alt="" class="icon-36">
+                    <img src="~/imagesmain/chevron-down.png" alt="" asp-append-version="true" class="icon-36">
                 </div>
 
                 <div class="footer-bottom-item">
-                    <img src="imagesmain/globe.png" alt="" class="icon-36">
+                    <img src="~/imagesmain/globe.png" alt="" class="icon-36">
                     <span>English</span>
-                    <img src="imagesmain/chevron-down.png" alt="" class="icon-36">
+                    <img src="~/imagesmain/chevron-down.png" asp-append-version="true" alt="" class="icon-36">
                 </div>
 
                 <div class="footer-bottom-item">
-                    <img src="imagesmain/Euro.png" alt="" class="icon-36">
+                    <img src="~/imagesmain/Euro.png" alt="" asp-append-version="true" class="icon-36">
                     <span>Euro</span>
-                    <img src="imagesmain/chevron-down.png" alt="" class="icon-36">
+                    <img src="~/imagesmain/chevron-down.png" asp-append-version="true" alt="" class="icon-36">
                 </div>
 
-                <span>� 2026 Allora. All rights reserved</span>
+                <span>2026 Allora. All rights reserved</span>
             </div>
         </div>
     </footer>
@@ -301,6 +312,6 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

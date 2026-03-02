@@ -67,6 +67,10 @@ namespace Web_Api_Amazon.Controllers
 
             return View();
         }
+        public IActionResult Profile()
+        {
+            return View("~/Views/Profile/Index.cshtml");
+        }
         public IActionResult Privacy()
         {
             return View();

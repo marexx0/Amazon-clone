@@ -91,7 +91,7 @@ async Task SeedAdminAsync(IServiceProvider services)
     }
 
     // 2. Твій email
-    var adminEmail = "vikaschool26yurchyk@gmail.com";
+    var adminEmail = "admin@gmail.com";
 
     var adminUser = await userManager.FindByEmailAsync(adminEmail);
 

@@ -1,88 +1,65 @@
-﻿// Profile dropdown
-(function () {
-    var btn = document.getElementById('profileBtn');
-    var dropdown = document.getElementById('profileDropdown');
+﻿document.addEventListener('DOMContentLoaded', function () {
+
+    var profileBtn = document.getElementById('profileBtn');
+    var profileDropdown = document.getElementById('profileDropdown');
     var overlay = document.getElementById('profileOverlay');
+    var catBtn = document.getElementById('catBtn');
+    var catDropdown = document.getElementById('catDropdown');
 
-    if (!btn || !dropdown || !overlay) return;
-
-    function open() {
-        dropdown.classList.add('open');
-        btn.classList.add('active');
+    function openProfile() {
+        closeCat();
+        profileDropdown.classList.add('open');
+        profileBtn.classList.add('active');
         overlay.classList.add('active');
     }
-
-    function close() {
-        dropdown.classList.remove('open');
-        btn.classList.remove('active');
+    function closeProfile() {
+        profileDropdown.classList.remove('open');
+        profileBtn.classList.remove('active');
         overlay.classList.remove('active');
     }
-
-    btn.addEventListener('click', function (e) {
-        e.stopPropagation();
-        dropdown.classList.contains('open') ? close() : open();
-    });
-
-    overlay.addEventListener('click', close);
-
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') close();
-    });
-
-    dropdown.addEventListener('click', function (e) {
-        e.stopPropagation();
-    });
-})();
-// Category dropdown
-(function () {
-    var btn = document.getElementById('catBtn');
-    var dropdown = document.getElementById('catDropdown');
-    var profileDropdown = document.getElementById('profileDropdown');
-    var profileBtn = document.getElementById('profileBtn');
-    var overlay = document.getElementById('profileOverlay');
-
-    if (!btn || !dropdown) return;
-
     function openCat() {
-        // закрити profile якщо відкритий
-        if (profileDropdown) profileDropdown.classList.remove('open');
-        if (profileBtn) profileBtn.classList.remove('active');
-
-        dropdown.classList.add('open');
-        btn.classList.add('active');
-        if (overlay) overlay.classList.add('active');
+        closeProfile();
+        catDropdown.classList.add('open');
+        catBtn.classList.add('active');
+        overlay.classList.add('active');
     }
-
     function closeCat() {
-        dropdown.classList.remove('open');
-        btn.classList.remove('active');
-        if (overlay) overlay.classList.remove('active');
+        if (!catBtn || !catDropdown) return;
+        catDropdown.classList.remove('open');
+        catBtn.classList.remove('active');
+        overlay.classList.remove('active');
+    }
+    function closeAll() {
+        closeProfile();
+        closeCat();
     }
 
-    btn.addEventListener('click', function (e) {
+    profileBtn?.addEventListener('click', function (e) {
         e.stopPropagation();
-        dropdown.classList.contains('open') ? closeCat() : openCat();
+        profileDropdown.classList.contains('open') ? closeProfile() : openProfile();
     });
 
-    overlay.addEventListener('click', closeCat);
+    catBtn?.addEventListener('click', function (e) {
+        e.stopPropagation();
+        catDropdown.classList.contains('open') ? closeCat() : openCat();
+    });
+
+    overlay?.addEventListener('click', closeAll);
+    document.addEventListener('click', closeAll);
 
     document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') closeCat();
+        if (e.key === 'Escape') closeAll();
     });
 
-    dropdown.addEventListener('click', function (e) {
-        e.stopPropagation();
+    // Зберігаємо позицію скролу
+    document.querySelectorAll('.cat-dropdown a').forEach(function (link) {
+        link.addEventListener('click', function () {
+            sessionStorage.setItem('scrollPos', window.scrollY);
+        });
     });
-})();
-// Зберігаємо позицію скролу перед переходом
-document.querySelectorAll('.cat-dropdownI a').forEach(function (link) {
-    link.addEventListener('click', function (e) {
-        e.stopPropagation();
-        sessionStorage.setItem('scrollPos', window.scrollY);
-    });
+
 });
 
-// Відновлюємо позицію після завантаження сторінки
 window.addEventListener('load', function () {
     var scrollPos = sessionStorage.getItem('scrollPos');
     if (scrollPos) {
