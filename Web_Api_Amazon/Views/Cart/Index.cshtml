@@ -15,9 +15,9 @@
     <link rel="stylesheet" href="~/css/cart.css" asp-append-version="true" />
 }
 
-<div class="cart-page">
-    <div class="cart-main">
-        <h1 class="cart-title">Shopping cart</h1>
+<div class="cart-page-shell">
+    <div class="cart-page">
+        <div class="cart-main">
 
         @if (!Model.CartItems.Any())
         {
@@ -69,7 +69,12 @@
                                 </form>
 
                                 <span class="action-divider" aria-hidden="true">|</span>
-                                <button class="action-link" type="button">Save for later</button>
+                                <form asp-controller="Cart" asp-action="SaveForLater" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="productId" value="@item.ProductId" />
+                                    <input type="hidden" name="variantKey" value="@item.VariantKey" />
+                                    <button class="action-link" type="submit">Save for later</button>
+                                </form>
                                 <span class="action-divider" aria-hidden="true">|</span>
                                 <button class="action-buy" type="button">Buy it now</button>
                             </div>
@@ -79,115 +84,227 @@
             }
         }
 
-        <section class="saved">
-            <div class="section-title">Saved for later (@Model.SavedForLater.Count)</div>
 
-            @if (Model.SavedForLater.Any())
-            {
-                <div class="card-grid">
-                    @foreach (var item in Model.SavedForLater)
+            <section class="saved" id="saved-favorites-section">
+                <div class="saved-tabs" role="tablist" aria-label="Saved items and favorites">
+                    <button class="saved-tab is-active"
+                            type="button"
+                            role="tab"
+                            id="saved-tab"
+                            aria-selected="true"
+                            aria-controls="saved-panel"
+                            data-tab-target="saved-panel">
+                        Saved for later
+                    </button>
+                    <button class="saved-tab"
+                            type="button"
+                            role="tab"
+                            id="favorites-tab"
+                            aria-selected="false"
+                            aria-controls="favorites-panel"
+                            data-tab-target="favorites-panel">
+                        Favorites
+                    </button>
+                </div>
+
+                <div class="saved-panel" id="saved-panel" role="tabpanel" aria-labelledby="saved-tab">
+                    @if (Model.SavedForLater.Any())
                     {
-                        <article class="product-card">
-                            @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
+                        <div class="card-grid">
+                            @foreach (var item in Model.SavedForLater)
                             {
-                                <img src="@item.ImageUrl" alt="@item.Name" />
+                                <article class="product-card">
+                                    @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
+                                    {
+                                        <img src="@item.ImageUrl" alt="@item.Name" />
+                                    }
+                                    <div class="product-card__body">
+                                        <strong>@FormatUsd(item.Price)</strong>
+                                        <h3>
+                                            <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">@item.Name</a>
+                                        </h3>
+                                        <p>@item.Description</p>
+                                        <div class="cart-item__actions">
+                                            <form asp-controller="Cart" asp-action="MoveSavedToCart" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                                <input type="hidden" name="variantKey" value="@item.VariantKey" />
+                                                <button class="action-link" type="submit">Move to cart</button>
+                                            </form>
+
+                                            <span class="action-divider" aria-hidden="true">|</span>
+
+                                            <form asp-controller="Cart" asp-action="DeleteSaved" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                                <input type="hidden" name="variantKey" value="@item.VariantKey" />
+                                                <button class="action-link action-link--danger" type="submit">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </article>
                             }
-                            <div class="product-card__body">
-                                <strong>@FormatUsd(item.Price)</strong>
-                                <h3>
-                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">@item.Name</a>
-                                </h3>
-                                <p>@item.Description</p>
-                            </div>
-                        </article>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="saved-empty-state" aria-live="polite">
+                            <div class="saved-empty-state__icon" aria-hidden="true"> <img src="~/images/ui/EmptyCart.png" alt="" /> </div>
+                            <h3>Save your items for later</h3>
+                            <p>If you aren't ready to buy, select Save for later. We'll keep the item safe here.</p>
+                        </div>
                     }
                 </div>
-            }
-            else
-            {
-                <div class="cart-note">No saved products available.</div>
-            }
-        </section>
 
-        <section class="saved">
-            <div class="section-title">Saved for later (@Model.SavedForLater.Count)</div>
-
-            @if (Model.SavedForLater.Any())
-            {
-                <div class="card-grid">
-                    @foreach (var item in Model.SavedForLater)
+                <div class="saved-panel" id="favorites-panel" role="tabpanel" aria-labelledby="favorites-tab" hidden>
+                    @if (Model.Favorites.Any())
                     {
-                        <article class="product-card">
-                            @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
+                        <div class="card-grid">
+                            @foreach (var item in Model.Favorites)
                             {
-                                <img src="@item.ImageUrl" alt="@item.Name" />
+                                <article class="product-card">
+                                    @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
+                                    {
+                                        <img src="@item.ImageUrl" alt="@item.Name" />
+                                    }
+                                    <div class="product-card__body">
+                                        <strong>@FormatUsd(item.Price)</strong>
+                                        <h3>
+                                            <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">@item.Name</a>
+                                        </h3>
+                                        <p>@item.Description</p>
+                                        <div class="cart-item__actions">
+                                            <form asp-controller="Cart" asp-action="Add" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                                <button class="action-link" type="submit">Move to cart</button>
+                                            </form>
+
+                                            <span class="action-divider" aria-hidden="true">|</span>
+
+                                            <form asp-controller="Favorites" asp-action="Remove" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                                <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
+                                                <button class="action-link action-link--danger" type="submit">Remove</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </article>
                             }
-                            <div class="product-card__body">
-                                <strong>@FormatUsd(item.Price)</strong>
-                                <h3>
-                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">@item.Name</a>
-                                </h3>
-                                <p>@item.Description</p>
-                            </div>
-                        </article>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="saved-empty-state" aria-live="polite">
+                            <div class="saved-empty-state__icon" aria-hidden="true"> <img src="~/images/ui/EmptyCart.png" alt="" /> </div>
+                            <h3>No favorites yet</h3>
+                            <p>Add products to favorites to see them here.</p>
+                        </div>
                     }
                 </div>
-            }
-            else
-            {
-                <div class="cart-note">No saved products available.</div>
-            }
-        </section>
-
-        <section class="saved">
-            <div class="section-title">Customers also viewed</div>
+            </section>
 
             @if (Model.Recommendations.Any())
             {
-                <div class="card-grid card-grid--recommend">
-                    @foreach (var item in Model.Recommendations)
+                <section class="saved">
+                    <div class="section-title">Customers also viewed</div>
+
+                    <div class="card-grid card-grid--recommend">
+                        @foreach (var item in Model.Recommendations)
+                        {
+                            <article class="product-card">
+                                @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
+                                {
+                                    <img src="@item.ImageUrl" alt="@item.Name" />
+                                }
+                                <div class="product-card__body">
+                                    <strong>@FormatUsd(item.Price)</strong>
+                                    <h3>
+                                        <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">@item.Name</a>
+                                    </h3>
+                                    <p>@item.Description</p>
+                                </div>
+                            </article>
+                        }
+                    </div>
+                </section>
+            }
+        </div>
+
+        <aside class="summary-sidebar">
+            <section class="summary">
+                <h3>Order summary</h3>
+
+                @if (Model.CartItems.Any())
+                {
+                    @foreach (var item in Model.CartItems)
                     {
-                        <article class="product-card">
-                            @if (!string.IsNullOrWhiteSpace(item.ImageUrl)) 
-                            {
-                                <img src="@item.ImageUrl" alt="@item.Name" />
-                            }
-                            <div class="product-card__body">
-                                <strong>@FormatUsd(item.Price)</strong>
-                                <h3>
-                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">@item.Name</a>
-                                </h3>
-                                <p>@item.Description</p>
-                            </div>
-                        </article>
+                        <div class="summary-row">
+                            <span>@item.Name</span>
+                            <span>@FormatUsd(item.TotalPrice)</span>
+                        </div>
                     }
+
+                    <hr class="summary-separator" />
+                    <div class="summary-row"><span>Subtotal:</span><strong>@FormatUsd(Model.Subtotal)</strong></div>
+                    <div class="summary-row"><span>Shipping:</span><span>@FormatUsd(Model.Shipping)</span></div>
+                    <div class="summary-row total"><span>Total:</span><strong>@FormatUsd(Model.Total)</strong></div>
+                    <hr class="summary-separator" />
+
+                    <label class="summary-gift">
+                        <input type="radio" name="orderGift" />
+                        <span>
+                            <strong>Order includes a gift</strong>
+                            <small>Add gift message at checkout</small>
+                        </span>
+                    </label>
+
+                    <button class="checkout" type="button">Proceed to checkout</button>
+                }
+                else
+                {
+                    <div class="cart-note">No items in order summary.</div>
+                }
+            </section>
+
+            <section class="summary summary--promo" aria-label="Smart membership offer">
+                <h3>Unlock $20 OFF</h3>
+                <div class="promo-content">
+                    <p>Join <strong>Smart+</strong> for free shipping &amp; discounts</p>
+                    <img src="~/images/ui/Discount.png" class="promo-icon" alt="" />
                 </div>
-            }
-        </section>
+                <button class="promo-btn" type="button">Try Smart+</button>
+            </section>
+        </aside>
     </div>
-
-    <aside class="summary">
-        <h3>Order summary</h3>
-
-        @if (Model.CartItems.Any())
-        {
-            @foreach (var item in Model.CartItems)
-            {
-                <div class="summary-row">
-                    <span>@item.Name@(item.Attributes.Any() ? $" ({string.Join(", ", item.Attributes.Select(a => $"{a.Name}: {a.Value}"))})" : string.Empty)</span>
-                    <span>@FormatUsd(item.TotalPrice)</span>
-                </div>
-            }
-
-            <hr />
-            <div class="summary-row"><span>Subtotal:</span><strong>@FormatUsd(Model.Subtotal)</strong></div>
-            <div class="summary-row"><span>Shipping:</span><span>@FormatUsd(Model.Shipping)</span></div>
-            <div class="summary-row total"><span>Total:</span><strong>@FormatUsd(Model.Total)</strong></div>
-            <button class="checkout" type="button">Proceed to checkout</button>
-        }
-        else
-        {
-            <div class="cart-note">No items in order summary.</div>
-        }
-    </aside>
 </div>
+
+@section Scripts {
+    <script>
+        (() => {
+            const section = document.getElementById("saved-favorites-section");
+            if (!section) return;
+
+            const tabs = Array.from(section.querySelectorAll("[data-tab-target]"));
+            const panels = Array.from(section.querySelectorAll(".saved-panel"));
+
+            const activateTab = (tab) => {
+                const targetId = tab.getAttribute("data-tab-target");
+                tabs.forEach((item) => {
+                    const isActive = item === tab;
+                    item.classList.toggle("is-active", isActive);
+                    item.setAttribute("aria-selected", isActive ? "true" : "false");
+                });
+
+                panels.forEach((panel) => {
+                    panel.hidden = panel.id !== targetId;
+                });
+            };
+
+            tabs.forEach((tab) => {
+                tab.addEventListener("click", () => activateTab(tab));
+            });
+        })();
+    </script>
+}

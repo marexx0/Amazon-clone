@@ -10,37 +10,59 @@
     @RenderSection("Styles", required: false)
     <link rel="stylesheet" href="~/Web_Api_Amazon.styles.css" asp-append-version="true" />
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Web_Api_Amazon</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+<body class="site-shell">
+    <header class="site-header">
+        <div class="container-fluid site-header__inner">
+            <a class="site-header__logo" asp-area="" asp-controller="Home" asp-action="Index" aria-label="Allora home">
+                <img src="~/images/ui/Logo.png" alt="Allora" />
+            </a>
 
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
+            <button type="button" class="site-header__location" aria-label="Select location">
+                <img src="~/images/ui/map-pin.png" alt="" aria-hidden="true" />
+                <span class="site-header__location-text">Vienna, Austria</span>
+                <span class="site-header__chevron"><img src="~/images/ui/chevron-down.png" alt="" aria-hidden="true" /></span>
+            </button>
+
+            <form class="site-header__search" role="search">
+                <label class="visually-hidden" for="site-search">Search</label>
+                <select aria-label="Category">
+                    <option selected>Category</option>
+                </select>
+                <input id="site-search" type="search" placeholder="Search" aria-label="Search" />
+                <button type="submit" aria-label="Submit search">
+                    <img src="~/images/ui/Search.png" alt="" aria-hidden="true" />
+                </button>
+            </form>
+
+            <div class="site-header__actions">
+                <button type="button" class="site-header__action site-header__lang" aria-label="Language">
+                    <span aria-hidden="true"><img src="~/images/ui/Globe.png" alt="" aria-hidden="true" /></span>
+                    <span class="site-header__language-text">English</span>
+                    <span class="site-header__chevron"><img src="~/images/ui/chevron-down.png" alt="" aria-hidden="true" /></span>
+                </button>
+                <button type="button" class="site-header__action" aria-label="Notifications">
+                    <img src="~/images/ui/Notifications.png" alt="" aria-hidden="true" />
+                </button>
+                <button type="button" class="site-header__action" aria-label="Favorites">
+                    <img src="~/images/ui/Favorites.png" alt="" aria-hidden="true" />
+                </button>
+                <a class="site-header__action" asp-controller="Cart" asp-action="Index" aria-label="Cart">
+                    <img src="~/images/ui/Cart.png" alt="" aria-hidden="true" />
+                </a>
+                <a class="site-header__action" asp-controller="Account" asp-action="Login" aria-label="Profile">
+                    <img src="~/images/ui/Profile.png" alt="" aria-hidden="true" />
+                </a>
             </div>
-        </nav>
+        </div>
     </header>
-    <div class="container">
+
+    <div class="site-content container-fluid px-3 px-md-4">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-        <footer class="site-footer">
+    <footer class="site-footer">
         <div class="container">
             <div class="row gy-4">
                 <div class="col-6 col-lg-2">
@@ -94,7 +116,6 @@
                 </div>
             </div>
                 <div class="site-footer__copy">&copy; 2026 Allora. All rights reserved</div>
-            </div>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

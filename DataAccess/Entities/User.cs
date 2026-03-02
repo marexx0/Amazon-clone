@@ -12,5 +12,11 @@ public class User : IdentityUser
 
     // Cart items
     public ICollection<CartItem> CartItems { get; set; }
-    
+
+    // Favorite products
+    public ICollection<FavoriteItem> FavoriteItems { get; set; }
+
+    // Saved for later products
+    public ICollection<SavedForLaterItem> SavedForLaterItems { get; set; }
+
 }

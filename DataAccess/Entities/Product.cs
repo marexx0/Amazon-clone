@@ -14,6 +14,8 @@ public class Product
 
     public ICollection<CartItem> CartItems { get; set; }
     public ICollection<OrderItem> OrderItems { get; set; }
+    public ICollection<FavoriteItem> FavoriteItems { get; set; }
+    public ICollection<SavedForLaterItem> SavedForLaterItems { get; set; }
 
     public ICollection<ProductProperty> Properties { get; set; }
 

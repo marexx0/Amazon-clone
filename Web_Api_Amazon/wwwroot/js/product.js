@@ -79,6 +79,8 @@
 
     const addToCartTrigger = document.getElementById('add-to-cart-trigger');
     const addToCartForm = addToCartTrigger?.closest('form');
+    const favoriteToggle = document.getElementById('favorite-toggle');
+    const favoriteFeedback = document.getElementById('favorite-feedback');
     const cartModal = document.getElementById('cart-modal');
     const closeCartModalElements = document.querySelectorAll('[data-close-cart-modal]');
 
@@ -136,6 +138,19 @@
         document.body.style.overflow = '';
     };
 
+    const setFavoriteState = (isFavorite) => {
+        if (!favoriteToggle) return;
+
+        favoriteToggle.dataset.isFavorite = `${isFavorite}`;
+        favoriteToggle.classList.toggle('is-favorite', isFavorite);
+        favoriteToggle.setAttribute('aria-label', isFavorite ? 'Remove from favorites' : 'Add to favorites');
+
+        const icon = favoriteToggle.querySelector('span[aria-hidden="true"]');
+        if (icon) {
+            icon.textContent = isFavorite ? '♥' : '♡';
+        }
+    };
+
     updateSelectedOptionsJson();
 
     addToCartForm?.addEventListener('submit', async (event) => {
@@ -163,6 +178,53 @@
             addToCartTrigger?.removeAttribute('disabled');
         }
     });
+
+    favoriteToggle?.addEventListener('click', async () => {
+        const productId = favoriteToggle.dataset.productId;
+        const toggleUrl = favoriteToggle.dataset.toggleUrl;
+        const token = document.querySelector('input[name="__RequestVerificationToken"]')?.value;
+
+        if (!productId || !toggleUrl || !token) {
+            return;
+        }
+
+        favoriteToggle.setAttribute('disabled', 'disabled');
+
+        try {
+            const payload = new URLSearchParams();
+            payload.set('productId', productId);
+            payload.set('__RequestVerificationToken', token);
+
+            const response = await fetch(toggleUrl, {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+                },
+                body: payload.toString()
+            });
+
+            if (!response.ok) {
+                throw new Error(`Favorite request failed with status ${response.status}`);
+            }
+
+            const result = await response.json();
+            setFavoriteState(Boolean(result.isFavorite));
+
+            if (favoriteFeedback && typeof result.message === 'string') {
+                favoriteFeedback.textContent = result.message;
+            }
+        }
+        catch {
+            if (favoriteFeedback) {
+                favoriteFeedback.textContent = 'Unable to update favorites right now. Please try again.';
+            }
+        }
+        finally {
+            favoriteToggle.removeAttribute('disabled');
+        }
+    });
+
 
     closeCartModalElements.forEach((element) => {
         element.addEventListener('click', closeCartModal);

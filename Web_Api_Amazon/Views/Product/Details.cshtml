@@ -68,10 +68,17 @@
         <div class="product-details">
             <div class="product-meta">
                 <span class="shipping-note">Free Shipping and Free Returns!</span>
-                <button class="icon-button" type="button" aria-label="Save product">
-                    <span aria-hidden="true">♡</span>
+                <button class="icon-button @(Model.IsFavorite ? "is-favorite" : string.Empty)"
+                        id="favorite-toggle"
+                        data-product-id="@product?.Id"
+                        data-toggle-url="@Url.Action("ToggleFavorite", "Product")"
+                        data-is-favorite="@Model.IsFavorite.ToString().ToLowerInvariant()"
+                        type="button"
+                        aria-label="@(Model.IsFavorite ? "Remove from favorites" : "Add to favorites")">
+                    <span aria-hidden="true">@(Model.IsFavorite ? "♥" : "♡")</span>
                 </button>
             </div>
+            <p class="favorite-feedback" id="favorite-feedback" role="status" aria-live="polite"></p>
             <h1>@product?.Name</h1>
             <p class="reviews-status">No reviews yet.</p>
             <p class="price">$@product?.Price.ToString("0.00")</p>
@@ -145,7 +152,7 @@
             <section class="cart-summary">
                 <h2 id="cart-modal-title" class="cart-modal-title">
                     <span class="cart-modal-title-icon" aria-hidden="true">
-                        <img src="~/images/products/ui/AddedToCartCheck.png" alt="" />
+                        <img src="~/images/ui/AddedToCartCheck.png" alt="" />
                     </span>
                     <span>Added to cart</span>
                 </h2>
@@ -212,13 +219,6 @@
             </div>
             <div class="tab-panel is-active" id="details">
                 <div class="details-grid details-grid-two-col">
-                    @if (!string.IsNullOrWhiteSpace(Model.Brand))
-                    {
-                        <div class="detail-item">
-                            <span class="detail-label">Brand:</span>
-                            <span class="detail-value">@Model.Brand</span>
-                        </div>
-                    }
                     @if (product?.Category != null)
                     {
                         <div class="detail-item">
@@ -290,7 +290,7 @@
     <section class="feature-row">
         <div class="feature">
             <span class="feature-icon" aria-hidden="true">
-                <img src="~/images/products/ui/SecurePayment.png" alt="" />
+                <img src="~/images/ui/SecurePayment.png" alt="" />
             </span>
             <div>
                 <h4>Secure Payments</h4>
@@ -299,7 +299,7 @@
         </div>
         <div class="feature">
             <span class="feature-icon" aria-hidden="true">
-                <img src="~/images/products/ui/OriginalProducts.png" alt="" />
+                <img src="~/images/ui/OriginalProducts.png" alt="" />
             </span>
             <div>
                 <h4>100% Original Products</h4>
@@ -308,7 +308,7 @@
         </div>
         <div class="feature">
             <span class="feature-icon" aria-hidden="true">
-                <img src="~/images/products/ui/CustomerSupport.png" alt="" />
+                <img src="~/images/ui/CustomerSupport.png" alt="" />
             </span>
             <div>
                 <h4>24/7 Customer Support</h4>
@@ -324,7 +324,7 @@
             <a class="primary-btn" asp-controller="Account" asp-action="SelectAccountType">Sign up free</a>
         </div>
         <div class="newsletter-graphic" aria-hidden="true">
-            <img src="~/images/products/ui/ProdDetailsSignIn.png" alt="" />
+            <img src="~/images/ui/ProdDetailsSignIn.png" alt="" />
         </div>
     </section>
 

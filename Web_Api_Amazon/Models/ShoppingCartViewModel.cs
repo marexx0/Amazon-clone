@@ -7,6 +7,7 @@ public class ShoppingCartViewModel
 {
     public List<CartProductViewModel> CartItems { get; set; } = new();
     public List<ProductCardViewModel> SavedForLater { get; set; } = new();
+    public List<ProductCardViewModel> Favorites { get; set; } = new();
     public List<ProductCardViewModel> Recommendations { get; set; } = new();
     public bool IsSignedIn { get; set; }
 
@@ -37,6 +38,7 @@ public class ProductCardViewModel
     public decimal Price { get; set; }
     public bool InStock { get; set; }
     public double Rating { get; set; }
+    public string VariantKey { get; set; } = "Default";
 }
 public class CartAttributeViewModel
 {

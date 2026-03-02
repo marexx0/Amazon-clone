@@ -1,22 +1,28 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Amazon_clone.DataAccess.Data;
+﻿using Amazon_clone.DataAccess.Data;
+using Core.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Claims;
+using System.Text.Json;
 using Web_Api_Amazon.Models;
 
 namespace Web_Api_Amazon.Controllers
 {
     public class ProductController : Controller
     {
+        private const string LocalFavoritesSessionKey = "LocalFavorites";
         private readonly ShopDbContext _context;
         private readonly IWebHostEnvironment _environment;
+        private readonly IFavoritesService _favoritesService;
 
-        public ProductController(ShopDbContext context, IWebHostEnvironment environment)
+        public ProductController(ShopDbContext context, IWebHostEnvironment environment, IFavoritesService favoritesService)
         {
             _context = context;
             _environment = environment;
+            _favoritesService = favoritesService;
         }
 
         // GET: Product/Details/5
@@ -87,6 +93,10 @@ namespace Web_Api_Amazon.Controllers
             var brand = product.Properties?
                 .FirstOrDefault(pp => pp.PropertyDefinition?.Name == "Brand")
                 ?.Value;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var isFavorite = string.IsNullOrWhiteSpace(userId)
+                ? GetFavoriteProductIds().Contains(product.Id)
+                : (await _favoritesService.GetFavoritesAsync(userId)).Any(item => item.ProductId == product.Id);
 
             var viewModel = new ProductDetailsViewModel
             {
@@ -96,10 +106,97 @@ namespace Web_Api_Amazon.Controllers
                 TopPicks = topPicks,
                 AvailableColors = availableColors,
                 AvailableSizes = availableSizes,
-                Brand = brand
+                IsFavorite = isFavorite
             };
 
             return View(viewModel);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ToggleFavorite(int productId)
+        {
+            var productExists = _context.Products.Any(p => p.Id == productId);
+            if (!productExists)
+            {
+                return NotFound();
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            bool isFavorite;
+
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                var favoriteIds = GetFavoriteProductIds();
+                isFavorite = favoriteIds.Contains(productId);
+
+                if (isFavorite)
+                {
+                    favoriteIds.Remove(productId);
+                }
+                else
+                {
+                    favoriteIds.Add(productId);
+                }
+
+                SaveFavoriteProductIds(favoriteIds);
+            }
+            else
+            {
+                var userFavorites = await _favoritesService.GetFavoritesAsync(userId);
+                isFavorite = userFavorites.Any(item => item.ProductId == productId);
+
+                if (isFavorite)
+                {
+                    await _favoritesService.RemoveAsync(userId, productId);
+                }
+                else
+                {
+                    await _favoritesService.AddAsync(userId, productId);
+                }
+            }
+
+            return Json(new
+            {
+                isFavorite = !isFavorite,
+                message = isFavorite ? "Removed from favorites." : "Added to favorites."
+            });
+        }
+
+        private List<int> GetFavoriteProductIds()
+        {
+            var rawValue = HttpContext.Session.GetString(LocalFavoritesSessionKey);
+            if (string.IsNullOrWhiteSpace(rawValue))
+            {
+                // Backward compatibility with previous session key
+                rawValue = HttpContext.Session.GetString("FavoriteProductIds");
+            }
+            if (string.IsNullOrWhiteSpace(rawValue))
+            {
+                return new List<int>();
+            }
+
+            try
+            {
+                var productIds = JsonSerializer.Deserialize<List<int>>(rawValue) ?? new List<int>();
+                return productIds.Distinct().ToList();
+            }
+            catch
+            {
+                return new List<int>();
+            }
+        }
+
+        private void SaveFavoriteProductIds(List<int> productIds)
+        {
+            if (!productIds.Any())
+            {
+                HttpContext.Session.Remove(LocalFavoritesSessionKey);
+                HttpContext.Session.Remove("FavoriteProductIds");
+                return;
+            }
+
+            HttpContext.Session.SetString(LocalFavoritesSessionKey, JsonSerializer.Serialize(productIds.Distinct().ToList()));
+            HttpContext.Session.Remove("FavoriteProductIds");
         }
 
         private List<ProductImage> EnrichImagesFromFiles(List<ProductImage> images, string primaryImageUrl, int productId)
