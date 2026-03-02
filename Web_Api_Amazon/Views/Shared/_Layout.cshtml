@@ -24,10 +24,10 @@
 
     <header class="main-header">
         <div class="header-inner">
-            <div class="header-left">
-                <div class="logo">
-                    <img src="~/imagesmain/Logo.png" alt="Allora logo" class="brand-logo">
-                </div>
+			<div class="header-left">
+                    <a asp-controller="Home" asp-action="Index" class="logo" aria-label="Logo">
+					    <img src="~/imagesmain/Logo.png" alt="Allora logo" class="brand-logo">
+                    </a>
 
                 <button type="button" class="header-location" aria-label="Select location">
                     <img src="~/imagesmain/map-pin.png" alt="location" class="icon-36">
@@ -164,9 +164,9 @@
                     <img src="~/imagesmain/heart.png" alt="Favorites" class="icon-36">
                 </button>
 
-                <button type="button" class="header-icon-btn" aria-label="Cart">
+                <a asp-controller="Cart" asp-action="Index" class="header-icon-btn" aria-label="Cart">
                     <img src="~/imagesmain/shopping-cart.png" alt="Cart" class="icon-36">
-                </button>
+                </a>
 
                 <!-- PROFILE � ���������� -->
                 <div class="profile-wrapper">
