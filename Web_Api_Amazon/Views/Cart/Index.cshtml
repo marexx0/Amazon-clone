@@ -1,4 +1,5 @@
-﻿﻿@using System.Globalization
+﻿@using System.Globalization
+@using Web_Api_Amazon.Entities
 @model Web_Api_Amazon.Models.ShoppingCartViewModel
 @{
     ViewData["Title"] = "Shopping cart";
@@ -12,77 +13,77 @@
 }
 
 @section Styles {
-    <link rel="stylesheet" href="~/css/profile.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/cart.css" asp-append-version="true" />
 }
 
 <div class="cart-page-shell">
     <div class="cart-page">
         <div class="cart-main">
 
-        @if (!Model.CartItems.Any())
-        {
-            <div class="cart-note">Your cart is empty.</div>
-        }
-        else
-        {
-            @foreach (var item in Model.CartItems)
+            @if (!Model.CartItems.Any())
             {
-                <article class="cart-item">
-                    @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
-                    {
-                        <img src="@item.ImageUrl" alt="@item.Name" class="cart-item__image" />
-                    }
-
-                    <div class="cart-item__content">
-                        <div class="cart-item__head">
-                            <h2>
-                                <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">@item.Name</a>
-                            </h2>
-                            <strong>@FormatUsd(item.TotalPrice)</strong>
-                        </div>
-
-                        <p class="stock @(item.InStock ? "is-in" : "is-out")">
-                            @(item.InStock ? "In stock" : "Out of stock")
-                        </p>
-
-                        @if (item.Attributes.Any())
+                <div class="cart-note">Your cart is empty.</div>
+            }
+            else
+            {
+                @foreach (var item in Model.CartItems)
+                {
+                    <article class="cart-item">
+                        @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
                         {
-                            @foreach (var attr in item.Attributes)
-                            {
-                                <div class="cart-item__meta">@attr.Name: <span>@attr.Value</span></div>
-                            }
+                            <img src="@item.ImageUrl" alt="@item.Name" class="cart-item__image" />
                         }
 
-                        <div class="cart-item__footer">
-                            <div class="cart-qty-control" aria-label="Quantity selector">
-                                <button type="button" class="cart-qty-btn">−</button>
-                                <span class="cart-qty-value">@item.Quantity</span>
-                                <button type="button" class="cart-qty-btn">+</button>
+                        <div class="cart-item__content">
+                            <div class="cart-item__head">
+                                <h2>
+                                    <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">@item.Name</a>
+                                </h2>
+                                <strong>@FormatUsd(item.TotalPrice)</strong>
                             </div>
 
-                            <div class="cart-item__actions">
-                                <form asp-controller="Cart" asp-action="Delete" method="post">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="productId" value="@item.ProductId" />
-                                    <input type="hidden" name="variantKey" value="@item.VariantKey" />
-                                    <button class="action-link action-link--danger" type="submit">Delete</button>
-                                </form>
+                            <p class="stock @(item.InStock ? "is-in" : "is-out")">
+                                @(item.InStock ? "In stock" : "Out of stock")
+                            </p>
 
-                                <span class="action-divider" aria-hidden="true">|</span>
-                                <form asp-controller="Cart" asp-action="SaveForLater" method="post">
-                                    @Html.AntiForgeryToken()
-                                    <input type="hidden" name="productId" value="@item.ProductId" />
-                                    <input type="hidden" name="variantKey" value="@item.VariantKey" />
-                                    <button class="action-link" type="submit">Save for later</button>
-                                </form>
-                                <span class="action-divider" aria-hidden="true">|</span>
-                                <button class="action-buy" type="button">Buy it now</button>
+                            @if (item.Attributes.Any())
+                            {
+                                @foreach (var attr in item.Attributes)
+                                {
+                                    <div class="cart-item__meta">@attr.Name: <span>@attr.Value</span></div>
+                                }
+                            }
+
+                            <div class="cart-item__footer">
+                                <div class="cart-qty-control" aria-label="Quantity selector">
+                                    <button type="button" class="cart-qty-btn">−</button>
+                                    <span class="cart-qty-value">@item.Quantity</span>
+                                    <button type="button" class="cart-qty-btn">+</button>
+                                </div>
+
+                                <div class="cart-item__actions">
+                                    <form asp-controller="Cart" asp-action="Delete" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="productId" value="@item.ProductId" />
+                                        <input type="hidden" name="variantKey" value="@item.VariantKey" />
+                                        <button class="action-link action-link--danger" type="submit">Delete</button>
+                                    </form>
+
+                                    <span class="action-divider" aria-hidden="true">|</span>
+                                    <form asp-controller="Cart" asp-action="SaveForLater" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="productId" value="@item.ProductId" />
+                                        <input type="hidden" name="variantKey" value="@item.VariantKey" />
+                                        <button class="action-link" type="submit">Save for later</button>
+                                    </form>
+                                    <span class="action-divider" aria-hidden="true">|</span>
+                                    <button class="action-buy" type="button">Buy it now</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </article>
+                    </article>
+                }
             }
-        }
 
 
             <section class="saved" id="saved-favorites-section">
@@ -113,36 +114,15 @@
                         <div class="card-grid">
                             @foreach (var item in Model.SavedForLater)
                             {
-                                <article class="product-card">
-                                    @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
-                                    {
-                                        <img src="@item.ImageUrl" alt="@item.Name" />
-                                    }
-                                    <div class="product-card__body">
-                                        <strong>@FormatUsd(item.Price)</strong>
-                                        <h3>
-                                            <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">@item.Name</a>
-                                        </h3>
-                                        <p>@item.Description</p>
-                                        <div class="cart-item__actions">
-                                            <form asp-controller="Cart" asp-action="MoveSavedToCart" method="post">
-                                                @Html.AntiForgeryToken()
-                                                <input type="hidden" name="productId" value="@item.ProductId" />
-                                                <input type="hidden" name="variantKey" value="@item.VariantKey" />
-                                                <button class="action-link" type="submit">Move to cart</button>
-                                            </form>
-
-                                            <span class="action-divider" aria-hidden="true">|</span>
-
-                                            <form asp-controller="Cart" asp-action="DeleteSaved" method="post">
-                                                @Html.AntiForgeryToken()
-                                                <input type="hidden" name="productId" value="@item.ProductId" />
-                                                <input type="hidden" name="variantKey" value="@item.VariantKey" />
-                                                <button class="action-link action-link--danger" type="submit">Delete</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </article>
+                                var productCard = new Product
+                                {
+                                    Id = item.ProductId,
+                                    Name = item.Name,
+                                    Description = item.Description,
+                                    ImageUrl = item.ImageUrl,
+                                    Price = (double)item.Price
+                                };
+                                <partial name="_ProductCard" model="productCard" />
                             }
                         </div>
                     }
@@ -162,35 +142,15 @@
                         <div class="card-grid">
                             @foreach (var item in Model.Favorites)
                             {
-                                <article class="product-card">
-                                    @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
-                                    {
-                                        <img src="@item.ImageUrl" alt="@item.Name" />
-                                    }
-                                    <div class="product-card__body">
-                                        <strong>@FormatUsd(item.Price)</strong>
-                                        <h3>
-                                            <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">@item.Name</a>
-                                        </h3>
-                                        <p>@item.Description</p>
-                                        <div class="cart-item__actions">
-                                            <form asp-controller="Cart" asp-action="Add" method="post">
-                                                @Html.AntiForgeryToken()
-                                                <input type="hidden" name="productId" value="@item.ProductId" />
-                                                <button class="action-link" type="submit">Move to cart</button>
-                                            </form>
-
-                                            <span class="action-divider" aria-hidden="true">|</span>
-
-                                            <form asp-controller="Favorites" asp-action="Remove" method="post">
-                                                @Html.AntiForgeryToken()
-                                                <input type="hidden" name="productId" value="@item.ProductId" />
-                                                <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
-                                                <button class="action-link action-link--danger" type="submit">Remove</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </article>
+                                var productCard = new Product
+                                {
+                                    Id = item.ProductId,
+                                    Name = item.Name,
+                                    Description = item.Description,
+                                    ImageUrl = item.ImageUrl,
+                                    Price = (double)item.Price
+                                };
+                                <partial name="_ProductCard" model="productCard" />
                             }
                         </div>
                     }
@@ -213,19 +173,15 @@
                     <div class="card-grid card-grid--recommend">
                         @foreach (var item in Model.Recommendations)
                         {
-                            <article class="product-card">
-                                @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
-                                {
-                                    <img src="@item.ImageUrl" alt="@item.Name" />
-                                }
-                                <div class="product-card__body">
-                                    <strong>@FormatUsd(item.Price)</strong>
-                                    <h3>
-                                        <a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">@item.Name</a>
-                                    </h3>
-                                    <p>@item.Description</p>
-                                </div>
-                            </article>
+                            var productCard = new Product
+                            {
+                                Id = item.ProductId,
+                                Name = item.Name,
+                                Description = item.Description,
+                                ImageUrl = item.ImageUrl,
+                                Price = (double)item.Price
+                            };
+                            <partial name="_ProductCard" model="productCard" />
                         }
                     </div>
                 </section>
@@ -304,6 +260,16 @@
 
             tabs.forEach((tab) => {
                 tab.addEventListener("click", () => activateTab(tab));
+            });
+
+            let isRefreshingFavorites = false;
+            document.addEventListener('favorites:changed', () => {
+                if (isRefreshingFavorites) {
+                    return;
+                }
+
+                isRefreshingFavorites = true;
+                window.location.reload();
             });
         })();
     </script>
