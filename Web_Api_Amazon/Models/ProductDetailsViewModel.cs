@@ -9,16 +9,21 @@ namespace Web_Api_Amazon.Models
         public IReadOnlyList<ProductImage> Images { get; set; } = new List<ProductImage>();
         public IReadOnlyList<Product> RelatedProducts { get; set; } = new List<Product>();
         public IReadOnlyList<Product> TopPicks { get; set; } = new List<Product>();
-        public IReadOnlyList<string> AvailableColors { get; set; } = new List<string>();
-        public IReadOnlyList<string> AvailableSizes { get; set; } = new List<string>();
+        public IReadOnlyList<ProductVariantOptionGroupViewModel> VariantOptionGroups { get; set; } = new List<ProductVariantOptionGroupViewModel>();
         public IReadOnlyList<ProductVariantSummaryViewModel> VariantSummaries { get; set; } = new List<ProductVariantSummaryViewModel>();
         public bool IsFavorite { get; set; }
     }
 
+    public class ProductVariantOptionGroupViewModel
+    {
+        public string Name { get; set; } = string.Empty;
+        public IReadOnlyList<string> Values { get; set; } = new List<string>();
+        public bool IsColor { get; set; }
+    }
+
     public class ProductVariantSummaryViewModel
     {
-        public string Size { get; set; } = string.Empty;
-        public string Color { get; set; } = string.Empty;
+        public IReadOnlyDictionary<string, string> Options { get; set; } = new Dictionary<string, string>();
         public int Quantity { get; set; }
     }
 }

@@ -12,7 +12,7 @@
                 <th>Description</th>
                 <th>Price</th>
                 <th>Category</th>
-                <th>Variants (Size / Color / Qty)</th>
+                <th>Variants (All properties / Qty)</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -30,7 +30,29 @@
                             <ul class="mb-0 ps-3">
                                 @foreach (var variant in product.Variants)
                                 {
-                                    <li>Size: @(string.IsNullOrWhiteSpace(variant.Name) ? "-" : variant.Name), Color: @(string.IsNullOrWhiteSpace(variant.Value) ? "-" : variant.Value), Qty: @variant.Quantity</li>
+                                    var variantProperties = variant.VariantValues?
+                                    .Where(vv => !string.IsNullOrWhiteSpace(vv.Value))
+                                    .OrderBy(vv => vv.PropertyDefinition?.Name)
+                                    .Select(vv => $"{(vv.PropertyDefinition?.Name ?? "Option")}: {vv.Value}")
+                                    .ToList() ?? new List<string>();
+
+                                    if (variantProperties.Count == 0)
+                                    {
+                                        if (!string.IsNullOrWhiteSpace(variant.Name) && !string.IsNullOrWhiteSpace(variant.Value))
+                                        {
+                                            variantProperties.Add($"{variant.Name}: {variant.Value}");
+                                        }
+                                        else if (!string.IsNullOrWhiteSpace(variant.Name))
+                                        {
+                                            variantProperties.Add($"Option: {variant.Name}");
+                                        }
+                                        else if (!string.IsNullOrWhiteSpace(variant.Value))
+                                        {
+                                            variantProperties.Add($"Option: {variant.Value}");
+                                        }
+                                    }
+
+                                    <li>@(variantProperties.Any() ? string.Join(" | ", variantProperties) : "Default variant") - Qty: @variant.Quantity</li>
                                 }
                             </ul>
                         }

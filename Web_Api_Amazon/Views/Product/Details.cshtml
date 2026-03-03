@@ -85,42 +85,44 @@
             <p class="reviews-status">No reviews yet.</p>
             <p class="price">$@product?.Price.ToString("0.00")</p>
 
-            @if (Model.AvailableColors.Any())
+            @foreach (var optionGroup in Model.VariantOptionGroups)
             {
-                <div class="option-group">
+                var selectedValue = optionGroup.Values.FirstOrDefault() ?? string.Empty;
+                <div class="option-group" data-option-name="@optionGroup.Name">
                     <div class="option-header">
-                        <span class="option-label">Color</span>
-                        <span class="option-value">@Model.AvailableColors.First()</span>
+                        <span class="option-label">@optionGroup.Name</span>
+                        <span class="option-value">@selectedValue</span>
                     </div>
-                    <div class="color-options">
-                        @foreach (var color in Model.AvailableColors)
-                        {
-                            var isSelected = color == Model.AvailableColors.First();
-                            var selectedClass = isSelected ? "is-selected" : string.Empty;
-                            <button class="color-option @selectedClass" type="button" aria-label="@color" data-color="@color">
-                                <span class="color-swatch" style="background:@color;"></span>
-                            </button>
-                        }
-                    </div>
-                </div>
-            }
 
-            @if (Model.AvailableSizes.Any())
-            {
-                <div class="option-group">
-                    <div class="option-header">
-                        <span class="option-label">Size</span>
-                        <span class="option-value">@Model.AvailableSizes.First()</span>
-                    </div>
-                    <div class="size-options">
-                        @foreach (var size in Model.AvailableSizes)
+                    @if (optionGroup.IsColor)
+                    {
+                        <div class="color-options">
+                            @foreach (var color in optionGroup.Values)
+                            {
+                                var isSelected = string.Equals(color, selectedValue, StringComparison.OrdinalIgnoreCase);
+                                var selectedClass = isSelected ? "is-selected" : string.Empty;
+                                <button class="color-option variant-option @selectedClass" type="button" aria-label="@color" data-option-name="@optionGroup.Name" data-option-value="@color">
+                                    <span class="color-swatch" style="background:@color;"></span>
+                                </button>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="size-options">
+                            @foreach (var value in optionGroup.Values)
+                            {
+                                var isSelected = string.Equals(value, selectedValue, StringComparison.OrdinalIgnoreCase);
+                                var selectedClass = isSelected ? "is-selected" : string.Empty;
+                                <button class="size-option variant-option @selectedClass" type="button" data-option-name="@optionGroup.Name" data-option-value="@value">@value</button>
+                            }
+                        </div>
+
+                        @if (string.Equals(optionGroup.Name, "Size", StringComparison.OrdinalIgnoreCase))
                         {
-                            var isSelected = size == Model.AvailableSizes.First();
-                            var selectedClass = isSelected ? "is-selected" : string.Empty;
-                            <button class="size-option @selectedClass" type="button" data-size="@size">@size</button>
+                            <a class="size-guide" href="#">Size guide</a>
                         }
-                    </div>
-                    <a class="size-guide" href="#">Size guide</a>
+                    }
                 </div>
             }
 
@@ -141,7 +143,7 @@
                 <div class="actions">
                     <button class="primary-btn" type="submit" id="add-to-cart-trigger">Add to cart</button>
                     <button class="secondary-btn" type="button">Buy now</button>
-                    
+
                 </div>
             </form>
         </div>
@@ -165,8 +167,13 @@
                     }
                     <div class="cart-summary-info">
                         <h3>@product?.Name</h3>
-                        <p><span>Size:</span> <strong id="modal-selected-size">@Model.AvailableSizes.FirstOrDefault()</strong></p>
-                        <p><span>Color:</span> <strong id="modal-selected-color">@Model.AvailableColors.FirstOrDefault()</strong></p>
+                        <div id="modal-selected-options">
+                            @foreach (var optionGroup in Model.VariantOptionGroups)
+                            {
+                                var selectedValue = optionGroup.Values.FirstOrDefault() ?? string.Empty;
+                                <p><span>@optionGroup.Name:</span> <strong data-modal-option-name="@optionGroup.Name">@selectedValue</strong></p>
+                            }
+                        </div>
                         <p><span>Quantity:</span> <strong id="modal-selected-qty">1</strong></p>
                     </div>
                 </div>
@@ -217,32 +224,11 @@
                             <span class="detail-value">@product.Category.Name</span>
                         </div>
                     }
-                    @if (Model.AvailableColors.Any())
+                    @foreach (var optionGroup in Model.VariantOptionGroups)
                     {
                         <div class="detail-item">
-                            <span class="detail-label">Colors:</span>
-                            <span class="detail-value">@string.Join(", ", Model.AvailableColors)</span>
-                        </div>
-                    }
-                    @if (Model.AvailableSizes.Any())
-                    {
-                        <div class="detail-item">
-                            <span class="detail-label">Sizes:</span>
-                            <span class="detail-value">@string.Join(", ", Model.AvailableSizes)</span>
-                        </div>
-                    }
-                    @if (Model.VariantSummaries.Any())
-                    {
-                        <div class="detail-item" style="grid-column: 1 / -1;">
-                            <span class="detail-label">Variant inventory:</span>
-                            <div class="detail-value">
-                                <ul class="mb-0 ps-3">
-                                    @foreach (var variant in Model.VariantSummaries)
-                                    {
-                                        <li>Size @(!string.IsNullOrWhiteSpace(variant.Size) ? variant.Size : "-") - Color @(!string.IsNullOrWhiteSpace(variant.Color) ? variant.Color : "-") - Quantity @variant.Quantity</li>
-                                    }
-                                </ul>
-                            </div>
+                            <span class="detail-label">@optionGroup.Name:</span>
+                            <span class="detail-value">@string.Join(", ", optionGroup.Values)</span>
                         </div>
                     }
                     @if (product?.Properties?.Any() == true)

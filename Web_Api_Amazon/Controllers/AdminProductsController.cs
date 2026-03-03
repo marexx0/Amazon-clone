@@ -24,6 +24,8 @@ namespace Web_Api_Amazon.Controllers
                 .Include(p => p.Category)
                 .Include(p => p.Properties)
                 .Include(p => p.Variants)
+                .ThenInclude(v => v.VariantValues)
+                .ThenInclude(vv => vv.PropertyDefinition)
                 .Include(p => p.Images)
                 .ToList();
             return View(products);

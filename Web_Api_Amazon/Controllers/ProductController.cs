@@ -81,38 +81,57 @@ namespace Web_Api_Amazon.Controllers
                 .ToListAsync();
 
             var variantSummaries = product.Variants?
-                .Where(v => !string.IsNullOrWhiteSpace(v.Name)
-                            || !string.IsNullOrWhiteSpace(v.Value)
-                            || v.Quantity > 0
-                            || (v.VariantValues?.Any() ?? false))
-                .Select(v =>
+                           .Where(v => !string.IsNullOrWhiteSpace(v.Name)
+                                       || !string.IsNullOrWhiteSpace(v.Value)
+                                       || v.Quantity > 0
+                                       || (v.VariantValues?.Any() ?? false))
+                           .Select(v =>
+                           {
+                               var optionMap = (v.VariantValues ?? new List<ProductVariantValue>())
+                                   .Where(vv => !string.IsNullOrWhiteSpace(vv.PropertyDefinition?.Name) && !string.IsNullOrWhiteSpace(vv.Value))
+                                   .GroupBy(vv => vv.PropertyDefinition!.Name.Trim(), StringComparer.OrdinalIgnoreCase)
+                                   .ToDictionary(g => g.First().PropertyDefinition!.Name.Trim(), g => g.First().Value!.Trim(), StringComparer.OrdinalIgnoreCase);
+
+                               if (optionMap.Count == 0)
+                               {
+                                   if (!string.IsNullOrWhiteSpace(v.Name) && !string.IsNullOrWhiteSpace(v.Value))
+                                   {
+                                       optionMap[v.Name.Trim()] = v.Value.Trim();
+                                   }
+                                   else if (!string.IsNullOrWhiteSpace(v.Name))
+                                   {
+                                       optionMap["Option"] = v.Name.Trim();
+                                   }
+                                   else if (!string.IsNullOrWhiteSpace(v.Value))
+                                   {
+                                       optionMap["Option"] = v.Value.Trim();
+                                   }
+                               }
+
+                               return new ProductVariantSummaryViewModel
+                               {
+                                   Options = optionMap,
+                                   Quantity = Math.Max(0, v.Quantity)
+                               };
+                           })
+                           .ToList() ?? new List<ProductVariantSummaryViewModel>();
+
+            var optionGroups = variantSummaries
+                .SelectMany(v => v.Options)
+                .GroupBy(kv => kv.Key, StringComparer.OrdinalIgnoreCase)
+                .Select(group => new ProductVariantOptionGroupViewModel
                 {
-                    var sizeFromValues = v.VariantValues?
-                        .FirstOrDefault(vv => vv.PropertyDefinition?.Name == "Size")
-                        ?.Value;
-                    var colorFromValues = v.VariantValues?
-                        .FirstOrDefault(vv => vv.PropertyDefinition?.Name == "Color")
-                        ?.Value;
-
-                    return new ProductVariantSummaryViewModel
-                    {
-                        Size = string.IsNullOrWhiteSpace(v.Name) ? (sizeFromValues ?? string.Empty) : v.Name,
-                        Color = string.IsNullOrWhiteSpace(v.Value) ? (colorFromValues ?? string.Empty) : v.Value,
-                        Quantity = Math.Max(0, v.Quantity)
-                    };
+                    Name = group.First().Key,
+                    Values = group.Select(kv => kv.Value)
+                        .Where(value => !string.IsNullOrWhiteSpace(value))
+                        .Distinct(StringComparer.OrdinalIgnoreCase)
+                        .ToList(),
+                    IsColor = string.Equals(group.First().Key, "Color", StringComparison.OrdinalIgnoreCase)
                 })
-                .ToList() ?? new List<ProductVariantSummaryViewModel>();
-
-            var availableColors = variantSummaries
-                .Select(v => v.Color)
-                .Where(c => !string.IsNullOrWhiteSpace(c))
-                .Distinct()
-                .ToList();
-
-            var availableSizes = variantSummaries
-                .Select(v => v.Size)
-                .Where(s => !string.IsNullOrWhiteSpace(s))
-                .Distinct()
+                .Where(group => group.Values.Any())
+                .OrderBy(group => string.Equals(group.Name, "Color", StringComparison.OrdinalIgnoreCase) ? 0 :
+                                  string.Equals(group.Name, "Size", StringComparison.OrdinalIgnoreCase) ? 1 : 2)
+                .ThenBy(group => group.Name)
                 .ToList();
 
             var brand = product.Properties?
@@ -129,8 +148,7 @@ namespace Web_Api_Amazon.Controllers
                 Images = images,
                 RelatedProducts = relatedProducts,
                 TopPicks = topPicks,
-                AvailableColors = availableColors,
-                AvailableSizes = availableSizes,
+                VariantOptionGroups = optionGroups,
                 VariantSummaries = variantSummaries,
                 IsFavorite = isFavorite
             };

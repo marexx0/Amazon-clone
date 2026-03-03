@@ -71,8 +71,8 @@
 
         <!-- Existing Variants -->
         <div class="form-group mb-3">
-            <label>Variants (Size / Color / Quantity)</label>
-            <small class="text-muted d-block mb-2">Example: Size 41, Color Brown, Quantity 8</small>
+            <label>Variants (Property / Value / Quantity)</label>
+            <small class="text-muted d-block mb-2">Example: RAM 8GB, Storage 256GB, Quantity 8</small>
             <div id="variantsContainer">
                 @if (Model.Variants != null)
                 {
@@ -81,28 +81,38 @@
                         var fallbackVariantValue = Model.Variants[i].VariantValues?.FirstOrDefault();
                         var variantName = Model.Variants[i].Name ?? fallbackVariantValue?.PropertyDefinition?.Name ?? string.Empty;
                         var variantValue = Model.Variants[i].Value ?? fallbackVariantValue?.Value ?? string.Empty;
-                        <div class="d-flex mb-2">
-                            <input type="text" name="Variants[@i].Name"
-                                   value="@variantName"
-                                   class="form-control me-2" />
+                        var allVariantProperties = Model.Variants[i].VariantValues?
+                        .Where(vv => !string.IsNullOrWhiteSpace(vv.Value))
+                        .Select(vv => $"{(vv.PropertyDefinition?.Name ?? "Option")}: {vv.Value}")
+                        .ToList() ?? new List<string>();
+                        <div class="mb-2">
+                            @if (allVariantProperties.Any())
+                            {
+                                <small class="text-muted d-block mb-1">Existing values: @string.Join(", ", allVariantProperties)</small>
+                            }
+                            <div class="d-flex">
+                                <input type="text" name="Variants[@i].Name"
+                                       value="@variantName"
+                                       class="form-control me-2" />
 
-                            <input type="text" name="Variants[@i].Value"
-                                   value="@variantValue"
-                                   class="form-control me-2" />
+                                <input type="text" name="Variants[@i].Value"
+                                       value="@variantValue"
+                                       class="form-control me-2" />
 
-                            <input type="number" name="Variants[@i].Quantity"
-                                   value="@Model.Variants[i].Quantity"
-                                   min="0"
-                                   class="form-control me-2"
-                                   placeholder="Quantity" />
+                                <input type="number" name="Variants[@i].Quantity"
+                                       value="@Model.Variants[i].Quantity"
+                                       min="0"
+                                       class="form-control me-2"
+                                       placeholder="Quantity" />
 
-                            <button type="button" class="btn btn-danger btn-sm removeVariant">X</button>
+                                <button type="button" class="btn btn-danger btn-sm removeVariant">X</button>
+                            </div>
                         </div>
                     }
                 }
             </div>
             <button type="button" id="addVariant" class="btn btn-primary btn-sm mt-2">
-                Add Size/Color Variant
+                Add Variant Property
             </button>
         </div>
 
@@ -135,8 +145,8 @@
             const div = document.createElement('div');
             div.classList.add('d-flex', 'mb-2');
             div.innerHTML = `
-                <input type="text" name="Variants[${variantIndex}].Name" class="form-control me-2" placeholder="Size (e.g. 41)" />
-                <input type="text" name="Variants[${variantIndex}].Value" class="form-control me-2" placeholder="Color (e.g. Brown)" />
+                <input type="text" name="Variants[${variantIndex}].Name" class="form-control me-2" placeholder="Property (e.g. RAM)" />
+                <input type="text" name="Variants[${variantIndex}].Value" class="form-control me-2" placeholder="Value (e.g. 8GB)" />
                 <input type="number" name="Variants[${variantIndex}].Quantity" min="0" class="form-control me-2" placeholder="Quantity" />
                 <button type="button" class="btn btn-danger btn-sm removeVariant">X</button>
             `;
