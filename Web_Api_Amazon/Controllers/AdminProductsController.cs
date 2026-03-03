@@ -88,10 +88,18 @@ namespace Web_Api_Amazon.Controllers
                 .Where(p => !string.IsNullOrWhiteSpace(p.Name) && !string.IsNullOrWhiteSpace(p.Value))
                 .ToList();
 
-           
+
             model.Variants = (model.Variants ?? new List<ProductVariant>())
-                .Where(v => !string.IsNullOrWhiteSpace(v.Name) && !string.IsNullOrWhiteSpace(v.Value))
-                .ToList();
+                 .Where(v => !string.IsNullOrWhiteSpace(v.Name)
+                             || !string.IsNullOrWhiteSpace(v.Value)
+                             || v.Quantity > 0)
+                 .Select(v => new ProductVariant
+                 {
+                     Name = v.Name,
+                     Value = v.Value,
+                     Quantity = Math.Max(0, v.Quantity)
+                 })
+                 .ToList();
 
             _context.Products.Add(model);
             await _context.SaveChangesAsync();
@@ -176,13 +184,15 @@ namespace Web_Api_Amazon.Controllers
             if (model.Variants != null)
             {
                 foreach (var variant in model.Variants
-                    .Where(v => !string.IsNullOrWhiteSpace(v.Name) &&
-                                !string.IsNullOrWhiteSpace(v.Value)))
+                    .Where(v => !string.IsNullOrWhiteSpace(v.Name)
+                                || !string.IsNullOrWhiteSpace(v.Value)
+                                || v.Quantity > 0))
                 {
                     product.Variants.Add(new ProductVariant
                     {
                         Name = variant.Name,
-                        Value = variant.Value
+                        Value = variant.Value,
+                        Quantity = Math.Max(0, variant.Quantity)
                     });
                 }
             }
@@ -221,6 +231,9 @@ namespace Web_Api_Amazon.Controllers
             ModelState.Remove(nameof(Product.OrderItems));
             ModelState.Remove(nameof(Product.FavoriteItems));
             ModelState.Remove(nameof(Product.SavedForLaterItems));
+            ModelState.Remove("Properties[].Product");
+            ModelState.Remove("Variants[].Product");
+            ModelState.Remove("Variants[].VariantValues");
         }
 
         // DELETE

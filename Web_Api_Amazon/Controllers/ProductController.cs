@@ -80,19 +80,40 @@ namespace Web_Api_Amazon.Controllers
                 .Take(4)
                 .ToListAsync();
 
-            var availableColors = product.Variants?
-                .SelectMany(v => v.VariantValues)
-                .Where(vv => vv.PropertyDefinition?.Name == "Color")
-                .Select(vv => vv.Value)
-                .Distinct()
-                .ToList() ?? new List<string>();
+            var variantSummaries = product.Variants?
+                .Where(v => !string.IsNullOrWhiteSpace(v.Name)
+                            || !string.IsNullOrWhiteSpace(v.Value)
+                            || v.Quantity > 0
+                            || (v.VariantValues?.Any() ?? false))
+                .Select(v =>
+                {
+                    var sizeFromValues = v.VariantValues?
+                        .FirstOrDefault(vv => vv.PropertyDefinition?.Name == "Size")
+                        ?.Value;
+                    var colorFromValues = v.VariantValues?
+                        .FirstOrDefault(vv => vv.PropertyDefinition?.Name == "Color")
+                        ?.Value;
 
-            var availableSizes = product.Variants?
-                .SelectMany(v => v.VariantValues)
-                .Where(vv => vv.PropertyDefinition?.Name == "Size")
-                .Select(vv => vv.Value)
+                    return new ProductVariantSummaryViewModel
+                    {
+                        Size = string.IsNullOrWhiteSpace(v.Name) ? (sizeFromValues ?? string.Empty) : v.Name,
+                        Color = string.IsNullOrWhiteSpace(v.Value) ? (colorFromValues ?? string.Empty) : v.Value,
+                        Quantity = Math.Max(0, v.Quantity)
+                    };
+                })
+                .ToList() ?? new List<ProductVariantSummaryViewModel>();
+
+            var availableColors = variantSummaries
+                .Select(v => v.Color)
+                .Where(c => !string.IsNullOrWhiteSpace(c))
                 .Distinct()
-                .ToList() ?? new List<string>();
+                .ToList();
+
+            var availableSizes = variantSummaries
+                .Select(v => v.Size)
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .Distinct()
+                .ToList();
 
             var brand = product.Properties?
                 .FirstOrDefault(pp => pp.PropertyDefinition?.Name == "Brand")
@@ -110,6 +131,7 @@ namespace Web_Api_Amazon.Controllers
                 TopPicks = topPicks,
                 AvailableColors = availableColors,
                 AvailableSizes = availableSizes,
+                VariantSummaries = variantSummaries,
                 IsFavorite = isFavorite
             };
 

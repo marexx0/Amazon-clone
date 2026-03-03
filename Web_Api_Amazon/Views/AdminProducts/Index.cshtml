@@ -12,6 +12,7 @@
                 <th>Description</th>
                 <th>Price</th>
                 <th>Category</th>
+                <th>Variants (Size / Color / Qty)</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -23,6 +24,21 @@
                     <td>@product.Description</td>
                     <td>@product.Price</td>
                     <td>@product.Category?.Name</td>
+                    <td>
+                        @if (product.Variants?.Any() == true)
+                        {
+                            <ul class="mb-0 ps-3">
+                                @foreach (var variant in product.Variants)
+                                {
+                                    <li>Size: @(string.IsNullOrWhiteSpace(variant.Name) ? "-" : variant.Name), Color: @(string.IsNullOrWhiteSpace(variant.Value) ? "-" : variant.Value), Qty: @variant.Quantity</li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <span class="text-muted">No variants</span>
+                        }
+                    </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@product.Id" class="btn btn-sm btn-warning">Edit</a>
                         <form asp-action="Delete" asp-route-id="@product.Id" method="post" style="display:inline-block;">

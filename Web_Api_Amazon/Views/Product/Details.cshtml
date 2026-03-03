@@ -231,6 +231,20 @@
                             <span class="detail-value">@string.Join(", ", Model.AvailableSizes)</span>
                         </div>
                     }
+                    @if (Model.VariantSummaries.Any())
+                    {
+                        <div class="detail-item" style="grid-column: 1 / -1;">
+                            <span class="detail-label">Variant inventory:</span>
+                            <div class="detail-value">
+                                <ul class="mb-0 ps-3">
+                                    @foreach (var variant in Model.VariantSummaries)
+                                    {
+                                        <li>Size @(!string.IsNullOrWhiteSpace(variant.Size) ? variant.Size : "-") - Color @(!string.IsNullOrWhiteSpace(variant.Color) ? variant.Color : "-") - Quantity @variant.Quantity</li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    }
                     @if (product?.Properties?.Any() == true)
                     {
                         @foreach (var property in product.Properties)

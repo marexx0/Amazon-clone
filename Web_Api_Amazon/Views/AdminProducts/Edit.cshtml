@@ -71,7 +71,8 @@
 
         <!-- Existing Variants -->
         <div class="form-group mb-3">
-            <label>Variants</label>
+            <label>Variants (Size / Color / Quantity)</label>
+            <small class="text-muted d-block mb-2">Example: Size 41, Color Brown, Quantity 8</small>
             <div id="variantsContainer">
                 @if (Model.Variants != null)
                 {
@@ -89,13 +90,19 @@
                                    value="@variantValue"
                                    class="form-control me-2" />
 
+                            <input type="number" name="Variants[@i].Quantity"
+                                   value="@Model.Variants[i].Quantity"
+                                   min="0"
+                                   class="form-control me-2"
+                                   placeholder="Quantity" />
+
                             <button type="button" class="btn btn-danger btn-sm removeVariant">X</button>
                         </div>
                     }
                 }
             </div>
             <button type="button" id="addVariant" class="btn btn-primary btn-sm mt-2">
-                Add Variant
+                Add Size/Color Variant
             </button>
         </div>
 
@@ -128,8 +135,9 @@
             const div = document.createElement('div');
             div.classList.add('d-flex', 'mb-2');
             div.innerHTML = `
-                <input type="text" name="Variants[${variantIndex}].Name" class="form-control me-2" placeholder="Variant Name" />
-                <input type="text" name="Variants[${variantIndex}].Value" class="form-control me-2" placeholder="Variant Value" />
+                <input type="text" name="Variants[${variantIndex}].Name" class="form-control me-2" placeholder="Size (e.g. 41)" />
+                <input type="text" name="Variants[${variantIndex}].Value" class="form-control me-2" placeholder="Color (e.g. Brown)" />
+                <input type="number" name="Variants[${variantIndex}].Quantity" min="0" class="form-control me-2" placeholder="Quantity" />
                 <button type="button" class="btn btn-danger btn-sm removeVariant">X</button>
             `;
             container.appendChild(div);

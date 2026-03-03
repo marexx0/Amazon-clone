@@ -61,18 +61,20 @@
 
         <!-- Variants -->
         <div class="mb-3">
-            <label class="form-label fw-bold" style="color:#0D1B34;">Variants</label>
+            <label class="form-label fw-bold" style="color:#0D1B34;">Variants (Size / Color / Quantity)</label>
+            <small class="text-muted d-block mb-2">Example: Size 41, Color Brown, Quantity 8</small>
             <div id="variantsContainer">
                 @for (int i = 0; i < (Model.Variants?.Count ?? 1); i++)
                 {
-                    <div class="d-flex mb-2 gap-2">
-                        <input asp-for="Variants[@i].Name" class="form-control" placeholder="Variant Name" />
-                        <input asp-for="Variants[@i].Value" class="form-control" placeholder="Variant Value" />
+                    <div class="d-flex mb-2 gap-2 align-items-center">
+                        <input asp-for="Variants[@i].Name" class="form-control" placeholder="Size (e.g. 41)" />
+                        <input asp-for="Variants[@i].Value" class="form-control" placeholder="Color (e.g. Brown)" />
+                        <input asp-for="Variants[@i].Quantity" type="number" min="0" class="form-control" placeholder="Quantity" />
                         <button type="button" class="btn btn-danger btn-sm removeVariant">X</button>
                     </div>
                 }
             </div>
-            <button type="button" id="addVariant" class="btn btn-outline-primary btn-sm mt-2">+ Add Variant</button>
+            <button type="button" id="addVariant" class="btn btn-outline-primary btn-sm mt-2">+ Add Size/Color Variant</button>
         </div>
 
         <div class="d-flex justify-content-between mt-4">
@@ -109,23 +111,24 @@
         });
 
         // Add Variant
-        document.getElementById('addVariant').addEventListener('click', function () {
-            const container = document.getElementById('variantsContainer');
-            const div = document.createElement('div');
-            div.classList.add('d-flex', 'mb-2', 'gap-2');
-            div.innerHTML = `
-                <input type="text" name="Variants[${variantIndex}].Name" class="form-control" placeholder="Variant Name" />
-                <input type="text" name="Variants[${variantIndex}].Value" class="form-control" placeholder="Variant Value" />
-                <button type="button" class="btn btn-danger btn-sm removeVariant">X</button>
-            `;
-            container.appendChild(div);
-            variantIndex++;
-        });
+         document.getElementById('addVariant').addEventListener('click', function () {
+             const container = document.getElementById('variantsContainer');
+             const div = document.createElement('div');
+             div.classList.add('d-flex', 'mb-2', 'gap-2');
+             div.innerHTML = `
+                 <input type="text" name="Variants[${variantIndex}].Name" class="form-control" placeholder="Size (e.g. 41)" />
+                 <input type="text" name="Variants[${variantIndex}].Value" class="form-control" placeholder="Color (e.g. Brown)" />
+                 <input type="number" name="Variants[${variantIndex}].Quantity" min="0" class="form-control" placeholder="Quantity" />
+                 <button type="button" class="btn btn-danger btn-sm removeVariant">X</button>
+             `;
+             container.appendChild(div);
+             variantIndex++;
+         });
 
-        document.getElementById('variantsContainer').addEventListener('click', function(e){
-            if(e.target.classList.contains('removeVariant')){
-                e.target.parentElement.remove();
-            }
-        });
+         document.getElementById('variantsContainer').addEventListener('click', function(e){
+             if(e.target.classList.contains('removeVariant')){
+                 e.target.parentElement.remove();
+             }
+         });
     </script>
 }
