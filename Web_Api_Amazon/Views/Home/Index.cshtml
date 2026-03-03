@@ -1,18 +1,30 @@
 ﻿@using Web_Api_Amazon.Entities
 @model IEnumerable<Web_Api_Amazon.Entities.Product>
 @{
-    var allProducts = ViewBag.AllProducts as List<Product>;
-    var filteredProducts = ViewBag.FilteredProducts as List<Product>;
+    var allProducts = ViewBag.AllProducts as List<Product> ?? new List<Product>();
+    var filteredProducts = ViewBag.FilteredProducts as List<Product> ?? new List<Product>();
     var selectedCategoryId = ViewBag.SelectedCategoryId as int?;
-   
-    var shuffled = allProducts.OrderBy(x => Guid.NewGuid()).ToList();
 
+    List<Product> PickProducts(IEnumerable<Product> source, int take)
+    {
+        var list = source.ToList();
+        if (!list.Any() || take <= 0)
+        {
+            return new List<Product>();
+        }
 
-    while (shuffled.Count < 24)
-        shuffled.AddRange(allProducts.OrderBy(x => Guid.NewGuid()));
+        if (list.Count <= take)
+        {
+            return list;
+        }
 
-    var popularProducts = shuffled.Take(12).ToList();
-    var collectionProducts = shuffled.Skip(12).Take(12).ToList();
+        return list
+            .OrderBy(_ => Random.Shared.Next())
+            .Take(take)
+            .ToList();
+    }
+
+    var popularProducts = PickProducts(allProducts, 12);
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -265,19 +277,9 @@ else
         @{
             var technologyCategoryIds = new List<int> { 8, 9, 10, 11, 12 };
 
-            var technologyProducts = allProducts
-            .Where(p => technologyCategoryIds.Contains(p.CategoryId))
-            .OrderBy(x => Guid.NewGuid())
-            .Take(12)
-            .ToList();
-
-            while (technologyProducts.Count < 12 && technologyProducts.Any())
-                technologyProducts.AddRange(
-                allProducts.Where(p => technologyCategoryIds.Contains(p.CategoryId))
-                .OrderBy(x => Guid.NewGuid())
-                );
-
-            technologyProducts = technologyProducts.Take(12).ToList();
+            var technologyProducts = PickProducts(
+            allProducts.Where(p => technologyCategoryIds.Contains(p.CategoryId)),
+            12);
         }
         
         <!-- Gifts -->
@@ -312,10 +314,7 @@ else
             <h2>Recently reviewed</h2>
             <div class="products-grid">
                 @{
-                    var recentProducts = allProducts.OrderBy(x => Guid.NewGuid()).Take(6).ToList();
-                    while (recentProducts.Count < 6)
-                        recentProducts.AddRange(allProducts.OrderBy(x => Guid.NewGuid()));
-                    recentProducts = recentProducts.Take(6).ToList();
+                    var recentProducts = PickProducts(allProducts, 6);
                 }
                 @foreach (var product in recentProducts)
                 {

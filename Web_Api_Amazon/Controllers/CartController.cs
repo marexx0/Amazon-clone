@@ -50,7 +50,9 @@ public class CartController : Controller
                 .AsNoTracking()
                 .ToListAsync();
 
-            cartItems = cartRows.Select(row => BuildCartItem(row.Product, row.Quantity, row.VariantKey, row.SelectedOptionsJson)).ToList();
+            cartItems = cartRows
+               .Select(row => BuildCartItem(row.Product, row.Quantity, row.VariantKey, row.SelectedOptionsJson))
+               .ToList();
         }
         else
         {
@@ -77,13 +79,9 @@ public class CartController : Controller
 
         var usedIds = cartItems.Select(item => item.ProductId).ToHashSet();
 
-        var products = await _context.Products
-            .Include(p => p.Images)
-            .Include(p => p.Variants)
-            .AsNoTracking()
-            .ToListAsync();
-
         List<ProductCardViewModel> savedForLater;
+        List<ProductCardViewModel> favorites;
+
         if (!string.IsNullOrWhiteSpace(userId))
         {
             var savedDtos = await _savedForLaterService.GetSavedItemsAsync(userId);
@@ -98,34 +96,7 @@ public class CartController : Controller
                 Rating = dto.Rating,
                 VariantKey = dto.VariantKey
             }).ToList();
-        }
-        else
-        {
-            var localSaved = GetLocalSavedForLater();
-            if (localSaved.Count > 0)
-            {
-                var savedIds = localSaved.Select(item => item.ProductId).Distinct().ToList();
-                var savedProducts = products.Where(p => savedIds.Contains(p.Id)).ToDictionary(p => p.Id);
 
-                savedForLater = localSaved
-                    .Where(item => savedProducts.ContainsKey(item.ProductId))
-                    .Select(item =>
-                    {
-                        var card = BuildProductCard(savedProducts[item.ProductId]);
-                        card.VariantKey = item.VariantKey;
-                        return card;
-                    })
-                    .ToList();
-            }
-            else
-            {
-                savedForLater = new List<ProductCardViewModel>();
-            }
-        }
-
-        List<ProductCardViewModel> favorites;
-        if (!string.IsNullOrWhiteSpace(userId))
-        {
             var favoriteDtos = await _favoritesService.GetFavoritesAsync(userId);
             favorites = favoriteDtos.Select(dto => new ProductCardViewModel
             {
@@ -141,20 +112,58 @@ public class CartController : Controller
         }
         else
         {
+            var localSaved = GetLocalSavedForLater();
             var localFavoriteIds = GetLocalFavorites();
-            favorites = products
-                .Where(product => localFavoriteIds.Contains(product.Id))
-                .Select(BuildProductCard)
+            var lookupIds = localSaved.Select(x => x.ProductId)
+                .Concat(localFavoriteIds)
+                .Distinct()
+                .ToList();
+
+            var lookupProducts = lookupIds.Count == 0
+                ? new Dictionary<int, Product>()
+                : await _context.Products
+                    .Where(p => lookupIds.Contains(p.Id))
+                    .Include(p => p.Images)
+                    .AsNoTracking()
+                    .ToDictionaryAsync(p => p.Id);
+
+            savedForLater = localSaved
+                .Where(item => lookupProducts.ContainsKey(item.ProductId))
+                .Select(item =>
+                {
+                    var card = BuildProductCard(lookupProducts[item.ProductId]);
+                    card.VariantKey = item.VariantKey;
+                    return card;
+                })
+                .ToList();
+
+            favorites = localFavoriteIds
+                .Where(id => lookupProducts.ContainsKey(id))
+                .Select(id => BuildProductCard(lookupProducts[id]))
                 .OrderBy(product => product.Name)
                 .ToList();
         }
 
-        var recommendations = products
+        usedIds.UnionWith(savedForLater.Select(item => item.ProductId));
+        usedIds.UnionWith(favorites.Select(item => item.ProductId));
+
+        var recommendations = await _context.Products
             .Where(product => !usedIds.Contains(product.Id))
             .OrderByDescending(product => product.Id)
             .Take(6)
-            .Select(BuildProductCard)
-            .ToList();
+            .Include(p => p.Images)
+            .AsNoTracking()
+            .Select(product => new ProductCardViewModel
+            {
+                ProductId = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                ImageUrl = product.Images.OrderBy(i => i.SortOrder).Select(i => i.ImageUrl).FirstOrDefault() ?? product.ImageUrl,
+                Price = (decimal)product.Price,
+                InStock = product.Variants.Sum(v => v.Quantity) > 0 || !product.Variants.Any(),
+                Rating = 4.2 + ((product.Id % 7) * 0.1)
+            })
+            .ToListAsync();
 
         var viewModel = new ShoppingCartViewModel
         {

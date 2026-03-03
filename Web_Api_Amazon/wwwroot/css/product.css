@@ -528,7 +528,8 @@ a.summary-lime-btn {
 
 .cart-recommendations-row {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(210px, 210px));
+    justify-content: start;
     gap: 1rem;
 }
 
@@ -668,7 +669,7 @@ a.summary-lime-btn {
     padding-bottom: 1rem;
 }
 
-.product-card {
+.legacy-product-card {
     background: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -679,7 +680,7 @@ a.summary-lime-btn {
     gap: 0.5rem;
 }
 
-    .product-card img {
+    .legacy-product-card img {
         width: 100%;
         height: 160px;
         object-fit: contain;
@@ -687,25 +688,25 @@ a.summary-lime-btn {
         margin-bottom: 0.5rem;
     }
 
-.card-body h3 {
+.legacy-card-body h3 {
     font-size: 0.95rem;
     margin: 0;
     color: var(--text-dark);
 }
 
-.card-price {
+.legacy-card-price {
     font-weight: 700;
     margin-bottom: 0.2rem;
     color: var(--text-dark);
 }
 
-.delivery {
+.legacy-delivery {
     font-size: 0.8rem;
     color: var(--text-muted);
     margin-bottom: 0.8rem;
 }
 
-.mini-btn {
+.legacy-mini-btn {
     background: var(--accent);
     color: var(--text-dark);
     border: none;
@@ -715,6 +716,16 @@ a.summary-lime-btn {
     cursor: pointer;
     width: 100%;
 }
+
+
+.product-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 210px));
+    gap: 1rem;
+    justify-content: start;
+}
+
+
 
 /* ================= FEATURE ROW ================= */
 

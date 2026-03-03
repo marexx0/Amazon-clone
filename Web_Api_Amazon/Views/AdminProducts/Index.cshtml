@@ -12,6 +12,7 @@
                 <th>Description</th>
                 <th>Price</th>
                 <th>Category</th>
+                <th>Variants (All properties / Qty)</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -23,6 +24,43 @@
                     <td>@product.Description</td>
                     <td>@product.Price</td>
                     <td>@product.Category?.Name</td>
+                    <td>
+                        @if (product.Variants?.Any() == true)
+                        {
+                            <ul class="mb-0 ps-3">
+                                @foreach (var variant in product.Variants)
+                                {
+                                    var variantProperties = variant.VariantValues?
+                                    .Where(vv => !string.IsNullOrWhiteSpace(vv.Value))
+                                    .OrderBy(vv => vv.PropertyDefinition?.Name)
+                                    .Select(vv => $"{(vv.PropertyDefinition?.Name ?? "Option")}: {vv.Value}")
+                                    .ToList() ?? new List<string>();
+
+                                    if (variantProperties.Count == 0)
+                                    {
+                                        if (!string.IsNullOrWhiteSpace(variant.Name) && !string.IsNullOrWhiteSpace(variant.Value))
+                                        {
+                                            variantProperties.Add($"{variant.Name}: {variant.Value}");
+                                        }
+                                        else if (!string.IsNullOrWhiteSpace(variant.Name))
+                                        {
+                                            variantProperties.Add($"Option: {variant.Name}");
+                                        }
+                                        else if (!string.IsNullOrWhiteSpace(variant.Value))
+                                        {
+                                            variantProperties.Add($"Option: {variant.Value}");
+                                        }
+                                    }
+
+                                    <li>@(variantProperties.Any() ? string.Join(" | ", variantProperties) : "Default variant") - Qty: @variant.Quantity</li>
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <span class="text-muted">No variants</span>
+                        }
+                    </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@product.Id" class="btn btn-sm btn-warning">Edit</a>
                         <form asp-action="Delete" asp-route-id="@product.Id" method="post" style="display:inline-block;">

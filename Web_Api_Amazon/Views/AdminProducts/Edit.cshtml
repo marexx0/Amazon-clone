@@ -7,6 +7,7 @@
     <h2>Edit Product</h2>
 
     <form asp-action="Edit" method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
         <input type="hidden" asp-for="Id" />
 
@@ -48,9 +49,10 @@
                 {
                     for (int i = 0; i < Model.Properties.Count; i++)
                     {
+                        var propertyName = Model.Properties[i].Name ?? Model.Properties[i].PropertyDefinition?.Name ?? string.Empty;
                         <div class="d-flex mb-2">
                             <input type="text" name="Properties[@i].Name"
-                                   value="@Model.Properties[i].Name"
+                                   value="@propertyName"
                                    class="form-control me-2" />
 
                             <input type="text" name="Properties[@i].Value"
@@ -69,28 +71,63 @@
 
         <!-- Existing Variants -->
         <div class="form-group mb-3">
-            <label>Variants</label>
+            <label>Variants (Property / Value / Quantity)</label>
+            <small class="text-muted d-block mb-2">Example: Color, Size / White, 8 / Quantity 6</small>
             <div id="variantsContainer">
                 @if (Model.Variants != null)
                 {
                     for (int i = 0; i < Model.Variants.Count; i++)
                     {
-                        <div class="d-flex mb-2">
-                            <input type="text" name="Variants[@i].Name"
-                                   value="@Model.Variants[i].Name"
-                                   class="form-control me-2" />
+                        var variant = Model.Variants[i];
+                        var variantPairs = (variant.VariantValues ?? Enumerable.Empty<ProductVariantValue>())
+                        .Where(vv => !string.IsNullOrWhiteSpace(vv.Value))
+                        .Select(vv => new
+                        {
+                            PropertyName = vv.PropertyDefinition?.Name ?? "Option",
+                            PropertyValue = vv.Value!.Trim()
+                        })
+                        .ToList();
 
-                            <input type="text" name="Variants[@i].Value"
-                                   value="@Model.Variants[i].Value"
-                                   class="form-control me-2" />
+                        var fallbackVariantValue = variantPairs.FirstOrDefault();
+                        var variantName = variant.Name ?? fallbackVariantValue?.PropertyName ?? string.Empty;
+                        var variantValue = variant.Value ?? fallbackVariantValue?.PropertyValue ?? string.Empty;
 
-                            <button type="button" class="btn btn-danger btn-sm removeVariant">X</button>
+                        if (variantPairs.Any())
+                        {
+                            variantName = string.Join(", ", variantPairs.Select(v => v.PropertyName));
+                            variantValue = string.Join(", ", variantPairs.Select(v => v.PropertyValue));
+                        }
+
+                        var displayVariantPairs = string.Join(", ", variantPairs.Select(v => $"{v.PropertyName}-{v.PropertyValue}"));
+
+                        <div class="mb-2">
+                            @if (!string.IsNullOrWhiteSpace(displayVariantPairs))
+                            {
+                                <small class="text-muted d-block mb-1">@displayVariantPairs</small>
+                            }
+                            <div class="d-flex">
+                                <input type="text" name="Variants[@i].Name"
+                                       value="@variantName"
+                                       class="form-control me-2" />
+
+                                <input type="text" name="Variants[@i].Value"
+                                       value="@variantValue"
+                                       class="form-control me-2" />
+
+                                <input type="number" name="Variants[@i].Quantity"
+                                       value="@variant.Quantity"
+                                       min="0"
+                                       class="form-control me-2"
+                                       placeholder="Quantity" />
+
+                                <button type="button" class="btn btn-danger btn-sm removeVariant">X</button>
+                            </div>
                         </div>
                     }
                 }
             </div>
             <button type="button" id="addVariant" class="btn btn-primary btn-sm mt-2">
-                Add Variant
+                Add Variant Property
             </button>
         </div>
 
@@ -123,12 +160,24 @@
             const div = document.createElement('div');
             div.classList.add('d-flex', 'mb-2');
             div.innerHTML = `
-                <input type="text" name="Variants[${variantIndex}].Name" class="form-control me-2" placeholder="Variant Name" />
-                <input type="text" name="Variants[${variantIndex}].Value" class="form-control me-2" placeholder="Variant Value" />
+                <input type="text" name="Variants[${variantIndex}].Name" class="form-control me-2" placeholder="Properties (e.g. Color, Size)" />
+                <input type="text" name="Variants[${variantIndex}].Value" class="form-control me-2" placeholder="Values (e.g. White, 8)" />
+                <input type="number" name="Variants[${variantIndex}].Quantity" min="0" class="form-control me-2" placeholder="Quantity" />
                 <button type="button" class="btn btn-danger btn-sm removeVariant">X</button>
             `;
             container.appendChild(div);
             variantIndex++;
+        });
+        document.getElementById('propertiesContainer').addEventListener('click', function (e) {
+            if (e.target.classList.contains('removeProperty')) {
+                e.target.parentElement.remove();
+            }
+        });
+
+        document.getElementById('variantsContainer').addEventListener('click', function (e) {
+            if (e.target.classList.contains('removeVariant')) {
+                e.target.parentElement.remove();
+            }
         });
     </script>
 }

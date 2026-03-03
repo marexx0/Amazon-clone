@@ -25,7 +25,9 @@
         breadcrumbs.Insert(0, category);
         category = category.ParentCategory;
     }
+
 }
+
 
 <div class="product-page">
     <div class="product-breadcrumb">
@@ -83,42 +85,44 @@
             <p class="reviews-status">No reviews yet.</p>
             <p class="price">$@product?.Price.ToString("0.00")</p>
 
-            @if (Model.AvailableColors.Any())
+            @foreach (var optionGroup in Model.VariantOptionGroups)
             {
-                <div class="option-group">
+                var selectedValue = optionGroup.Values.FirstOrDefault() ?? string.Empty;
+                <div class="option-group" data-option-name="@optionGroup.Name">
                     <div class="option-header">
-                        <span class="option-label">Color</span>
-                        <span class="option-value">@Model.AvailableColors.First()</span>
+                        <span class="option-label">@optionGroup.Name</span>
+                        <span class="option-value">@selectedValue</span>
                     </div>
-                    <div class="color-options">
-                        @foreach (var color in Model.AvailableColors)
-                        {
-                            var isSelected = color == Model.AvailableColors.First();
-                            var selectedClass = isSelected ? "is-selected" : string.Empty;
-                            <button class="color-option @selectedClass" type="button" aria-label="@color" data-color="@color">
-                                <span class="color-swatch" style="background:@color;"></span>
-                            </button>
-                        }
-                    </div>
-                </div>
-            }
 
-            @if (Model.AvailableSizes.Any())
-            {
-                <div class="option-group">
-                    <div class="option-header">
-                        <span class="option-label">Size</span>
-                        <span class="option-value">@Model.AvailableSizes.First()</span>
-                    </div>
-                    <div class="size-options">
-                        @foreach (var size in Model.AvailableSizes)
+                    @if (optionGroup.IsColor)
+                    {
+                        <div class="color-options">
+                            @foreach (var color in optionGroup.Values)
+                            {
+                                var isSelected = string.Equals(color, selectedValue, StringComparison.OrdinalIgnoreCase);
+                                var selectedClass = isSelected ? "is-selected" : string.Empty;
+                                <button class="color-option variant-option @selectedClass" type="button" aria-label="@color" data-option-name="@optionGroup.Name" data-option-value="@color">
+                                    <span class="color-swatch" style="background:@color;"></span>
+                                </button>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="size-options">
+                            @foreach (var value in optionGroup.Values)
+                            {
+                                var isSelected = string.Equals(value, selectedValue, StringComparison.OrdinalIgnoreCase);
+                                var selectedClass = isSelected ? "is-selected" : string.Empty;
+                                <button class="size-option variant-option @selectedClass" type="button" data-option-name="@optionGroup.Name" data-option-value="@value">@value</button>
+                            }
+                        </div>
+
+                        @if (string.Equals(optionGroup.Name, "Size", StringComparison.OrdinalIgnoreCase))
                         {
-                            var isSelected = size == Model.AvailableSizes.First();
-                            var selectedClass = isSelected ? "is-selected" : string.Empty;
-                            <button class="size-option @selectedClass" type="button" data-size="@size">@size</button>
+                            <a class="size-guide" href="#">Size guide</a>
                         }
-                    </div>
-                    <a class="size-guide" href="#">Size guide</a>
+                    }
                 </div>
             }
 
@@ -139,7 +143,7 @@
                 <div class="actions">
                     <button class="primary-btn" type="submit" id="add-to-cart-trigger">Add to cart</button>
                     <button class="secondary-btn" type="button">Buy now</button>
-                    
+
                 </div>
             </form>
         </div>
@@ -163,8 +167,13 @@
                     }
                     <div class="cart-summary-info">
                         <h3>@product?.Name</h3>
-                        <p><span>Size:</span> <strong id="modal-selected-size">@Model.AvailableSizes.FirstOrDefault()</strong></p>
-                        <p><span>Color:</span> <strong id="modal-selected-color">@Model.AvailableColors.FirstOrDefault()</strong></p>
+                        <div id="modal-selected-options">
+                            @foreach (var optionGroup in Model.VariantOptionGroups)
+                            {
+                                var selectedValue = optionGroup.Values.FirstOrDefault() ?? string.Empty;
+                                <p><span>@optionGroup.Name:</span> <strong data-modal-option-name="@optionGroup.Name">@selectedValue</strong></p>
+                            }
+                        </div>
                         <p><span>Quantity:</span> <strong id="modal-selected-qty">1</strong></p>
                     </div>
                 </div>
@@ -189,18 +198,7 @@
                     @for (var i = 0; i < Math.Min(Model.RelatedProducts.Count, 3); i++)
                     {
                         var related = Model.RelatedProducts[i];
-                        var relatedImage = related.Images?.OrderBy(img => img.SortOrder).FirstOrDefault()?.ImageUrl ?? related.ImageUrl;
-                        <article class="cart-mini-card">
-                            @if (!string.IsNullOrWhiteSpace(relatedImage))
-                            {
-                                <img src="@relatedImage" alt="@related.Name" />
-                            }
-                            <div class="cart-mini-card-body">
-                                <p class="mini-card-price">$@related.Price.ToString("0.00")</p>
-                                <p class="mini-card-name">@related.Name</p>
-                                <button class="summary-lime-btn" type="button">Add to cart</button>
-                            </div>
-                        </article>
+                        <partial name="_ProductCard" model="related" />
                     }
                 </div>
             </section>
@@ -226,31 +224,30 @@
                             <span class="detail-value">@product.Category.Name</span>
                         </div>
                     }
-                    @if (Model.AvailableColors.Any())
+                    @foreach (var optionGroup in Model.VariantOptionGroups)
                     {
                         <div class="detail-item">
-                            <span class="detail-label">Colors:</span>
-                            <span class="detail-value">@string.Join(", ", Model.AvailableColors)</span>
-                        </div>
-                    }
-                    @if (Model.AvailableSizes.Any())
-                    {
-                        <div class="detail-item">
-                            <span class="detail-label">Sizes:</span>
-                            <span class="detail-value">@string.Join(", ", Model.AvailableSizes)</span>
+                            <span class="detail-label">@optionGroup.Name:</span>
+                            <span class="detail-value">@string.Join(", ", optionGroup.Values)</span>
                         </div>
                     }
                     @if (product?.Properties?.Any() == true)
                     {
                         @foreach (var property in product.Properties)
                         {
-                            if (property.PropertyDefinition?.Name == "Brand")
+                            var propertyLabel = property.Name ?? property.PropertyDefinition?.Name;
+                            var propertyValue = property.Value?.Trim();
+
+                            if (string.IsNullOrWhiteSpace(propertyLabel)
+                            || string.Equals(propertyLabel, "Brand", StringComparison.OrdinalIgnoreCase)
+                            || string.IsNullOrWhiteSpace(propertyValue))
                             {
                                 continue;
                             }
+
                             <div class="detail-item">
-                                <span class="detail-label">@(property.PropertyDefinition?.Name):</span>
-                                <span class="detail-value">@property.Value</span>
+                                <span class="detail-label">@propertyLabel:</span>
+                                <span class="detail-value">@propertyValue</span>
                             </div>
                         }
                     }
@@ -266,23 +263,11 @@
         <div class="section-header">
             <h2>Customers also viewed</h2>
         </div>
-        <div class="card-row">
+        <div class="product-cards-grid">
             @for (var i = 0; i < Model.RelatedProducts.Count; i++)
             {
                 var related = Model.RelatedProducts[i];
-                var relatedImage = related.Images?.OrderBy(img => img.SortOrder).FirstOrDefault()?.ImageUrl ?? related.ImageUrl;
-                <article class="product-card">
-                    @if (!string.IsNullOrWhiteSpace(relatedImage))
-                    {
-                        <img src="@relatedImage" alt="@related.Name" />
-                    }
-                    <div class="card-body">
-                        <p class="card-price">$@related.Price.ToString("0.00")</p>
-                        <h3>@related.Name</h3>
-                        <p class="delivery">Delivery tomorrow, 31 Jan</p>
-                        <button class="mini-btn" type="button">Buy now</button>
-                    </div>
-                </article>
+                <partial name="_ProductCard" model="related" />
             }
         </div>
     </section>
@@ -332,21 +317,10 @@
         <div class="section-header">
             <h2>Top Picks of the Month</h2>
         </div>
-        <div class="card-row">
+        <div class="card-row product-cards-grid">
             @foreach (var pick in Model.TopPicks)
             {
-                var pickImage = pick.Images?.OrderBy(img => img.SortOrder).FirstOrDefault()?.ImageUrl ?? pick.ImageUrl;
-                <article class="product-card">
-                    @if (!string.IsNullOrWhiteSpace(pickImage))
-                    {
-                        <img src="@pickImage" alt="@pick.Name" />
-                    }
-                    <div class="card-body">
-                        <h3>@pick.Name</h3>
-                        <p class="card-price">$@pick.Price.ToString("0.00")</p>
-                        <button class="mini-btn" type="button">Buy now</button>
-                    </div>
-                </article>
+                <partial name="_ProductCard" model="pick" />
             }
         </div>
     </section>

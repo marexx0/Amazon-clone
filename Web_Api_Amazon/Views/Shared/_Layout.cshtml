@@ -23,193 +23,209 @@
     <div id="profileOverlay"></div>
 
     <header class="main-header">
-        <div class="header-left">
-            <div class="logo">
-                <img src="imagesmain/Logo.png" alt="logo icon" style="width:60px; height:auto;">
-            </div>
-            <img src="imagesmain/map-pin.png" alt="location icon" class="icon-36">
-            <span>Vienna, Austria</span>
+        <div class="header-inner">
+			<div class="header-left">
+                    <a asp-controller="Home" asp-action="Index" class="logo" aria-label="Logo">
+					    <img src="~/imagesmain/Logo.png" alt="Allora logo" class="brand-logo">
+                    </a>
 
-            <img src="imagesmain/chevron-down.png" alt="down icon" class="icon-36">
-        </div>
-        </div>
-        <div class="header-center">
-
-            <div class="cat-wrapper">
-                <button class="cat-btn" id="catBtn">
-                    Category <span class="cat-arrow">&#9660;</span>
+                <button type="button" class="header-location" aria-label="Select location">
+                    <img src="~/imagesmain/map-pin.png" alt="location" class="icon-36">
+                    <span>Vienna, Austria</span>
+                    <img src="~/imagesmain/chevron-down.png" alt="open" class="icon-36">
                 </button>
-
-                <div class="cat-dropdown" id="catDropdown">
-                    @{
-                        var activeCat = Context.Request.Query["categoryId"].ToString();
-                    }
-                    <a href="/?categoryId=6" class="cat-item">
-                        <img src="imagesmain/clothe.png" alt="">
-                        Clothing
-                    </a>
-
-                    <a href="/?categoryId=7" data-category-id="7" class="cat-item">
-                        <img src="imagesmain/shoes.png" alt="">
-                        Shoes
-                    </a>
-
-                    <a href="/?categoryId=8" class="cat-item">
-                        <img src="imagesmain/computer.png" alt="">
-                        Computers / Laptops / Tablets
-                    </a>
-
-                    <a href="/?categoryId=9" class="cat-item">
-                        <img src="imagesmain/phone.png" alt="">
-                        Mobile Phones
-                    </a>
-
-                    <a href="/?categoryId=10" class="cat-item">
-                        <img src="imagesmain/Audio.png" alt="">
-                        Headphone
-                    </a>
-
-                    <a href="/?categoryId=11" class="cat-item">
-                        <img src="imagesmain/photo.png" alt="">
-                        Cameras / Photo Equipment
-                    </a>
-
-                    <a href="/?categoryId=12" class="cat-item">
-                        <img src="imagesmain/Game.png" alt="">
-                        Gaming
-                    </a>
-
-                    <a href="/?categoryId=13" class="cat-item">
-                        <img src="imagesmain/Home.png" alt="">
-                        Home Decor
-                    </a>
-
-                    <a href="/?categoryId=14" class="cat-item">
-                        <img src="imagesmain/Furniture.png" alt="">
-                        Furniture
-                    </a>
-
-                    <a href="/?categoryId=15" class="cat-item">
-                        <img src="imagesmain/Light.png" alt="">
-                        Lighting
-                    </a>
-
-                    <a href="/?categoryId=16" class="cat-item">
-                        <img src="imagesmain/Yard.png" alt="">
-                        Yard and Garden
-                    </a>
-
-                    <a href="/?categoryId=17" class="cat-item">
-                        <img src="imagesmain/Plumbing.png" alt="">
-                        Tools / Hardware / Plumbing
-                    </a>
-
-                    <a href="/?categoryId=19" class="cat-item">
-                        <img src="imagesmain/sport.png" alt="">
-                        Sports / Outdoor / Fitness
-                    </a>
-
-                    <a href="/?categoryId=21" class="cat-item">
-                        <img src="imagesmain/toys.png" alt="">
-                        Toys Kids
-                    </a>
-
-                    <a href="/?categoryId=22" class="cat-item">
-                        <img src="imagesmain/book.png" alt="">
-                        Books / Media
-                    </a>
-
-                    <a href="/?categoryId=23" class="cat-item">
-                        <img src="imagesmain/Health.png" alt="">
-                        Health
-                    </a>
-
-                </div>
             </div>
 
-            <!--  SEARCH -->
-            <form asp-controller="Home"
-                  asp-action="Index"
-                  method="get"
-                  class="search-form">
+            <div class="header-center">
 
-                <input type="text"
-                       name="searchString"
-                       value="@Context.Request.Query["searchString"]"
-                       placeholder="Search products..."
-                       class="search-input" />
+                <div class="cat-wrapper">
+                    <button class="cat-btn" id="catBtn">
+                        Category <span class="cat-arrow">&#9660;</span>
+                    </button>
 
-                <button type="submit" class="search-btn">
-                    <img src="imagesmain/search.png" alt="search" class="icon-36">
-                </button>
-            </form>
-
-        </div>
-
-        <div class="header-right">
-            <div class="globe">
-                <img src="imagesmain/globe.png" alt="logo icon" class="icon-36">
-            </div>
-            <span>English<img src="imagesmain/chevron-down.png" alt="logo icon" class="icon-36"></span>
-            <span><img src="imagesmain/bell.png" alt="logo icon" class="icon-36"></span>
-            <span><img src="imagesmain/heart.png" alt="logo icon" class="icon-36"></span>
-            <span><img src="imagesmain/shopping-cart.png" alt="logo icon" class="icon-36"></span>
-
-            <!-- PROFILE � ���������� -->
-            <div class="profile-wrapper">
-                <button class="profile-btn" id="profileBtn" title="Account">
-                    <img src="imagesmain/Account Photo.png" alt="profile" style="width:44px; height:44px;">
-                </button>
-
-                <div class="profile-dropdown" id="profileDropdown">
-                    @{
-                      
-                        User? currentUser = null;
-
-                        if (User.Identity.IsAuthenticated)
-                        {
-                            currentUser = await UserManager.GetUserAsync(User);
+                    <div class="cat-dropdown" id="catDropdown">
+                        @{
+                            var activeCat = Context.Request.Query["categoryId"].ToString();
                         }
-                    }
+                        <a href="/?categoryId=6" class="cat-item">
+                            <img src="~/imagesmain/clothe.png" alt="">
+                            Clothing
+                        </a>
 
-                    @if (currentUser != null)
-                    {
-                        <div class="dd-signin">
-                            <strong>@currentUser.FirstName</strong>
-                        </div>
+                        <a href="/?categoryId=7" data-category-id="7" class="cat-item">
+                            <img src="~/imagesmain/shoes.png" alt="">
+                            Shoes
+                        </a>
 
-                        @if (await UserManager.IsInRoleAsync(currentUser, "Admin"))
+                        <a href="/?categoryId=8" class="cat-item">
+                            <img src="~/imagesmain/computer.png" alt="">
+                            Computers / Laptops / Tablets
+                        </a>
+
+                        <a href="/?categoryId=9" class="cat-item">
+                            <img src="~/imagesmain/phone.png" alt="">
+                            Mobile Phones
+                        </a>
+
+                        <a href="/?categoryId=10" class="cat-item">
+                            <img src="~/imagesmain/Audio.png" alt="">
+                            Headphone
+                        </a>
+
+                        <a href="/?categoryId=11" class="cat-item">
+                            <img src="~/imagesmain/photo.png" alt="">
+                            Cameras / Photo Equipment
+                        </a>
+
+                        <a href="/?categoryId=12" class="cat-item">
+                            <img src="~/imagesmain/Game.png" alt="">
+                            Gaming
+                        </a>
+
+                        <a href="/?categoryId=13" class="cat-item">
+                            <img src="~/imagesmain/Home.png" alt="">
+                            Home Decor
+                        </a>
+
+                        <a href="/?categoryId=14" class="cat-item">
+                            <img src="~/imagesmain/Furniture.png" alt="">
+                            Furniture
+                        </a>
+
+                        <a href="/?categoryId=15" class="cat-item">
+                            <img src="~/imagesmain/Light.png" alt="">
+                            Lighting
+                        </a>
+
+                        <a href="/?categoryId=16" class="cat-item">
+                            <img src="~/imagesmain/Yard.png" alt="">
+                            Yard and Garden
+                        </a>
+
+                        <a href="/?categoryId=17" class="cat-item">
+                            <img src="~/imagesmain/Plumbing.png" alt="">
+                            Tools / Hardware / Plumbing
+                        </a>
+
+                        <a href="/?categoryId=19" class="cat-item">
+                            <img src="~/imagesmain/sport.png" alt="">
+                            Sports / Outdoor / Fitness
+                        </a>
+
+                        <a href="/?categoryId=21" class="cat-item">
+                            <img src="~/imagesmain/toys.png" alt="">
+                            Toys Kids
+                        </a>
+
+                        <a href="/?categoryId=22" class="cat-item">
+                            <img src="~/imagesmain/book.png" alt="">
+                            Books / Media
+                        </a>
+
+                        <a href="/?categoryId=23" class="cat-item">
+                            <img src="~/imagesmain/Health.png" alt="">
+                            Health
+                        </a>
+
+                    </div>
+                </div>
+
+                <!--  SEARCH -->
+                <form asp-controller="Home"
+                      asp-action="Index"
+                      method="get"
+                      class="search-form">
+
+                    <input type="text"
+                           name="searchString"
+                           value="@Context.Request.Query["searchString"]"
+                           placeholder="Search products..."
+                           class="search-input" />
+
+                    <button type="submit" class="search-btn">
+                        <img src="~/imagesmain/search.png" alt="search" class="icon-36">
+                    </button>
+                </form>
+
+            </div>
+
+            <div class="header-right">
+                <button type="button" class="header-lang" aria-label="Choose language">
+                    <img src="~/imagesmain/globe.png" alt="language" class="icon-36">
+                    <span>English</span>
+                    <img src="~/imagesmain/chevron-down.png" alt="open" class="icon-36">
+                </button>
+
+                <button type="button" class="header-icon-btn" aria-label="Notifications">
+                    <img src="~/imagesmain/bell.png" alt="Notifications" class="icon-36">
+                </button>
+
+                <button type="button" class="header-icon-btn" aria-label="Favorites">
+                    <img src="~/imagesmain/heart.png" alt="Favorites" class="icon-36">
+                </button>
+
+                <a asp-controller="Cart" asp-action="Index" class="header-icon-btn" aria-label="Cart">
+                    <img src="~/imagesmain/shopping-cart.png" alt="Cart" class="icon-36">
+                </a>
+
+                <!-- PROFILE � ���������� -->
+                <div class="profile-wrapper">
+                    <button class="profile-btn" id="profileBtn" title="Account">
+                        <img src="~/imagesmain/Account Photo.png" alt="profile" style="width:44px; height:44px;">
+                    </button>
+
+                    <div class="profile-dropdown" id="profileDropdown">
+                        @{
+
+                            User? currentUser = null;
+
+                            if (User.Identity.IsAuthenticated)
+                            {
+                                currentUser = await UserManager.GetUserAsync(User);
+                            }
+                        }
+
+                        @if (currentUser != null)
                         {
-                            <div class="dd-admin">
-                                <a asp-controller="AdminPanel"
-                                   asp-action="Index"
-                                   class="admin-link">
-                                    Admin Panel
+                            <div class="dd-signin">
+                                <strong>@currentUser.FirstName</strong>
+                            </div>
+
+                            @if (await UserManager.IsInRoleAsync(currentUser, "Admin"))
+                            {
+                                <div class="dd-admin">
+                                    <a asp-controller="AdminPanel"
+                                       asp-action="Index"
+                                       class="admin-link">
+                                        Admin Panel
+                                    </a>
+                                </div>
+                            }
+
+                            <div class="dd-signout">
+                                <a asp-controller="Account" asp-action="Logout" class="logout-btn">
+                                    Sign out
                                 </a>
                             </div>
                         }
+                        else
+                        {
+                            <div class="dd-signin">
+                                <a asp-controller="Account" asp-action="Entry" class="n-signin">
+                                    Sign in
+                                </a>
+                                <p class="dd-signin-sub">
+                                    New customer?
+                                    <a asp-controller="Account" asp-action="Register">Start here</a>
+                                </p>
+                            </div>
+                        }
 
-                        <div class="dd-signout">
-                            <a asp-controller="Account" asp-action="Logout" class="logout-btn">
-                                Sign out
-                            </a>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="dd-signin">
-                            <a asp-controller="Account" asp-action="Entry" class="n-signin">
-                                Sign in
-                            </a>
-                            <p class="dd-signin-sub">
-                                New customer?
-                                <a asp-controller="Account" asp-action="Register">Start here</a>
-                            </p>
-                        </div>
-                    }
 
-                   
+                    </div>
                 </div>
+            </div>
+        </div>
     </header>
 
     <div class="container">
@@ -235,19 +251,7 @@
                     <h5 class="site-footer__title">For Business</h5>
                     <ul class="site-footer__list">
                         <li><a href="#">Sell with Allora</a></li>
-                        <li><a href="#">Business Accounts</a></li>
-                        <li><a href="#">Product Management</a></li>
-                        <li><a href="#">Analytics &amp; Insights</a></li>
-                        <li><a href="#">Advertising Tools</a></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h5 class="site-footer__title">Payments &amp; Orders</h5>
-                    <ul class="site-footer__list">
-                        <li><a href="#">Payment Methods</a></li>
-                        <li><a href="#">Invoices &amp; Billing</a></li>
-                        <li><a href="#">Order Tracking</a></li>
-                        <li><a href="#">Returns &amp; Refunds</a></li>
+                        @@ -251,56 +253,56 @@
                         <li><a href="#">Delivery Information</a></li>
                     </ul>
                 </div>
@@ -273,24 +277,24 @@
             </div>
 
             <div class="site-footer__bottom">
-                <img src="imagesmain/Logo.png" alt="Allora" class="footer-logo">
+                <img src="~/imagesmain/Logo.png" alt="Allora" class="footer-logo">
 
                 <div class="footer-bottom-item">
-                    <img src="imagesmain/map-pin.png" alt="" class="icon-36">
+                    <img src="~/imagesmain/map-pin.png" alt="" class="icon-36">
                     <span>Vienna, Austria</span>
-                    <img src="imagesmain/chevron-down.png" alt="" class="icon-36">
+                    <img src="~/imagesmain/chevron-down.png" alt="" class="icon-36">
                 </div>
 
                 <div class="footer-bottom-item">
-                    <img src="imagesmain/globe.png" alt="" class="icon-36">
+                    <img src="~/imagesmain/globe.png" alt="" class="icon-36">
                     <span>English</span>
-                    <img src="imagesmain/chevron-down.png" alt="" class="icon-36">
+                    <img src="~/imagesmain/chevron-down.png" alt="" class="icon-36">
                 </div>
 
                 <div class="footer-bottom-item">
-                    <img src="imagesmain/Euro.png" alt="" class="icon-36">
+                    <img src="~/imagesmain/Euro.png" alt="" class="icon-36">
                     <span>Euro</span>
-                    <img src="imagesmain/chevron-down.png" alt="" class="icon-36">
+                    <img src="~/imagesmain/chevron-down.png" alt="" class="icon-36">
                 </div>
 
                 <span>� 2026 Allora. All rights reserved</span>

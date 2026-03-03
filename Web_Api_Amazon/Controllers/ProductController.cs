@@ -30,6 +30,7 @@ namespace Web_Api_Amazon.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var product = await _context.Products
+                .AsNoTracking()
                 .Include(p => p.Category)
                 .ThenInclude(c => c.ParentCategory)
                 .Include(p => p.Images)
@@ -63,6 +64,7 @@ namespace Web_Api_Amazon.Controllers
             }
 
             var relatedProducts = await _context.Products
+                .AsNoTracking()
                 .Include(p => p.Images)
                 .Where(p => p.CategoryId == product.CategoryId && p.Id != product.Id)
                 .OrderBy(p => p.Name)
@@ -71,25 +73,67 @@ namespace Web_Api_Amazon.Controllers
 
             var relatedIds = relatedProducts.Select(p => p.Id).ToHashSet();
             var topPicks = await _context.Products
+                .AsNoTracking()
                 .Include(p => p.Images)
                 .Where(p => p.Id != product.Id && !relatedIds.Contains(p.Id))
                 .OrderByDescending(p => p.Id)
                 .Take(4)
                 .ToListAsync();
 
-            var availableColors = product.Variants?
-                .SelectMany(v => v.VariantValues)
-                .Where(vv => vv.PropertyDefinition?.Name == "Color")
-                .Select(vv => vv.Value)
-                .Distinct()
-                .ToList() ?? new List<string>();
+            var variantSummaries = product.Variants?
+                           .Where(v => !string.IsNullOrWhiteSpace(v.Name)
+                                       || !string.IsNullOrWhiteSpace(v.Value)
+                                       || v.Quantity > 0
+                                       || (v.VariantValues?.Any() ?? false))
+                           .Select(v =>
+                           {
+                               var optionMap = (v.VariantValues ?? new List<ProductVariantValue>())
+                                   .Where(vv => !string.IsNullOrWhiteSpace(vv.PropertyDefinition?.Name) && !string.IsNullOrWhiteSpace(vv.Value))
+                                   .GroupBy(vv => vv.PropertyDefinition!.Name.Trim(), StringComparer.OrdinalIgnoreCase)
+                                   .ToDictionary(g => g.First().PropertyDefinition!.Name.Trim(), g => g.First().Value!.Trim(), StringComparer.OrdinalIgnoreCase);
 
-            var availableSizes = product.Variants?
-                .SelectMany(v => v.VariantValues)
-                .Where(vv => vv.PropertyDefinition?.Name == "Size")
-                .Select(vv => vv.Value)
-                .Distinct()
-                .ToList() ?? new List<string>();
+                               if (optionMap.Count == 0)
+                               {
+                                   if (!string.IsNullOrWhiteSpace(v.Name) && !string.IsNullOrWhiteSpace(v.Value))
+                                   {
+                                       optionMap[v.Name.Trim()] = v.Value.Trim();
+                                   }
+                                   else if (!string.IsNullOrWhiteSpace(v.Name))
+                                   {
+                                       optionMap["Option"] = v.Name.Trim();
+                                   }
+                                   else if (!string.IsNullOrWhiteSpace(v.Value))
+                                   {
+                                       optionMap["Option"] = v.Value.Trim();
+                                   }
+                               }
+
+                               return new ProductVariantSummaryViewModel
+                               {
+                                   Options = optionMap,
+                                   Quantity = Math.Max(0, v.Quantity)
+                               };
+                           })
+                           .ToList() ?? new List<ProductVariantSummaryViewModel>();
+
+            var optionGroups = variantSummaries
+                .SelectMany(v => v.Options)
+                .GroupBy(kv => kv.Key, StringComparer.OrdinalIgnoreCase)
+                .Select(group => new ProductVariantOptionGroupViewModel
+                {
+                    Name = group.First().Key,
+                    Values = group.Select(kv => kv.Value?.Trim())
+                        .Where(value => !string.IsNullOrWhiteSpace(value))
+                        .Select(value => value!)
+                        .Distinct(StringComparer.OrdinalIgnoreCase)
+                        .ToList(),
+                    IsColor = string.Equals(group.First().Key, "Color", StringComparison.OrdinalIgnoreCase)
+                })
+                .Where(group => group.Values.Any())
+                .OrderBy(group => string.Equals(group.Name, "Color", StringComparison.OrdinalIgnoreCase) ? 0 :
+                                  string.Equals(group.Name, "Size", StringComparison.OrdinalIgnoreCase) ? 1 : 2)
+                .ThenBy(group => group.Name)
+                .ToList();
 
             var brand = product.Properties?
                 .FirstOrDefault(pp => pp.PropertyDefinition?.Name == "Brand")
@@ -97,7 +141,7 @@ namespace Web_Api_Amazon.Controllers
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var isFavorite = string.IsNullOrWhiteSpace(userId)
                 ? GetFavoriteProductIds().Contains(product.Id)
-                : (await _favoritesService.GetFavoritesAsync(userId)).Any(item => item.ProductId == product.Id);
+                : await _favoritesService.IsFavoriteAsync(userId, product.Id);
 
             var viewModel = new ProductDetailsViewModel
             {
@@ -105,8 +149,8 @@ namespace Web_Api_Amazon.Controllers
                 Images = images,
                 RelatedProducts = relatedProducts,
                 TopPicks = topPicks,
-                AvailableColors = availableColors,
-                AvailableSizes = availableSizes,
+                VariantOptionGroups = optionGroups,
+                VariantSummaries = variantSummaries,
                 IsFavorite = isFavorite
             };
 
@@ -143,8 +187,7 @@ namespace Web_Api_Amazon.Controllers
             }
             else
             {
-                var userFavorites = await _favoritesService.GetFavoritesAsync(userId);
-                isFavorite = userFavorites.Any(item => item.ProductId == productId);
+                isFavorite = await _favoritesService.IsFavoriteAsync(userId, productId);
 
                 if (isFavorite)
                 {
@@ -162,7 +205,6 @@ namespace Web_Api_Amazon.Controllers
                 message = isFavorite ? "Removed from favorites." : "Added to favorites."
             });
         }
-
         private List<int> GetFavoriteProductIds()
         {
             var rawValue = HttpContext.Session.GetString(LocalFavoritesSessionKey);

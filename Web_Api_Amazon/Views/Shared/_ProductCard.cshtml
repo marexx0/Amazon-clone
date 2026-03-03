@@ -1,5 +1,40 @@
-﻿@model Web_Api_Amazon.Entities.Product
+﻿﻿@using System.Security.Claims
+@using System.Linq
+@using Microsoft.AspNetCore.Http
+@using System.Text.Json
+@using Core.Interfaces
+@model Web_Api_Amazon.Entities.Product
+@inject IFavoritesService FavoritesService
 <link rel="stylesheet" href="~/css/cardproduct.css" asp-append-version="true" />
+@{
+    const string favoritesCacheKey = "FavoriteProductIds";
+    var favoriteProductIds = Context.Items[favoritesCacheKey] as HashSet<int>;
+
+    if (favoriteProductIds is null)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (!string.IsNullOrWhiteSpace(userId))
+        {
+            favoriteProductIds = (await FavoritesService.GetFavoritesAsync(userId))
+                .Select(item => item.ProductId)
+                .ToHashSet();
+        }
+        else
+        {
+            var favoriteIdsRaw = Context.Session.GetString("LocalFavorites")
+                                 ?? Context.Session.GetString("FavoriteProductIds");
+
+            favoriteProductIds = string.IsNullOrWhiteSpace(favoriteIdsRaw)
+                ? new HashSet<int>()
+                : (JsonSerializer.Deserialize<List<int>>(favoriteIdsRaw) ?? new List<int>()).ToHashSet();
+        }
+
+        Context.Items[favoritesCacheKey] = favoriteProductIds;
+    }
+
+    var isFavorite = favoriteProductIds.Contains(Model.Id);
+}
 <div class="product-card">
 
     <div class="product-image">
@@ -10,9 +45,22 @@
             <img src="@Model.ImageUrl" alt="@Model.Name" />
         </a>
 
-        <button class="wishlist-btn">
-            <img src="~/imagesmain/heartBL.png" alt="logo" style="width:15px; height:15px; " />
-        </button>
+        <form asp-controller="Favorites"
+              asp-action="@(isFavorite ? "Remove" : "Add")"
+              method="post"
+              class="wishlist-form">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="productId" value="@Model.Id" />
+            <input type="hidden" name="returnUrl" value="@($"{Context.Request.Path}{Context.Request.QueryString}")" />
+
+            <button type="submit"
+                    class="wishlist-btn @(isFavorite ? "is-favorite" : string.Empty)"
+                    aria-label="@(isFavorite ? "Remove from favorites" : "Add to favorites")">
+                <svg class="wishlist-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M12 20.5c-.22 0-.44-.08-.61-.24l-1.5-1.37C5.14 14.56 2 11.72 2 8.5 2 5.95 4.02 4 6.5 4c1.58 0 3.09.74 4.03 1.94A5.2 5.2 0 0 1 12 7.7a5.2 5.2 0 0 1 1.47-1.76A5.1 5.1 0 0 1 17.5 4C19.98 4 22 5.95 22 8.5c0 3.22-3.14 6.06-7.89 10.39l-1.5 1.37c-.17.16-.39.24-.61.24Z" />
+                </svg>
+            </button>
+        </form>
 
         <div class="rating">
             <img src="~/imagesmain/Vector.png" alt="logo" style="width:15px; height:15px; " />
@@ -43,6 +91,7 @@
                   asp-action="Add"
                   method="post">
 
+                @Html.AntiForgeryToken()
                 <input type="hidden" name="productId" value="@Model.Id" />
 
                 <button type="submit" class="cart-btn">
