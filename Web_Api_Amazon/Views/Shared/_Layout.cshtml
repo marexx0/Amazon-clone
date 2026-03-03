@@ -156,7 +156,13 @@
             <span>English <img src="~/imagesmain/chevron-down.png" asp-append-version="true" class="icon-36"></span>
             <span> <img src="~/imagesmain/bell.png" asp-append-version="true" class="icon-36"></span>
             <span> <img src="~/imagesmain/heart.png" asp-append-version="true" class="icon-36"></span>
-            <span> <img src="~/imagesmain/shopping-cart.png" asp-append-version="true" class="icon-36"></span>
+            <a asp-controller="Cart"
+               asp-action="Index"
+               class="header-icon-link">
+                <img src="~/imagesmain/shopping-cart.png"
+                     asp-append-version="true"
+                     class="icon-36" />
+            </a>
 
             <!-- PROFILE-->
             <div class="profile-wrapper">

@@ -1,0 +1,113 @@
+/* ===== RESPONSIVE (—œ≤À‹Õ»… ƒÀﬂ ¬—≤’ ‘Œ–Ã) ===== */
+@media (max-width: 1200px) {
+    body {
+        padding: 30px 20px;
+    }
+
+    .main-container {
+        gap: 40px;
+    }
+
+    h1 {
+        font-size: 24px;
+        line-height: 32px;
+    }
+
+    .subtitle {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 900px) {
+    body {
+        padding: 20px 15px;
+    }
+
+    .main-container {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        max-width: 480px;
+        margin: 0 auto;
+    }
+
+    .image-section {
+        min-height: 300px !important;
+        width: 100%;
+        max-height: 400px;
+    }
+
+    .form-section {
+        max-width: 100%;
+    }
+
+    h1 {
+        font-size: 22px;
+        line-height: 28px;
+    }
+
+    .subtitle {
+        font-size: 12px;
+        line-height: 20px;
+    }
+
+    .btn-main, .btn-login {
+        height: 40px;
+        font-size: 14px;
+    }
+
+    input {
+        height: 40px;
+        font-size: 13px;
+    }
+
+    .oauth-button {
+        height: 40px;
+        font-size: 13px;
+    }
+
+    .footer-links, .agreements {
+        font-size: 12px;
+    }
+
+    .password-rules span {
+        font-size: 10px;
+        padding: 4px 8px;
+    }
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 15px 10px;
+    }
+
+    .image-section {
+        min-height: 250px !important;
+    }
+
+    h1 {
+        font-size: 20px;
+        line-height: 26px;
+    }
+
+    .subtitle {
+        font-size: 11px;
+        line-height: 18px;
+    }
+
+    .btn-main, .btn-login {
+        font-size: 13px;
+    }
+
+    input {
+        font-size: 12px;
+    }
+
+    .oauth-button {
+        font-size: 12px;
+    }
+
+    .footer-links, .agreements {
+        font-size: 11px;
+    }
+}
