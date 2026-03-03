@@ -34,15 +34,6 @@ body {
 }
 
 
-
-
-
-
-
-
-
-
-
 .icon-36 {
     width: 24px;
     height: 24px;
@@ -92,7 +83,7 @@ body {
 }
 
 main {
-    flex: 2; /* займає весь простір між header і footer */
+    flex: 2; 
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
@@ -472,9 +463,6 @@ main {
 }
 
 
-
-
-/* Обгортка для позиціонування */
 .profile-wrapper {
     position: relative;
 }
@@ -673,7 +661,7 @@ main {
     width: 320px;
     background: #FCFCFC;
     border-radius: 0px;
-    /* box-shadow: 0 8px 32px rgba(0,0,0,.14);*/
+    
     border: 1px solid #E5E7EB;
     padding: 12px 0;
     z-index: 1000;
@@ -735,7 +723,7 @@ main {
 }
 
 .main-header {
-    background: #0D1B34; /* той самий що у футера */
+    background: #0D1B34;
     margin: 0;
 }
 
@@ -858,14 +846,14 @@ main {
     color: #111827;
 }
 
-/* ряд кнопок */
+
 .dd-actions-row {
     display: flex;
     gap: 12px;
     margin-bottom: 16px;
 }
 
-/* універсальна кнопка */
+
 .dd-btn {
     flex: 1;
     height: 38px;
@@ -879,7 +867,7 @@ main {
     transition: all .18s ease;
 }
 
-    /* сіра кнопка */
+  
     .dd-btn.secondary {
         background: #F3F4F6;
         color: #374151;
@@ -890,7 +878,7 @@ main {
             background: #E5E7EB;
         }
 
-    /* зелена кнопка */
+  
     .dd-btn.primary {
         background: #CFFA4E;
         color: #111827;
@@ -900,7 +888,7 @@ main {
             background: #B5ED24;
         }
 
-/* logout */
+
 .dd-signout {
     border-top: 1px solid #E5E7EB;
     padding-top: 12px;

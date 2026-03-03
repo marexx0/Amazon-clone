@@ -11,7 +11,7 @@ body {
     min-height: 100vh;
 }
 
-/* ?? Sidebar ?? */
+
 .sidebar {
     width: 240px; 
     padding: 16px 14px;
@@ -78,7 +78,7 @@ body {
     color: #6b7c99;
 }
 
-/* Nav */
+
 .sidebar-nav { flex: 1; }
 
 .nav-section {
@@ -91,7 +91,7 @@ body {
     margin: 14px 0 4px 6px;
 }
 
-/* Sidebar menu items */
+
 .nav-item {
     display: flex;
     align-items: center;
@@ -153,7 +153,7 @@ body {
     margin-top: 6px;
 }
 
-/* ?? Main content ?? */
+
 .content {
     flex: 1;
     padding: 56px 60px;
@@ -175,7 +175,7 @@ body {
     margin-bottom: 32px;
 }
 
-/* ?? Profile grid ?? */
+
 .profile-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -192,7 +192,7 @@ body {
     margin-bottom: 16px;
 }
 
-/* ?? Fields ?? */
+
 .field-group { margin-bottom: 55px; }
 
 .field-label {
@@ -243,7 +243,7 @@ body {
     gap: 14px;
 }
 
-/* Input with icon */
+
 .input-icon-wrap {
     position: relative;
 }
@@ -259,7 +259,7 @@ body {
     pointer-events: none;
 }
 
-/* Radio group */
+
 .radio-group {
     display: flex;
     flex-direction: column;
@@ -376,3 +376,306 @@ body {
         gap: 48px;
     }
 }
+
+
+
+/*Secirity*/
+/* ?? Security-specific styles ?? */
+
+.security-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 64px;
+    align-items: start;
+}
+
+/* ?? Section headings ?? */
+.sec-section {
+    margin-bottom: 32px;
+}
+
+.sec-heading {
+    font-size: 16px;
+    font-weight: 700;
+    color: #0D1B34;
+    margin-bottom: 4px;
+}
+
+.sec-subheading {
+    font-size: 12px;
+    color: #6b7c99;
+    margin-bottom: 20px;
+}
+
+/* ?? Credential blocks ?? */
+.cred-block {
+    margin-bottom: 28px;
+}
+
+.cred-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: #0D1B34;
+    margin-bottom: 6px;
+}
+
+.cred-input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .cred-input-row .field-input {
+        flex: 1;
+    }
+
+.change-link {
+    display: inline-block;
+    font-size: 12px;
+    color: #9CA3AF; 
+    text-decoration: none;
+    font-weight: 500;
+    margin-top: 6px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+    .change-link:hover {
+        color: #4B5563;
+        text-decoration: none;
+    }
+
+
+
+
+/* ?? Active sessions ?? */
+.session-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.session-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border: 1px solid #e8ecf4;
+    border-radius: 10px;
+    background: #fff;
+    transition: border-color 0.15s;
+}
+
+    .session-card:hover {
+        border-color: #c4cde0;
+    }
+
+.session-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.session-icon {
+    width: 32px;
+    height: 32px;
+    background: #f0f3fa;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+    .session-icon img {
+        width: 16px;
+        height: 16px;
+        opacity: 0.6;
+    }
+
+.session-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #0D1B34;
+}
+
+.session-meta {
+    font-size: 11px;
+    color: #6b7c99;
+    margin-top: 1px;
+}
+
+.session-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    background: #e8f0fe;
+    color: #4a7aff;
+    border-radius: 20px;
+    padding: 2px 7px;
+    margin-left: 6px;
+}
+
+.btn-signout {
+    font-size: 12px;
+    font-weight: 500;
+    color: #6b7c99;
+    background: #f0f3fa;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+}
+
+    .btn-signout:hover {
+        background: #e0e6f4;
+        color: #0D1B34;
+    }
+
+.btn-signout-all {
+    margin-top: 12px;
+    font-size: 13px;
+    font-weight: 600;
+   color: #080808;
+    background: #EEF4FD;
+    border: none; 
+    outline: none;
+    border-radius: 7px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+    .btn-signout-all:hover {
+        background: #d4ddfa;
+    }
+
+/* ?? 2FA ?? */
+.tfa-card {
+    border: none; 
+    border-radius: 0;
+    padding: 0; 
+    margin-bottom: 12px;
+    background: none;
+}
+
+.tfa-header {
+    
+    margin-bottom: 2px;
+}
+
+.tfa-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0D1B34;
+}
+
+.tfa-desc {
+    font-size: 12px;
+    color: #6b7c99;
+    margin-bottom: 8px;
+}
+
+/* Toggle switch */
+.toggle-wrap {
+    display: flex;
+    align-items: center;
+}
+
+.toggle {
+    position: relative;
+    display: inline-block;
+    width: 38px;
+    height: 22px;
+}
+
+    .toggle input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #d0d8e8;
+    border-radius: 22px;
+    transition: 0.2s;
+}
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 16px;
+        width: 16px;
+        left: 3px;
+        bottom: 3px;
+        background: white;
+        border-radius: 50%;
+        transition: 0.2s;
+        box-shadow: 0 1px 3px rgba(0,0,0,.2);
+    }
+
+.toggle input:checked + .slider {
+    background: #4a7aff;
+}
+
+    .toggle input:checked + .slider:before {
+        transform: translateX(16px);
+    }
+
+.tfa-methods {
+    display: flex;
+    flex-direction: column;
+    gap:6px;
+    margin-bottom: 6px;
+}
+
+.tfa-method {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #0D1B34;
+    cursor: pointer;
+}
+
+    .tfa-method input[type="radio"] {
+        accent-color: #4a7aff;
+        width: 15px;
+        height: 15px;
+    }
+
+.tfa-hint {
+    font-size: 11px;
+    color: #a0aec0;
+    margin-top: 4px;
+}
+
+/* Account recovery */
+.recovery-block {
+    margin-bottom: 20px;
+}
+
+/* Divider */
+.sec-divider {
+    border: none;
+    border-top: 1px solid #f0f3fa;
+    margin: 24px 0;
+}
+
+@@media (max-width: 900px) {
+    .security-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+}
+
+.field-input{background:white;}
