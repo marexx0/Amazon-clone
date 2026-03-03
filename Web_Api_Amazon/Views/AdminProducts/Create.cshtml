@@ -62,13 +62,13 @@
         <!-- Variants -->
         <div class="mb-3">
             <label class="form-label fw-bold" style="color:#0D1B34;">Variants (Property / Value / Quantity)</label>
-            <small class="text-muted d-block mb-2">Example: RAM 8GB, Storage 256GB, Quantity 8</small>
+            <small class="text-muted d-block mb-2">Example: Color, Size / White, 8 / Quantity 6</small>
             <div id="variantsContainer">
                 @for (int i = 0; i < (Model.Variants?.Count ?? 1); i++)
                 {
                     <div class="d-flex mb-2 gap-2 align-items-center">
-                        <input asp-for="Variants[@i].Name" class="form-control" placeholder="Property (e.g. RAM)" />
-                        <input asp-for="Variants[@i].Value" class="form-control" placeholder="Value (e.g. 8GB)" />
+                        <input asp-for="Variants[@i].Name" class="form-control" placeholder="Properties (e.g. Color, Size)" />
+                        <input asp-for="Variants[@i].Value" class="form-control" placeholder="Values (e.g. White, 8)" />
                         <input asp-for="Variants[@i].Quantity" type="number" min="0" class="form-control" placeholder="Quantity" />
                         <button type="button" class="btn btn-danger btn-sm removeVariant">X</button>
                     </div>
@@ -116,8 +116,8 @@
              const div = document.createElement('div');
              div.classList.add('d-flex', 'mb-2', 'gap-2');
              div.innerHTML = `
-                 <input type="text" name="Variants[${variantIndex}].Name" class="form-control" placeholder="Property (e.g. RAM)" />
-                 <input type="text" name="Variants[${variantIndex}].Value" class="form-control" placeholder="Value (e.g. 8GB)" />
+                 <input type="text" name="Variants[${variantIndex}].Name" class="form-control" placeholder="Properties (e.g. Color, Size)" />
+                 <input type="text" name="Variants[${variantIndex}].Value" class="form-control" placeholder="Values (e.g. White, 8)" />
                  <input type="number" name="Variants[${variantIndex}].Quantity" min="0" class="form-control" placeholder="Quantity" />
                  <button type="button" class="btn btn-danger btn-sm removeVariant">X</button>
              `;

@@ -44,36 +44,26 @@
         });
     });
 
-    const colorButtons = document.querySelectorAll('.color-option');
-    colorButtons.forEach((btn) => {
+    const variantButtons = document.querySelectorAll('.variant-option');
+    variantButtons.forEach((btn) => {
         btn.addEventListener('click', () => {
-            colorButtons.forEach((item) => item.classList.remove('is-selected'));
-            btn.classList.add('is-selected');
-            const color = btn.getAttribute('data-color');
-            const selectedColorName = btn.closest('.option-group')?.querySelector('.option-value');
+            const optionName = btn.getAttribute('data-option-name');
+            const optionValue = btn.getAttribute('data-option-value')?.trim() ?? '';
+            const group = btn.closest('.option-group');
 
-            if (selectedColorName && color) {
-                selectedColorName.textContent = color;
+            if (!group || !optionName) {
+                return;
+            }
+
+            group.querySelectorAll('.variant-option').forEach((item) => item.classList.remove('is-selected'));
+            btn.classList.add('is-selected');
+
+            const selectedOptionValue = group.querySelector('.option-value');
+            if (selectedOptionValue && optionValue) {
+                selectedOptionValue.textContent = optionValue;
             }
 
             updateSelectedOptionsJson();
-
-        });
-    });
-
-    const sizeButtons = document.querySelectorAll('.size-option');
-    sizeButtons.forEach((btn) => {
-        btn.addEventListener('click', () => {
-            sizeButtons.forEach((item) => item.classList.remove('is-selected'));
-            btn.classList.add('is-selected');
-            const selectedSize = btn.closest('.option-group')?.querySelector('.option-value');
-
-            if (selectedSize) {
-                selectedSize.textContent = btn.textContent?.trim() ?? '';
-            }
-
-            updateSelectedOptionsJson();
-
         });
     });
 

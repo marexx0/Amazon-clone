@@ -122,8 +122,9 @@ namespace Web_Api_Amazon.Controllers
                 .Select(group => new ProductVariantOptionGroupViewModel
                 {
                     Name = group.First().Key,
-                    Values = group.Select(kv => kv.Value)
+                    Values = group.Select(kv => kv.Value?.Trim())
                         .Where(value => !string.IsNullOrWhiteSpace(value))
+                        .Select(value => value!)
                         .Distinct(StringComparer.OrdinalIgnoreCase)
                         .ToList(),
                     IsColor = string.Equals(group.First().Key, "Color", StringComparison.OrdinalIgnoreCase)

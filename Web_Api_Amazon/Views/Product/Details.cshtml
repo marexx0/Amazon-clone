@@ -235,13 +235,19 @@
                     {
                         @foreach (var property in product.Properties)
                         {
-                            if (property.PropertyDefinition?.Name == "Brand")
+                            var propertyLabel = property.Name ?? property.PropertyDefinition?.Name;
+                            var propertyValue = property.Value?.Trim();
+
+                            if (string.IsNullOrWhiteSpace(propertyLabel)
+                            || string.Equals(propertyLabel, "Brand", StringComparison.OrdinalIgnoreCase)
+                            || string.IsNullOrWhiteSpace(propertyValue))
                             {
                                 continue;
                             }
+
                             <div class="detail-item">
-                                <span class="detail-label">@(property.PropertyDefinition?.Name):</span>
-                                <span class="detail-value">@property.Value</span>
+                                <span class="detail-label">@propertyLabel:</span>
+                                <span class="detail-value">@propertyValue</span>
                             </div>
                         }
                     }
