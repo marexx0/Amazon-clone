@@ -1,0 +1,142 @@
+@using Microsoft.AspNetCore.Identity
+@using Web_Api_Amazon.Entities
+@inject UserManager<User> UserManager
+@inject SignInManager<User> SignInManager
+
+@{
+    Web_Api_Amazon.Entities.User currentUser = null;
+    if (User.Identity.IsAuthenticated)
+        currentUser = await UserManager.GetUserAsync(User);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+
+    <link rel="stylesheet" href="~/css/profile.css" asp-append-version="true" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    @if (currentUser != null)
+    {
+        <div class="layout">
+
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-top">
+                    <a class="icon-btn" asp-controller="Home" asp-action="Index">
+                        <img src="~/images/iconsPF/chevron-left.png" class="btn-icon" />
+                    </a>
+                    <button class="icon-btn">
+                        <img src="~/images/iconsPF/Sidebar.png"
+                             asp-append-version="true"
+                             alt="back"
+                             class="btn-icon" />
+                    </button>
+                </div>
+
+                <div class="sidebar-search">
+
+                    <div class="input-icon-wrap">
+                        <input type="text"
+                               class="field-input"
+                               placeholder="Search" />
+
+                        <img src="~/images/iconsPF/search.png"
+                             asp-append-version="true"
+                             class="input-icon" />
+                    </div>
+                </div>
+
+                <nav class="sidebar-nav">
+
+                    <p class="nav-section">Account</p>
+
+                    <a asp-controller="Profile" asp-action="Index"
+                       class="nav-item @(ViewData["ActivePage"]?.ToString() == "Profile" ? "active" : "")">
+                        <img src="~/images/iconsPF/user.png" class="nav-icon" alt="Profile" />
+                        Profile
+                    </a>
+
+                    <a asp-controller="Profile" asp-action="Security"
+                       class="nav-item @(ViewData["ActivePage"]?.ToString() == "Security" ? "active" : "")">
+                        <img src="~/images/iconsPF/Shield.png" class="nav-icon" alt="Security" />
+                        Security
+                    </a>
+                    <a href="#" class="nav-item">
+                        <img src="~/images/iconsPF/trending-up.png" class="nav-icon" alt="Activity" />
+                        Activity
+                    </a>
+                    <a href="#" class="nav-item">
+                        <img src="~/images/iconsPF/heart.png" class="nav-icon" alt="Favorites" />
+                        Favorites
+                    </a>
+
+                    <p class="nav-section">Commerce</p>
+                    <a href="#" class="nav-item">
+                        <img src="~/images/iconsPF/package.png" class="nav-icon" alt="Orders" />
+                        Orders
+                    </a>
+                    <a href="#" class="nav-item">
+                        <img src="~/images/iconsPF/credit-card.png" class="nav-icon" alt="Payments" />
+                        Payments
+                    </a>
+                    <a href="#" class="nav-item">
+                        <img src="~/images/iconsPF/map-pin2.png" class="nav-icon" alt="Addresses" />
+                        Addresses
+                    </a>
+
+                    <p class="nav-section">System</p>
+                    <a href="#" class="nav-item">
+                        <img src="~/images/iconsPF/bell.png" class="nav-icon" alt="Notifications" />
+                        Notifications
+                    </a>
+                    <a href="#" class="nav-item">
+                        <img src="~/images/iconsPF/lock-closed.png" class="nav-icon" alt="Privacy & Data" />
+                        Privacy & Data
+                    </a>
+                    <a href="#" class="nav-item">
+                        <img src="~/images/iconsPF/Accessibility.png" class="nav-icon" alt="Accessibility" />
+                        Accessibility
+                    </a>
+                </nav>
+
+                <div class="sidebar-bottom">
+                    <a href="#" class="nav-item">
+                        <img src="~/images/iconsPF/settings.png" class="nav-icon" alt="Preferences" />
+                        Preferences
+                    </a>
+                    <a href="#" class="nav-item">
+                        <img src="~/images/iconsPF/info.png" class="nav-icon" alt="Support" />
+                        Support
+                    </a>
+                    <a asp-controller="Account" asp-action="Logout" class="nav-item logout">
+                        <img src="~/images/iconsPF/Log-out.png" class="nav-icon" alt="Log out" />
+                        Log out
+                    </a>
+                </div>
+            </aside>
+
+            <!-- Main content -->
+            <main class="content">
+                @RenderBody()
+            </main>
+
+        </div>
+    }
+    else
+    {
+        <p style="text-align:center;margin-top:60px">
+            You must be logged in.
+            <a asp-controller="Account" asp-action="Entry">Sign in</a>
+        </p>
+    }
+
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>

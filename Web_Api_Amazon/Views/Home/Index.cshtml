@@ -157,7 +157,7 @@
 @if (!string.IsNullOrEmpty(searchString))
 {
     <section id="search-section" class="category-results">
-        <h2>Search results for "@searchString"</h2>
+        
 
         @if (filteredProducts.Any())
         {
@@ -177,7 +177,7 @@
 else if (selectedCategoryId.HasValue && filteredProducts.Any())
 {
     <section id="category-section" class="category-results">
-        <h2>@filteredProducts.First().Category?.Name</h2>
+        
 
         <div class="products-grid">
             @foreach (var product in filteredProducts)

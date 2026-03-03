@@ -1040,6 +1040,109 @@ main {
     height: 20px;
 }
 
+
+/* ===== ADMIN   ===== */
+
+.dd-admin {
+    border-top: 1px solid #E5E7EB;
+    padding: 12px 18px;
+}
+
+    .dd-admin a {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        color: #6B7280;
+        text-decoration: none;
+        font-size: 13px;
+        padding: 6px 7px;
+        border-radius: 7px;
+        transition: background .15s ease, color .15s ease;
+    }
+
+        .dd-admin a:hover {
+            background: rgba(191, 242, 24, 0.15);
+            color: #84cc16;
+        }
+
+/* ===== USER BLOCK ===== */
+
+.dd-user {
+    padding: 20px 18px 16px;
+}
+
+.dd-user-name {
+    font-size: 14px;
+    margin-bottom: 14px;
+    color: #111827;
+}
+
+
+.dd-actions-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+
+.dd-btn {
+    flex: 1;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all .18s ease;
+}
+
+
+    .dd-btn.secondary {
+        background: #F3F4F6;
+        color: #374151;
+        border: 1px solid #E5E7EB;
+    }
+
+        .dd-btn.secondary:hover {
+            background: #E5E7EB;
+        }
+
+
+    .dd-btn.primary {
+        background: #CFFA4E;
+        color: #111827;
+    }
+
+        .dd-btn.primary:hover {
+            background: #B5ED24;
+        }
+
+
+.dd-signout {
+    border-top: 1px solid #E5E7EB;
+    padding-top: 12px;
+}
+
+.logout-btn {
+    display: block;
+    text-align: center;
+    font-size: 13px;
+    color: #6B7280;
+    text-decoration: none;
+    padding: 6px;
+    border-radius: 6px;
+    transition: .15s;
+}
+
+    .logout-btn:hover {
+        background: #FEF2F2;
+        color: #DC2626;
+    }
+
+
+
 @media (max-width: 1200px) {
     .header-inner {
         flex-wrap: wrap;
