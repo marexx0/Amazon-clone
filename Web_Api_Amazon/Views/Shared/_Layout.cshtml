@@ -177,46 +177,57 @@
 
                     @if (currentUser != null)
                     {
-                        <div class="dd-signin">
-                            <strong>@currentUser.FirstName</strong>
-                        </div>
+                        <div class="dd-user">
+                            <div class="dd-user-name">
+                                Hello, <strong>@currentUser.FirstName</strong>
+                            </div>
 
-                        @if (await UserManager.IsInRoleAsync(currentUser, "Admin"))
-                        {
-                            <div class="dd-admin">
-                                <a asp-controller="AdminPanel"
-                                   asp-action="Index"
-                                   class="admin-link">
-                                    Admin Panel
+                            <div class="dd-actions-row">
+
+                                @if (await UserManager.IsInRoleAsync(currentUser, "Admin"))
+                                {
+                                    <a asp-controller="AdminPanel"
+                                       asp-action="Index"
+                                       class="dd-btn secondary">
+                                        Admin Panel
+                                    </a>
+                                }
+
+                                <a asp-controller="Home"
+                                   asp-action="Profile"
+                                   class="dd-btn primary">
+                                    Profile
+                                </a>
+
+                            </div>
+
+                            <div class="dd-signout">
+                                <a asp-controller="Account"
+                                   asp-action="Logout"
+                                   class="logout-btn">
+                                    Log out
                                 </a>
                             </div>
-                        }
-                        <!-- Нова кнопка Profile -->
-                        <div class="dd-profile">
-                            <a asp-controller="Home" asp-action="Profile" class="profile-btn-link">
-                                Profile
-                            </a>
-                        </div>
-                        <div class="dd-signout">
-                            <a asp-controller="Account" asp-action="Logout" class="logout-btn">
-                                Sign out
-                            </a>
                         </div>
                     }
                     else
                     {
                         <div class="dd-signin">
-                            <a asp-controller="Account" asp-action="Entry" class="n-signin">
+                            <a asp-controller="Account"
+                               asp-action="Entry"
+                               class="n-signin">
                                 Sign in
                             </a>
+
                             <p class="dd-signin-sub">
                                 New customer?
-                                <a asp-controller="Account" asp-action="Register">Start here</a>
+                                <a asp-controller="Account"
+                                   asp-action="Register">
+                                    Start here
+                                </a>
                             </p>
                         </div>
                     }
-
-                   
                 </div>
            
         </div> <!-- profile-wrapper -->
