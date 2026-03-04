@@ -54,19 +54,21 @@ public class OrdersController : Controller
         return View(model);
     }
 
+    // This handles the submission of the Shipping details from Checkout.cshtml
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Checkout(CheckoutViewModel model)
+    public async Task<IActionResult> Payment(CheckoutViewModel model)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (string.IsNullOrWhiteSpace(userId))
-        {
-            return RedirectToAction("Login", "Account", new { returnUrl = Url.Action("Checkout", "Orders") });
-        }
+        var isSignedIn = !string.IsNullOrWhiteSpace(userId);
 
-        var cartModel = await BuildCheckoutModelForUserAsync(userId, model.ShippingMethod);
+        // Rebuild the cart items for the summary
+        var cartModel = isSignedIn
+            ? await BuildCheckoutModelForUserAsync(userId!, model.ShippingMethod)
+            : await BuildCheckoutModelForGuestAsync(model.ShippingMethod);
+
         model.Items = cartModel.Items;
-        model.IsSignedIn = true;
+        model.IsSignedIn = isSignedIn;
 
         if (model.Items.Count == 0)
         {
@@ -74,14 +76,49 @@ public class OrdersController : Controller
             return RedirectToAction("Index", "Cart");
         }
 
-        if (!ModelState.IsValid) return View(model);
+        // If the shipping details are invalid, send them back to the Checkout page
+        if (!ModelState.IsValid)
+        {
+            return View("Checkout", model);
+        }
 
+        // Serialize and save the validated shipping details for the final step
+        TempData["CheckoutData"] = JsonSerializer.Serialize(model);
+
+        // Render the Payment.cshtml page
+        return View(model);
+    }
+
+    // This handles the submission from the Payment.cshtml page
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ProcessPayment(string PaymentMethod)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var isSignedIn = !string.IsNullOrWhiteSpace(userId);
+
+        // Retrieve the saved shipping data
+        var rawCheckoutData = TempData["CheckoutData"]?.ToString();
+        if (string.IsNullOrWhiteSpace(rawCheckoutData))
+        {
+            return RedirectToAction("Checkout"); // Session expired or missing data
+        }
+
+        var checkoutData = JsonSerializer.Deserialize<CheckoutViewModel>(rawCheckoutData);
+
+        var cartModel = isSignedIn
+            ? await BuildCheckoutModelForUserAsync(userId!, checkoutData!.ShippingMethod)
+            : await BuildCheckoutModelForGuestAsync(checkoutData!.ShippingMethod);
+
+        if (cartModel.Items.Count == 0) return RedirectToAction("Index", "Cart");
+
+        // Create the final order
         var order = new Order
         {
-            UserId = userId,
+            UserId = userId, // Will be null for guests
             OrderDate = DateTime.UtcNow,
             Status = OrderStatus.Pending,
-            OrderItems = model.Items.Select(item => new OrderItem
+            OrderItems = cartModel.Items.Select(item => new OrderItem
             {
                 ProductId = item.ProductId,
                 Quantity = item.Quantity,
@@ -91,15 +128,25 @@ public class OrdersController : Controller
 
         _context.Orders.Add(order);
 
-        var userCartItems = await _context.CartItems.Where(ci => ci.UserId == userId).ToListAsync();
-        _context.CartItems.RemoveRange(userCartItems);
+        // Clear the user's cart
+        if (isSignedIn)
+        {
+            var userCartItems = await _context.CartItems.Where(ci => ci.UserId == userId).ToListAsync();
+            _context.CartItems.RemoveRange(userCartItems);
+        }
+        else
+        {
+            HttpContext.Session.Remove(LocalCartSessionKey);
+        }
 
         await _context.SaveChangesAsync();
 
-        TempData["CheckoutName"] = $"{model.FirstName} {model.LastName}";
-        TempData["CheckoutAddress"] = $"{model.AddressLine1}, {model.City}, {model.State} {model.PostalCode}, {model.Country}";
-        TempData["CheckoutShipping"] = model.ShippingMethod;
-        TempData["CheckoutGift"] = model.IncludeGift;
+        // Pass success details to Complete view
+        TempData["CheckoutName"] = $"{checkoutData.FirstName} {checkoutData.LastName}";
+        TempData["CheckoutAddress"] = $"{checkoutData.AddressLine1}, {checkoutData.City}, {checkoutData.State} {checkoutData.PostalCode}, {checkoutData.Country}";
+        TempData["CheckoutShipping"] = checkoutData.ShippingMethod;
+        TempData["CheckoutGift"] = checkoutData.IncludeGift;
+        TempData["PaymentMethod"] = PaymentMethod;
 
         return RedirectToAction(nameof(Complete), new { id = order.Id });
     }
@@ -108,15 +155,20 @@ public class OrdersController : Controller
     public async Task<IActionResult> Complete(int id)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (string.IsNullOrWhiteSpace(userId)) return Challenge();
 
         var order = await _context.Orders
             .Include(o => o.OrderItems)
             .ThenInclude(oi => oi.Product)
             .AsNoTracking()
-            .FirstOrDefaultAsync(o => o.Id == id && o.UserId == userId);
+            .FirstOrDefaultAsync(o => o.Id == id);
 
         if (order is null) return NotFound();
+
+        // Ensure users can't view someone else's order (Allow if guest order OR if it belongs to current user)
+        if (order.UserId != null && order.UserId != userId)
+        {
+            return Challenge();
+        }
 
         return View(order);
     }

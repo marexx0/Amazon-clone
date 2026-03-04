@@ -55,7 +55,7 @@
                 </div>
             }
 
-            <form asp-action="Checkout" method="post" class="checkout-form">
+            <form asp-action="Payment" method="post" class="checkout-form">
                 @Html.AntiForgeryToken()
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <input asp-for="IncludeGift" type="hidden" id="includeGiftHidden" />
@@ -188,23 +188,25 @@
             </form>
         </main>
 
-        <aside class="summary-sidebar">
-            <div class="summary">
+        <aside>
+            <div class="checkout-card summary-card">
                 <h3>Order summary</h3>
 
-                @foreach (var item in Model.Items)
-                {
-                    <div class="summary-row">
-                        <span>@item.Name x @item.Quantity</span>
-                        <span>@FormatUsd(item.Total)</span>
-                    </div>
-                }
+                <div class="summary-items">
+                    @foreach (var item in Model.Items)
+                    {
+                        <div class="summary-row">
+                            <span>@item.Name</span>
+                            <span>@FormatUsd(item.Total)</span>
+                        </div>
+                    }
+                </div>
 
-                <hr class="summary-separator" />
+                <hr class="summary-divider" />
 
                 <div class="summary-row">
                     <span>Subtotal:</span>
-                    <strong id="summary-subtotal" data-value="@Model.Subtotal.ToString(CultureInfo.InvariantCulture)">@FormatUsd(Model.Subtotal)</strong>
+                    <span id="summary-subtotal" data-value="@Model.Subtotal.ToString(CultureInfo.InvariantCulture)">@FormatUsd(Model.Subtotal)</span>
                 </div>
                 <div class="summary-row">
                     <span>Shipping:</span>
@@ -212,18 +214,18 @@
                 </div>
 
                 <div class="summary-row total">
-                    <span>Total:</span>
+                    <strong>Total:</strong>
                     <strong id="summary-total">@FormatUsd(Model.Total)</strong>
                 </div>
 
-                <hr class="summary-separator" />
+                <hr class="summary-divider" />
 
-                <label class="summary-gift">
+                <label class="checkbox-line gift-checkbox">
                     <input id="includeGiftCheckbox" type="checkbox" />
-                    <span>
-                        <strong>Order includes a gift</strong>
+                    <div class="gift-text">
+                        <span>Order includes a gift</span>
                         <small>Add gift message at checkout</small>
-                    </span>
+                    </div>
                 </label>
             </div>
         </aside>
@@ -265,7 +267,6 @@
         // --- 3. Strict Form Validation for Button State ---
         const checkoutBtn = document.querySelector('.checkout-btn');
 
-        // Exact IDs of the fields marked as "* Required" in the UI
         const requiredFieldIds = [
             'FirstName', 'LastName', 'Email', 'PhoneNumber',
             'Country', 'AddressLine1', 'City', 'State', 'PostalCode'
@@ -274,7 +275,6 @@
         function checkFormValidity() {
             let isValid = true;
 
-            // Check if any required field is completely empty or just spaces
             requiredFieldIds.forEach(id => {
                 const field = document.getElementById(id);
                 if (field && field.value.trim() === '') {
@@ -282,7 +282,6 @@
                 }
             });
 
-            // Toggle the disabled states
             if (isValid) {
                 checkoutBtn.classList.remove('disabled');
                 checkoutBtn.removeAttribute('disabled');
@@ -292,13 +291,11 @@
             }
         }
 
-        // Attach listeners to all inputs and selects so it updates live
         document.querySelectorAll('.checkout-form input, .checkout-form select').forEach(input => {
             input.addEventListener('input', checkFormValidity);
             input.addEventListener('change', checkFormValidity);
         });
 
-        // Run immediately on page load to set the initial disabled state
         checkFormValidity();
     </script>
 }

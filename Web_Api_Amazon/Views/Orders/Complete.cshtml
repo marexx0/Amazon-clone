@@ -3,32 +3,144 @@
 @{
     ViewData["Title"] = "Order Complete";
     var customer = TempData["CheckoutName"] as string ?? "Customer";
-    var address = TempData["CheckoutAddress"] as string ?? "Address submitted at checkout";
+    var address = TempData["CheckoutAddress"] as string ?? "123 Main Street, Austin, TX 16201, USA";
     var shipping = TempData["CheckoutShipping"] as string ?? "Standard";
-    var includesGift = Convert.ToString(TempData["CheckoutGift"]) ?? "false";
+    var paymentMethod = TempData["PaymentMethod"] as string;
+
+    // Formatting logic
+    var displayPayment = paymentMethod == "PayPal" ? "PayPal" : (paymentMethod == "ApplePay" ? "Apple Pay" : "Visa •••• •••• •••• 4582");
+    var estimatedDelivery = Model.OrderDate.AddDays(shipping == "Express" ? 3 : 6).ToString("MMM dd, yyyy");
+    var transactionId = Guid.NewGuid().ToString().Substring(0, 9).ToUpper(); // Mocked for visual matching
+
+    var subtotal = Model.OrderItems.Sum(i => i.Price * i.Quantity);
+    var shippingCost = shipping == "Express" ? 9.99 : 0.00;
+    var total = subtotal + shippingCost;
 }
 
 @functions {
     private static string FormatUsd(double amount) => $"${amount.ToString("0.00", CultureInfo.InvariantCulture)}";
 }
 
-<div class="container py-5">
-    <div class="card shadow-sm p-4">
-        <h2>Thanks! Your order is confirmed.</h2>
-        <p>Order #@Model.Id placed on @Model.OrderDate.ToLocalTime().ToString("g").</p>
-        <p><strong>Customer:</strong> @customer</p>
-        <p><strong>Shipping address:</strong> @address</p>
-        <p><strong>Shipping method:</strong> @shipping</p>
-        <p><strong>Gift:</strong> @(string.Equals(includesGift, "True", StringComparison.OrdinalIgnoreCase) ? "Yes" : "No")</p>
-        <hr />
+@section Styles {
+    <link rel="stylesheet" href="~/css/checkout.css" asp-append-version="true" />
+}
 
-        <h4>Items</h4>
-        @foreach (var item in Model.OrderItems)
-        {
-            <div class="d-flex justify-content-between">
-                <span>@item.Product.Name x @item.Quantity</span>
-                <span>@FormatUsd(item.Price * item.Quantity)</span>
+<div class="checkout-page">
+    <div class="checkout-steps-wrapper">
+        <div class="checkout-steps" aria-label="Checkout progress">
+            <div class="step is-completed">
+                <span class="dot">
+                    <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </span>
+                <span class="step-text">Shipping</span>
             </div>
-        }
+            <div class="line is-completed"></div>
+
+            <div class="step is-completed">
+                <span class="dot">
+                    <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </span>
+                <span class="step-text">Payment</span>
+            </div>
+            <div class="line is-completed"></div>
+
+            <div class="step is-completed">
+                <span class="dot">
+                    <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </span>
+                <span class="step-text">Complete</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="complete-container">
+        <div class="success-header">
+            <div class="success-icon-large">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 13L9 17L19 7" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </div>
+            <h2>Your order is completed!</h2>
+            <p>Thank you. Your order has been received</p>
+        </div>
+
+        <div class="order-info-banner">
+            <div class="info-block">
+                <span>Order ID</span>
+                <strong>#@Model.Id@Model.OrderDate.ToString("MMddyy")</strong>
+            </div>
+            <div class="info-block">
+                <span>Estimated delivery</span>
+                <strong>@estimatedDelivery</strong>
+            </div>
+            <div class="info-block">
+                <span>Payment method</span>
+                <strong>@displayPayment</strong>
+            </div>
+            <div class="info-block">
+                <span>Transaction ID</span>
+                <strong>@transactionId</strong>
+            </div>
+            <div class="info-block">
+                <span>Shipping address</span>
+                <strong>@address</strong>
+            </div>
+        </div>
+
+        <div class="order-details-card">
+            <div class="order-items-list">
+                @foreach (var item in Model.OrderItems)
+                {
+                    <div class="order-item-row">
+                        <div class="item-img-wrapper">
+                            @if (!string.IsNullOrEmpty(item.Product.ImageUrl))
+                            {
+                                <img src="@item.Product.ImageUrl" alt="@item.Product.Name" />
+                            }
+                        </div>
+                        <div class="item-details">
+                            <h4>@item.Product.Name</h4>
+                            <div class="item-meta">
+                                <p>Size: &nbsp;44</p>
+                                <p>Color: &nbsp;White</p>
+                                <p>Quantity: &nbsp;@item.Quantity</p>
+                            </div>
+                        </div>
+                        <div class="item-price">
+                            <strong>@FormatUsd(item.Price * item.Quantity)</strong>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="order-totals-area">
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>@FormatUsd(subtotal)</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span>@FormatUsd(shippingCost)</span>
+                </div>
+
+                <hr class="summary-divider" />
+
+                <div class="summary-row total">
+                    <strong>Total</strong>
+                    <strong>@FormatUsd(total)</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="complete-actions">
+            <a asp-controller="Home" asp-action="Index" class="btn-shopping">Continue shopping</a>
+            <a href="#" class="btn-track">Track your order</a>
+        </div>
     </div>
 </div>
