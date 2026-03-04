@@ -537,6 +537,7 @@ p {
 
 .line.is-completed {
     background: #111827;
+    height: 2px;
 }
 
 /* --- Payment Accordion --- */

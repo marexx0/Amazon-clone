@@ -1,24 +1,11 @@
 ﻿@using System.Globalization
-@model global::Order
+@model Web_Api_Amazon.Models.OrderCompleteViewModel
 @{
     ViewData["Title"] = "Order Complete";
-    var customer = TempData["CheckoutName"] as string ?? "Customer";
-    var address = TempData["CheckoutAddress"] as string ?? "123 Main Street, Austin, TX 16201, USA";
-    var shipping = TempData["CheckoutShipping"] as string ?? "Standard";
-    var paymentMethod = TempData["PaymentMethod"] as string;
-
-    // Formatting logic
-    var displayPayment = paymentMethod == "PayPal" ? "PayPal" : (paymentMethod == "ApplePay" ? "Apple Pay" : "Visa •••• •••• •••• 4582");
-    var estimatedDelivery = Model.OrderDate.AddDays(shipping == "Express" ? 3 : 6).ToString("MMM dd, yyyy");
-    var transactionId = Guid.NewGuid().ToString().Substring(0, 9).ToUpper(); // Mocked for visual matching
-
-    var subtotal = Model.OrderItems.Sum(i => i.Price * i.Quantity);
-    var shippingCost = shipping == "Express" ? 9.99 : 0.00;
-    var total = subtotal + shippingCost;
 }
 
 @functions {
-    private static string FormatUsd(double amount) => $"${amount.ToString("0.00", CultureInfo.InvariantCulture)}";
+    private static string FormatUsd(decimal amount) => $"${amount.ToString("0.00", CultureInfo.InvariantCulture)}";
 }
 
 @section Styles {
@@ -36,6 +23,7 @@
                 </span>
                 <span class="step-text">Shipping</span>
             </div>
+
             <div class="line is-completed"></div>
 
             <div class="step is-completed">
@@ -46,6 +34,7 @@
                 </span>
                 <span class="step-text">Payment</span>
             </div>
+
             <div class="line is-completed"></div>
 
             <div class="step is-completed">
@@ -73,47 +62,45 @@
         <div class="order-info-banner">
             <div class="info-block">
                 <span>Order ID</span>
-                <strong>#@Model.Id@Model.OrderDate.ToString("MMddyy")</strong>
+                <strong>#@Model.OrderId@Model.OrderDate.ToString("MMddyy")</strong>
             </div>
             <div class="info-block">
                 <span>Estimated delivery</span>
-                <strong>@estimatedDelivery</strong>
+                <strong>@Model.EstimatedDeliveryDate.ToString("MMM dd, yyyy")</strong>
             </div>
             <div class="info-block">
                 <span>Payment method</span>
-                <strong>@displayPayment</strong>
+                <strong>@Model.DisplayPaymentMethod</strong>
             </div>
             <div class="info-block">
                 <span>Transaction ID</span>
-                <strong>@transactionId</strong>
+                <strong>@Model.TransactionId</strong>
             </div>
             <div class="info-block">
                 <span>Shipping address</span>
-                <strong>@address</strong>
+                <strong>@Model.ShippingAddress</strong>
             </div>
         </div>
 
         <div class="order-details-card">
             <div class="order-items-list">
-                @foreach (var item in Model.OrderItems)
+                @foreach (var item in Model.Items)
                 {
                     <div class="order-item-row">
                         <div class="item-img-wrapper">
-                            @if (!string.IsNullOrEmpty(item.Product.ImageUrl))
+                            @if (!string.IsNullOrEmpty(item.ImageUrl))
                             {
-                                <img src="@item.Product.ImageUrl" alt="@item.Product.Name" />
+                                <img src="@item.ImageUrl" alt="@item.Name" />
                             }
                         </div>
                         <div class="item-details">
-                            <h4>@item.Product.Name</h4>
+                            <h4>@item.Name</h4>
                             <div class="item-meta">
-                                <p>Size: &nbsp;44</p>
-                                <p>Color: &nbsp;White</p>
                                 <p>Quantity: &nbsp;@item.Quantity</p>
                             </div>
                         </div>
                         <div class="item-price">
-                            <strong>@FormatUsd(item.Price * item.Quantity)</strong>
+                            <strong>@FormatUsd(item.LineTotal)</strong>
                         </div>
                     </div>
                 }
@@ -122,18 +109,18 @@
             <div class="order-totals-area">
                 <div class="summary-row">
                     <span>Subtotal</span>
-                    <span>@FormatUsd(subtotal)</span>
+                    <span>@FormatUsd(Model.Subtotal)</span>
                 </div>
                 <div class="summary-row">
                     <span>Shipping</span>
-                    <span>@FormatUsd(shippingCost)</span>
+                    <span>@FormatUsd(Model.ShippingCost)</span>
                 </div>
 
                 <hr class="summary-divider" />
 
                 <div class="summary-row total">
                     <strong>Total</strong>
-                    <strong>@FormatUsd(total)</strong>
+                    <strong>@FormatUsd(Model.Total)</strong>
                 </div>
             </div>
         </div>

@@ -1,9 +1,9 @@
 ﻿using System.Security.Claims;
 using System.Text.Json;
 using Amazon_clone.DataAccess.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
 using Web_Api_Amazon.Entities;
 using Web_Api_Amazon.Models;
 
@@ -12,6 +12,9 @@ namespace Web_Api_Amazon.Controllers;
 public class OrdersController : Controller
 {
     private const string LocalCartSessionKey = "LocalCart";
+    private const string CheckoutDataTempDataKey = "CheckoutData";
+    private const string OrderCompleteContextTempDataKey = "OrderCompleteContext";
+
     private readonly ShopDbContext _context;
     private readonly UserManager<User> _userManager;
 
@@ -35,14 +38,7 @@ public class OrdersController : Controller
 
         if (isSignedIn)
         {
-            var user = await _userManager.FindByIdAsync(userId!);
-            if (user is not null)
-            {
-                model.FirstName = user.FirstName ?? string.Empty;
-                model.LastName = user.LastName ?? string.Empty;
-                model.Email = user.Email ?? string.Empty;
-                model.PhoneNumber = user.PhoneNumber ?? string.Empty;
-            }
+            await PopulateSignedInUserAsync(model, userId!);
         }
 
         if (model.Items.Count == 0)
@@ -54,7 +50,6 @@ public class OrdersController : Controller
         return View(model);
     }
 
-    // This handles the submission of the Shipping details from Checkout.cshtml
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Payment(CheckoutViewModel model)
@@ -62,12 +57,11 @@ public class OrdersController : Controller
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         var isSignedIn = !string.IsNullOrWhiteSpace(userId);
 
-        // Rebuild the cart items for the summary
-        var cartModel = isSignedIn
+        var refreshedCartModel = isSignedIn
             ? await BuildCheckoutModelForUserAsync(userId!, model.ShippingMethod)
             : await BuildCheckoutModelForGuestAsync(model.ShippingMethod);
 
-        model.Items = cartModel.Items;
+        model.Items = refreshedCartModel.Items;
         model.IsSignedIn = isSignedIn;
 
         if (model.Items.Count == 0)
@@ -76,48 +70,80 @@ public class OrdersController : Controller
             return RedirectToAction("Index", "Cart");
         }
 
-        // If the shipping details are invalid, send them back to the Checkout page
         if (!ModelState.IsValid)
         {
             return View("Checkout", model);
         }
 
-        // Serialize and save the validated shipping details for the final step
-        TempData["CheckoutData"] = JsonSerializer.Serialize(model);
-
-        // Render the Payment.cshtml page
+        TempData[CheckoutDataTempDataKey] = JsonSerializer.Serialize(model);
         return View(model);
     }
 
-    // This handles the submission from the Payment.cshtml page
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> ProcessPayment(string PaymentMethod)
+    public async Task<IActionResult> ProcessPayment(string paymentMethod)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         var isSignedIn = !string.IsNullOrWhiteSpace(userId);
 
-        // Retrieve the saved shipping data
-        var rawCheckoutData = TempData["CheckoutData"]?.ToString();
-        if (string.IsNullOrWhiteSpace(rawCheckoutData))
+        var checkoutData = ReadCheckoutData();
+        if (checkoutData is null)
         {
-            return RedirectToAction("Checkout"); // Session expired or missing data
+            return RedirectToAction(nameof(Checkout));
         }
 
-        var checkoutData = JsonSerializer.Deserialize<CheckoutViewModel>(rawCheckoutData);
+        var selectedPaymentMethod = NormalizePaymentMethod(paymentMethod);
 
         var cartModel = isSignedIn
-            ? await BuildCheckoutModelForUserAsync(userId!, checkoutData!.ShippingMethod)
-            : await BuildCheckoutModelForGuestAsync(checkoutData!.ShippingMethod);
+            ? await BuildCheckoutModelForUserAsync(userId!, checkoutData.ShippingMethod)
+            : await BuildCheckoutModelForGuestAsync(checkoutData.ShippingMethod);
 
-        if (cartModel.Items.Count == 0) return RedirectToAction("Index", "Cart");
+        if (cartModel.Items.Count == 0)
+        {
+            TempData["CheckoutError"] = "Your cart is empty.";
+            return RedirectToAction("Index", "Cart");
+        }
 
-        // Create the final order
+        var requestedQuantities = cartModel.Items
+            .GroupBy(item => item.ProductId)
+            .Select(group => new ProductQuantityRequest
+            {
+                ProductId = group.Key,
+                Quantity = group.Sum(item => item.Quantity)
+            })
+            .ToList();
+
+        var requestedProductIds = requestedQuantities.Select(r => r.ProductId).ToList();
+
+        var variantStockByProduct = await _context.ProductVariants
+            .Where(variant => requestedProductIds.Contains(variant.ProductId))
+            .GroupBy(variant => variant.ProductId)
+            .Select(group => new ProductQuantityRequest
+            {
+                ProductId = group.Key,
+                Quantity = group.Sum(variant => variant.Quantity)
+            })
+            .ToDictionaryAsync(item => item.ProductId, item => item.Quantity);
+
+        foreach (var request in requestedQuantities)
+        {
+            if (!variantStockByProduct.TryGetValue(request.ProductId, out var availableStock))
+            {
+                continue;
+            }
+
+            if (request.Quantity > availableStock)
+            {
+                TempData["CheckoutError"] = "Some products are out of stock. Please update your cart.";
+                return RedirectToAction("Index", "Cart");
+            }
+        }
+
         var order = new Order
         {
-            UserId = userId, // Will be null for guests
+            UserId = userId,
             OrderDate = DateTime.UtcNow,
-            Status = OrderStatus.Pending,
+            Status = OrderStatus.New,
             OrderItems = cartModel.Items.Select(item => new OrderItem
             {
                 ProductId = item.ProductId,
@@ -126,9 +152,13 @@ public class OrdersController : Controller
             }).ToList()
         };
 
+        // Payment is confirmed in this action, so advance from New to Processing.
+        AdvanceOrderStatus(order, OrderStatus.Processing);
+
         _context.Orders.Add(order);
 
-        // Clear the user's cart
+        await ReduceVariantInventoryAsync(requestedQuantities);
+
         if (isSignedIn)
         {
             var userCartItems = await _context.CartItems.Where(ci => ci.UserId == userId).ToListAsync();
@@ -141,12 +171,21 @@ public class OrdersController : Controller
 
         await _context.SaveChangesAsync();
 
-        // Pass success details to Complete view
-        TempData["CheckoutName"] = $"{checkoutData.FirstName} {checkoutData.LastName}";
-        TempData["CheckoutAddress"] = $"{checkoutData.AddressLine1}, {checkoutData.City}, {checkoutData.State} {checkoutData.PostalCode}, {checkoutData.Country}";
-        TempData["CheckoutShipping"] = checkoutData.ShippingMethod;
-        TempData["CheckoutGift"] = checkoutData.IncludeGift;
-        TempData["PaymentMethod"] = PaymentMethod;
+        var completionContext = new OrderCompletionContext
+        {
+            FirstName = checkoutData.FirstName,
+            LastName = checkoutData.LastName,
+            AddressLine1 = checkoutData.AddressLine1,
+            AddressLine2 = checkoutData.AddressLine2,
+            City = checkoutData.City,
+            State = checkoutData.State,
+            PostalCode = checkoutData.PostalCode,
+            Country = checkoutData.Country,
+            ShippingMethod = checkoutData.ShippingMethod,
+            PaymentMethod = selectedPaymentMethod
+        };
+
+        TempData[OrderCompleteContextTempDataKey] = JsonSerializer.Serialize(completionContext);
 
         return RedirectToAction(nameof(Complete), new { id = order.Id });
     }
@@ -157,21 +196,205 @@ public class OrdersController : Controller
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         var order = await _context.Orders
+            .Include(o => o.User)
             .Include(o => o.OrderItems)
             .ThenInclude(oi => oi.Product)
-            .AsNoTracking()
             .FirstOrDefaultAsync(o => o.Id == id);
 
-        if (order is null) return NotFound();
+        if (order is null)
+        {
+            return NotFound();
+        }
 
-        // Ensure users can't view someone else's order (Allow if guest order OR if it belongs to current user)
-        if (order.UserId != null && order.UserId != userId)
+        if (!string.IsNullOrWhiteSpace(order.UserId) && order.UserId != userId)
         {
             return Challenge();
         }
 
-        return View(order);
+        // Completing checkout should mark the order as Completed unless it is already beyond that state.
+        if (CanAdvanceTo(order.Status, OrderStatus.Completed))
+        {
+            order.Status = OrderStatus.Completed;
+            await _context.SaveChangesAsync();
+        }
+
+        var completionContext = ReadOrderCompletionContext();
+
+        var model = new OrderCompleteViewModel
+        {
+            OrderId = order.Id,
+            OrderDate = order.OrderDate,
+            CustomerName = BuildCustomerName(completionContext, order.User),
+            ShippingAddress = BuildShippingAddress(completionContext),
+            ShippingMethod = completionContext?.ShippingMethod ?? "Standard",
+            PaymentMethod = completionContext?.PaymentMethod ?? "CreditCard",
+            TransactionId = BuildTransactionId(order),
+            Items = order.OrderItems
+                .Where(item => item.Product is not null)
+                .Select(item => new OrderCompleteItemViewModel
+                {
+                    ProductId = item.ProductId,
+                    Name = item.Product.Name,
+                    ImageUrl = item.Product.ImageUrl,
+                    Quantity = item.Quantity,
+                    UnitPrice = (decimal)item.Price
+                })
+                .ToList()
+        };
+
+        return View(model);
     }
+
+    private async Task ReduceVariantInventoryAsync(List<ProductQuantityRequest> requests)
+    {
+        if (requests.Count == 0)
+        {
+            return;
+        }
+
+        var productIds = requests.Select(r => r.ProductId).ToList();
+
+        var variants = await _context.ProductVariants
+            .Where(variant => productIds.Contains(variant.ProductId))
+            .OrderBy(variant => variant.Id)
+            .ToListAsync();
+
+        foreach (var request in requests)
+        {
+            var remaining = request.Quantity;
+            var productVariants = variants.Where(variant => variant.ProductId == request.ProductId && variant.Quantity > 0);
+
+            foreach (var variant in productVariants)
+            {
+                if (remaining <= 0)
+                {
+                    break;
+                }
+
+                var toReduce = Math.Min(variant.Quantity, remaining);
+                variant.Quantity -= toReduce;
+                remaining -= toReduce;
+            }
+        }
+    }
+
+    private async Task PopulateSignedInUserAsync(CheckoutViewModel model, string userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId);
+        if (user is null)
+        {
+            return;
+        }
+
+        model.FirstName = user.FirstName ?? string.Empty;
+        model.LastName = user.LastName ?? string.Empty;
+        model.Email = user.Email ?? string.Empty;
+        model.PhoneNumber = user.PhoneNumber ?? string.Empty;
+    }
+
+    private CheckoutViewModel? ReadCheckoutData()
+    {
+        var rawCheckoutData = TempData[CheckoutDataTempDataKey]?.ToString();
+        if (string.IsNullOrWhiteSpace(rawCheckoutData))
+        {
+            return null;
+        }
+
+        try
+        {
+            return JsonSerializer.Deserialize<CheckoutViewModel>(rawCheckoutData);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private OrderCompletionContext? ReadOrderCompletionContext()
+    {
+        var rawContext = TempData.Peek(OrderCompleteContextTempDataKey)?.ToString();
+        if (string.IsNullOrWhiteSpace(rawContext))
+        {
+            return null;
+        }
+
+        try
+        {
+            return JsonSerializer.Deserialize<OrderCompletionContext>(rawContext);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static string NormalizePaymentMethod(string? paymentMethod)
+    {
+        return paymentMethod switch
+        {
+            "PayPal" => "PayPal",
+            "ApplePay" => "ApplePay",
+            _ => "CreditCard"
+        };
+    }
+
+    private static void AdvanceOrderStatus(Order order, OrderStatus targetStatus)
+    {
+        if (CanAdvanceTo(order.Status, targetStatus))
+        {
+            order.Status = targetStatus;
+        }
+    }
+
+    private static bool CanAdvanceTo(OrderStatus currentStatus, OrderStatus targetStatus)
+    {
+        // Keep Pending as a legacy/pre-payment fallback and allow normal forward transitions.
+        if (currentStatus == OrderStatus.Pending)
+        {
+            return targetStatus is OrderStatus.Processing or OrderStatus.Shipped or OrderStatus.Completed;
+        }
+
+        return currentStatus <= targetStatus;
+    }
+
+    private static string BuildCustomerName(OrderCompletionContext? context, User? orderUser)
+    {
+        var contextName = $"{context?.FirstName} {context?.LastName}".Trim();
+        if (!string.IsNullOrWhiteSpace(contextName))
+        {
+            return contextName;
+        }
+
+        var userName = $"{orderUser?.FirstName} {orderUser?.LastName}".Trim();
+        if (!string.IsNullOrWhiteSpace(userName))
+        {
+            return userName;
+        }
+
+        return orderUser?.Email ?? string.Empty;
+    }
+
+    private static string BuildShippingAddress(OrderCompletionContext? context)
+    {
+        if (context is null)
+        {
+            return string.Empty;
+        }
+
+        var segments = new[]
+        {
+            context.AddressLine1,
+            context.AddressLine2,
+            context.City,
+            $"{context.State} {context.PostalCode}".Trim(),
+            context.Country
+        };
+
+        return string.Join(", ", segments.Where(segment => !string.IsNullOrWhiteSpace(segment)));
+    }
+
+    private static string BuildTransactionId(Order order)
+        => $"ORD-{order.Id}-{order.OrderDate:yyyyMMddHHmmss}";
 
     private async Task<CheckoutViewModel> BuildCheckoutModelForUserAsync(string userId, string shippingMethod = "Standard")
     {
@@ -185,7 +408,7 @@ public class OrdersController : Controller
         {
             ShippingMethod = shippingMethod,
             Items = cartItems
-                .Where(ci => ci.Product != null)
+                .Where(ci => ci.Product is not null)
                 .Select(ci => new CheckoutSummaryItemViewModel
                 {
                     ProductId = ci.ProductId,
@@ -207,9 +430,9 @@ public class OrdersController : Controller
 
         var productIds = localCart.Select(item => item.ProductId).Distinct().ToList();
         var products = await _context.Products
-            .Where(p => productIds.Contains(p.Id))
+            .Where(product => productIds.Contains(product.Id))
             .AsNoTracking()
-            .ToDictionaryAsync(p => p.Id);
+            .ToDictionaryAsync(product => product.Id);
 
         return new CheckoutViewModel
         {
@@ -230,7 +453,6 @@ public class OrdersController : Controller
     private List<LocalCartLine> GetLocalCart()
     {
         var raw = HttpContext.Session.GetString(LocalCartSessionKey);
-
         if (string.IsNullOrWhiteSpace(raw))
         {
             return new List<LocalCartLine>();
@@ -259,6 +481,12 @@ public class OrdersController : Controller
     }
 
     private sealed class LocalCartLine
+    {
+        public int ProductId { get; set; }
+        public int Quantity { get; set; }
+    }
+
+    private sealed class ProductQuantityRequest
     {
         public int ProductId { get; set; }
         public int Quantity { get; set; }
