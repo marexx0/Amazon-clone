@@ -1,0 +1,34 @@
+﻿@using System.Globalization
+@model global::Order
+@{
+    ViewData["Title"] = "Order Complete";
+    var customer = TempData["CheckoutName"] as string ?? "Customer";
+    var address = TempData["CheckoutAddress"] as string ?? "Address submitted at checkout";
+    var shipping = TempData["CheckoutShipping"] as string ?? "Standard";
+    var includesGift = Convert.ToString(TempData["CheckoutGift"]) ?? "false";
+}
+
+@functions {
+    private static string FormatUsd(double amount) => $"${amount.ToString("0.00", CultureInfo.InvariantCulture)}";
+}
+
+<div class="container py-5">
+    <div class="card shadow-sm p-4">
+        <h2>Thanks! Your order is confirmed.</h2>
+        <p>Order #@Model.Id placed on @Model.OrderDate.ToLocalTime().ToString("g").</p>
+        <p><strong>Customer:</strong> @customer</p>
+        <p><strong>Shipping address:</strong> @address</p>
+        <p><strong>Shipping method:</strong> @shipping</p>
+        <p><strong>Gift:</strong> @(string.Equals(includesGift, "True", StringComparison.OrdinalIgnoreCase) ? "Yes" : "No")</p>
+        <hr />
+
+        <h4>Items</h4>
+        @foreach (var item in Model.OrderItems)
+        {
+            <div class="d-flex justify-content-between">
+                <span>@item.Product.Name x @item.Quantity</span>
+                <span>@FormatUsd(item.Price * item.Quantity)</span>
+            </div>
+        }
+    </div>
+</div>

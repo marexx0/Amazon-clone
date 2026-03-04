@@ -216,7 +216,9 @@
                         </span>
                     </label>
 
-                    <button class="checkout" type="button">Proceed to checkout</button>
+                    <form asp-controller="Orders" asp-action="Checkout" method="get">
+                        <button class="checkout" type="submit">Proceed to checkout</button>
+                    </form>
                 }
                 else
                 {
