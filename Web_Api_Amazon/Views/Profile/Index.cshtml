@@ -1,0 +1,102 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Web_Api_Amazon.Entities
+@inject UserManager<User> UserManager
+
+@{
+    Layout = "~/Views/Shared/_ProfileLayout.cshtml";
+    ViewData["Title"] = "Profile";
+    ViewData["ActivePage"] = "Profile";
+    User currentUser = null;
+    if (User.Identity.IsAuthenticated)
+        currentUser = await UserManager.GetUserAsync(User);
+}
+
+<h1 class="page-title">Profile</h1>
+<p class="page-subtitle">
+    Manage how your account appears and how we communicate with you
+</p>
+
+<div class="profile-grid">
+
+    <!-- LEFT COLUMN -->
+    <div class="profile-col profile-col-left">
+        <section class="profile-section">
+            <h2 class="section-heading">Basic information</h2>
+            <div class="field-group">
+                <label class="field-label">Name Surname</label>
+                <input type="text" class="field-input" value="@currentUser.FirstName @currentUser.LastName" />
+                <span class="field-hint">Used to personalize your experience</span>
+            </div>
+        </section>
+
+        <section class="profile-section">
+            <h2 class="section-heading">Contact information</h2>
+            <div class="contact-row">
+                <div class="field-group">
+                    <label class="field-label">Email</label>
+                    <input type="email" class="field-input" value="@currentUser.Email" readonly />
+                </div>
+                <div class="field-group">
+                    <label class="field-label">Password</label>
+                    <input type="password" class="field-input" value="password" readonly />
+                </div>
+            </div>
+            <p class="security-hint">
+                Change contact information?
+                <a asp-controller="Account" asp-action="Security">Go to Security page</a>
+            </p>
+        </section>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="profile-col profile-col-right">
+        <section class="profile-section">
+            <h2 class="section-heading">Personal details</h2>
+            <div class="personal-row">
+                <div class="field-group">
+                    <label class="field-label">Date of birth</label>
+                    <div class="input-icon-wrap">
+                        <input type="text" class="field-input" placeholder="DD/MM/YYYY" />
+                        <img src="~/images/iconsPF/calendar.png" class="input-icon" alt="calendar" />
+                    </div>
+                    <span class="field-hint">Used only for age-related experiences</span>
+                </div>
+                <div class="field-group">
+                    <label class="field-label">Location</label>
+                    <div class="input-icon-wrap">
+                        <input type="text" class="field-input" placeholder="Vienna, Austria" />
+                        <img src="~/images/iconsPF/map-pin.png" class="input-icon" alt="location" />
+                    </div>
+                    <span class="field-hint">Used for legal purposes</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="profile-section">
+            <h2 class="section-heading">Gender identity</h2>
+            <div class="radio-group">
+                <label><input type="radio" name="gender" value="woman" /> Woman</label>
+                <label><input type="radio" name="gender" value="man" /> Man</label>
+                <label><input type="radio" name="gender" value="non-binary" /> Non-binary</label>
+                <label><input type="radio" name="gender" value="prefer-not" /> Prefer not to say</label>
+                <label><input type="radio" name="gender" value="self-describe" checked /> Prefer to self-describe</label>
+            </div>
+
+            <input type="text" class="field-input mt-8" id="genderDescribe" placeholder="Describe" />
+            <span class="field-hint">This helps us address you respectfully</span>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const genderDescribe = document.getElementById('genderDescribe');
+        genderDescribe.style.display = 'block'; // початково
+
+        document.querySelectorAll('input[name="gender"]').forEach(r => {
+            r.addEventListener('change', () => {
+                genderDescribe.style.display = r.value === 'self-describe' ? 'block' : 'none';
+            });
+        });
+    </script>
+}

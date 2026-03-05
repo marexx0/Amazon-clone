@@ -1,0 +1,219 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<Web_Api_Amazon.Entities.User> UserManager
+@inject SignInManager<Web_Api_Amazon.Entities.User> SignInManager
+
+@{
+    Layout = "~/Views/Shared/_ProfileLayout.cshtml";
+    ViewData["Title"] = "Security";
+    ViewData["ActivePage"] = "Security";
+    Web_Api_Amazon.Entities.User currentUser = null;
+    if (User.Identity.IsAuthenticated)
+        currentUser = await UserManager.GetUserAsync(User);
+}
+
+@if (currentUser != null)
+{
+    <h1 class="page-title">Security</h1>
+    <p class="page-subtitle">Keep your account protected</p>
+
+    <div class="security-grid">
+
+        <!-- LEFT COLUMN -->
+        <div>
+            <!-- Sign-in credentials -->
+            <section class="sec-section">
+                <h2 class="sec-heading">Sign-in credentials</h2>
+
+                <div class="cred-block">
+                    <label class="cred-label">Password</label>
+                    <div class="cred-input-row">
+                        <input type="password" id="passwordField"
+                               class="field-input"
+                               value="DIO9-I7&x"
+                               readonly />
+                    </div>
+                    <a class="change-link" id="toggleChangePassword">Change password</a>
+                </div>
+
+                <div id="changePasswordForm" style="display:none; margin-bottom:24px;">
+                    <div class="field-group">
+                        <label class="field-label">Current password</label>
+                        <input type="password" class="field-input" placeholder="Enter current password" />
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">New password</label>
+                        <input type="password" class="field-input" id="newPass" placeholder="At least 8 characters" />
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Confirm new password</label>
+                        <input type="password" class="field-input" id="confirmPass" placeholder="Repeat new password" />
+                        <span class="field-hint" id="passMatchHint" style="color:#ff6b6b; display:none;">
+                            Passwords do not match
+                        </span>
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-signout-all" id="savePasswordBtn">Save password</button>
+                        <button class="btn-signout" id="cancelPasswordBtn">Cancel</button>
+                    </div>
+                </div>
+
+                <hr class="sec-divider" />
+
+                <!-- Email -->
+                <div class="cred-block">
+                    <label class="cred-label">Email</label>
+                    <div class="cred-input-row">
+                        <input type="email" id="emailField"
+                               class="field-input"
+                               value="@currentUser.Email"
+                               readonly />
+                    </div>
+                    <a class="change-link" id="toggleChangeEmail">Change email</a>
+                </div>
+
+                <div id="changeEmailForm" style="display:none; margin-bottom:24px;">
+                    <div class="field-group">
+                        <label class="field-label">New email address</label>
+                        <input type="email" class="field-input" placeholder="Enter new email" />
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label">Confirm with password</label>
+                        <input type="password" class="field-input" placeholder="Current password" />
+                    </div>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-signout-all">Save email</button>
+                        <button class="btn-signout" id="cancelEmailBtn">Cancel</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Account recovery -->
+            <section class="sec-section">
+                <h2 class="sec-heading">Account recovery</h2>
+                <p class="sec-subheading">We'll use this if you ever lose access</p>
+                <div class="cred-block">
+                    <label class="cred-label">Recovery email</label>
+                    <input type="email" class="field-input" placeholder="example@gmail.com" />
+                    <a class="change-link">Change email</a>
+                </div>
+            </section>
+        </div>
+
+        <!-- RIGHT COLUMN -->
+        <div>
+            <!-- Active sessions -->
+            <section class="sec-section">
+                <h2 class="sec-heading">Active sessions</h2>
+                <p class="sec-subheading">Review recent actions on your account</p>
+                <div class="session-list">
+                    <div class="session-card">
+                        <div class="session-left">
+                            <div class="session-icon"><img src="~/images/iconsPF/monitor.png" alt="desktop" /></div>
+                            <div>
+                                <div class="session-name">MacBook Pro <span class="session-badge">Active now</span></div>
+                                <div class="session-meta">Vienna, Austria</div>
+                            </div>
+                        </div>
+                        <button class="btn-signout">Sign out</button>
+                    </div>
+                    <div class="session-card">
+                        <div class="session-left">
+                            <div class="session-icon"><img src="~/images/iconsPF/smartphone.png" alt="phone" /></div>
+                            <div>
+                                <div class="session-name">iPhone 17 Pro Max</div>
+                                <div class="session-meta">Vienna, Austria · 2 hours ago</div>
+                            </div>
+                        </div>
+                        <button class="btn-signout">Sign out</button>
+                    </div>
+                    <div class="session-card">
+                        <div class="session-left">
+                            <div class="session-icon"><img src="~/images/iconsPF/tablet.png" alt="tablet" /></div>
+                            <div>
+                                <div class="session-name">iPad Pro</div>
+                                <div class="session-meta">London, UK · 1 day ago</div>
+                            </div>
+                        </div>
+                        <button class="btn-signout">Sign out</button>
+                    </div>
+                </div>
+                <button class="btn-signout-all">Sign out from all devices</button>
+            </section>
+
+            <!-- Two-factor authentication -->
+            <section class="sec-section">
+                <div class="tfa-card">
+                    <div class="tfa-header">
+                        <span class="tfa-title">Two-factor authentication</span>
+                        <label class="toggle">
+                            <input type="checkbox" id="tfaToggle" checked />
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <p class="tfa-desc">Add an extra layer of security</p>
+                    <div class="tfa-methods" id="tfaMethods">
+                        <label class="tfa-method"><input type="radio" name="tfa" value="email" checked /> Email verification</label>
+                        <label class="tfa-method"><input type="radio" name="tfa" value="app" /> Authenticator app</label>
+                    </div>
+                    <p class="tfa-hint">You'll be asked for a verification code when signing in from a new device</p>
+                </div>
+            </section>
+        </div>
+
+    </div>
+
+    @section Scripts {
+        <script>
+            // Toggle change-password form
+            const togglePwd = document.getElementById('toggleChangePassword');
+            const pwdForm   = document.getElementById('changePasswordForm');
+            const cancelPwd = document.getElementById('cancelPasswordBtn');
+            const newPass   = document.getElementById('newPass');
+            const confirmPass = document.getElementById('confirmPass');
+            const passHint  = document.getElementById('passMatchHint');
+
+            togglePwd.addEventListener('click', () => {
+                const open = pwdForm.style.display === 'block';
+                pwdForm.style.display = open ? 'none' : 'block';
+                togglePwd.textContent = open ? 'Change password' : 'Cancel';
+            });
+            cancelPwd.addEventListener('click', () => {
+                pwdForm.style.display = 'none';
+                togglePwd.textContent = 'Change password';
+            });
+            [newPass, confirmPass].forEach(el => el.addEventListener('input', () => {
+                passHint.style.display = confirmPass.value && newPass.value !== confirmPass.value ? 'block' : 'none';
+            }));
+
+            // Toggle change-email form
+            const toggleEmail  = document.getElementById('toggleChangeEmail');
+            const emailForm    = document.getElementById('changeEmailForm');
+            const cancelEmail  = document.getElementById('cancelEmailBtn');
+
+            toggleEmail.addEventListener('click', () => {
+                const open = emailForm.style.display === 'block';
+                emailForm.style.display = open ? 'none' : 'block';
+                toggleEmail.textContent = open ? 'Change email' : 'Cancel';
+            });
+            cancelEmail.addEventListener('click', () => {
+                emailForm.style.display = 'none';
+                toggleEmail.textContent = 'Change email';
+            });
+
+            // 2FA toggle
+            const tfaToggle  = document.getElementById('tfaToggle');
+            const tfaMethods = document.getElementById('tfaMethods');
+            tfaToggle.addEventListener('change', () => {
+                tfaMethods.style.opacity = tfaToggle.checked ? '1' : '0.35';
+                tfaMethods.querySelectorAll('input').forEach(r => r.disabled = !tfaToggle.checked);
+            });
+        </script>
+    }
+}
+else
+{
+    <p style="text-align:center;margin-top:60px">
+        You must be logged in.
+        <a asp-controller="Account" asp-action="Entry">Sign in</a>
+    </p>
+}
