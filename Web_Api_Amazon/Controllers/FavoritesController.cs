@@ -25,43 +25,40 @@ public class FavoritesController : Controller
     [HttpGet]
     public async Task<IActionResult> Index()
     {
+        ViewData["ActivePage"] = "Favorites";
+
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        List<int> productIds;
 
         if (!string.IsNullOrWhiteSpace(userId))
         {
             await MergeLocalFavoritesIntoUserAsync(userId);
-            var userFavorites = await _favoritesService.GetFavoritesAsync(userId);
-            return View(userFavorites.Select(MapToViewModel).ToList());
-        }
 
-        var localFavoriteIds = GetLocalFavorites();
-        if (localFavoriteIds.Count == 0)
+            productIds = (await _favoritesService.GetFavoritesAsync(userId))
+                .Select(x => x.ProductId)
+                .ToList();
+        }
+        else
         {
-            return View(Array.Empty<ProductCardViewModel>());
+            productIds = GetLocalFavorites();
         }
 
-        var favorites = await _context.Products
-            .Where(p => localFavoriteIds.Contains(p.Id))
+        if (!productIds.Any())
+        {
+            return View("~/Views/Profile/Favourites.cshtml",
+                new List<Web_Api_Amazon.Entities.Product>());
+        }
+
+        var products = await _context.Products
+            .Where(p => productIds.Contains(p.Id))
+            .Include(p => p.Category)
             .Include(p => p.Images)
             .Include(p => p.Variants)
             .AsNoTracking()
             .ToListAsync();
 
-        var mapped = favorites
-            .Select(product => new ProductCardViewModel
-            {
-                ProductId = product.Id,
-                Name = product.Name,
-                Description = product.Description,
-                ImageUrl = product.Images.OrderBy(i => i.SortOrder).FirstOrDefault()?.ImageUrl ?? product.ImageUrl,
-                Price = (decimal)product.Price,
-                InStock = product.Variants.Sum(v => v.Quantity) > 0 || !product.Variants.Any(),
-                Rating = 4.2 + ((product.Id % 7) * 0.1)
-            })
-            .OrderBy(p => p.Name)
-            .ToList();
-
-        return View(mapped);
+        return View("~/Views/Profile/Favourites.cshtml", products);
     }
 
     [HttpPost]

@@ -1,0 +1,23 @@
+﻿@model List<Web_Api_Amazon.Entities.Product>
+
+@{
+    ViewData["Title"] = "Favourites";
+    ViewData["ActivePage"] = "Favorites";
+    Layout = "_ProfileLayout";
+}
+
+<h2 class="page-title">My Favourites</h2>
+
+@if (!Model.Any())
+{
+    <p>You don’t have any favourites yet.</p>
+}
+else
+{
+    <div class="products-grid">
+        @foreach (var item in Model)
+        {
+            @await Html.PartialAsync("_ProductCard", item)
+        }
+    </div>
+}

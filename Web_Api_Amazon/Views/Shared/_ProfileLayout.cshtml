@@ -71,7 +71,8 @@
                         <img src="~/images/iconsPF/trending-up.png" class="nav-icon" alt="Activity" />
                         Activity
                     </a>
-                    <a href="#" class="nav-item">
+                    <a asp-controller="Favorites" asp-action="Index"
+                       class="nav-item @(ViewData["ActivePage"]?.ToString() == "Favorites" ? "active" : "")">
                         <img src="~/images/iconsPF/heart.png" class="nav-icon" alt="Favorites" />
                         Favorites
                     </a>
