@@ -1,0 +1,256 @@
+﻿@using System.Globalization
+@model Web_Api_Amazon.Models.CheckoutViewModel
+@{
+    ViewData["Title"] = "Payment";
+}
+
+@functions {
+    private static string FormatUsd(decimal amount) => $"${amount.ToString("0.00", CultureInfo.InvariantCulture)}";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/checkout.css" asp-append-version="true" />
+}
+
+<div class="checkout-page">
+    <div class="checkout-steps-wrapper">
+        <div class="checkout-steps" aria-label="Checkout progress">
+            <div class="step is-completed">
+                <span class="dot">
+                    <svg width="12" height="10" viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                </span>
+                <span class="step-text">Shipping</span>
+            </div>
+            <div class="line is-completed"></div>
+
+            <div class="step is-active">
+                <span class="dot"></span>
+                <span class="step-text">Payment</span>
+            </div>
+            <div class="line"></div>
+
+            <div class="step">
+                <span class="dot"></span>
+                <span class="step-text">Complete</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="checkout-grid">
+        <main>
+            <form asp-action="ProcessPayment" method="post" class="checkout-form" id="paymentForm">
+                @Html.AntiForgeryToken()
+
+                <section class="checkout-card">
+                    <h3>Payment method</h3>
+
+                    <div class="payment-accordion">
+                        <label class="payment-option is-active" id="cc-option">
+                            <div class="payment-option-header">
+                                <input type="radio" name="PaymentMethod" value="CreditCard" checked />
+                                <span class="payment-title">Credit/debit card</span>
+                            </div>
+                            <div class="payment-option-body">
+                                <div class="grid-1">
+                                    <div>
+                                        <label for="CardNumber">Card number *</label>
+                                        <div class="input-with-icon">
+                                            <input type="text" id="CardNumber" name="CardNumber" placeholder="0000 0000 0000 0000" required />
+                                            <svg class="input-icon" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M14.1667 8.33333H5.83333C4.91286 8.33333 4.16667 9.07953 4.16667 10V15.8333C4.16667 16.7538 4.91286 17.5 5.83333 17.5H14.1667C15.0871 17.5 15.8333 16.7538 15.8333 15.8333V10C15.8333 9.07953 15.0871 8.33333 14.1667 8.33333Z" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M6.66667 8.33333V5.83333C6.66667 4.94928 7.01786 4.10143 7.64303 3.47631C8.2682 2.85119 9.11605 2.5 10 2.5C10.8839 2.5 11.7318 2.85119 12.357 3.47631C12.9821 4.10143 13.3333 4.94928 13.3333 5.83333V8.33333" stroke="#6B7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grid-2">
+                                    <div>
+                                        <label for="ExpiryDate">Expiration date *</label>
+                                        <input type="text" id="ExpiryDate" name="ExpiryDate" placeholder="MM / YY" required />
+                                    </div>
+                                    <div>
+                                        <label for="CVC">CVC *</label>
+                                        <input type="text" id="CVC" name="CVC" placeholder="000" required />
+                                    </div>
+                                </div>
+                                <div class="grid-1">
+                                    <div>
+                                        <label for="NameOnCard">Name on card *</label>
+                                        <input type="text" id="NameOnCard" name="NameOnCard" placeholder="First & Last name" required />
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+
+                        <label class="payment-option" id="paypal-option">
+                            <div class="payment-option-header">
+                                <input type="radio" name="PaymentMethod" value="PayPal" />
+                                <span class="payment-title">PayPal</span>
+                            </div>
+                        </label>
+
+                        <label class="payment-option" id="applepay-option">
+                            <div class="payment-option-header">
+                                <input type="radio" name="PaymentMethod" value="ApplePay" />
+                                <span class="payment-title">Apple Pay</span>
+                            </div>
+                        </label>
+                    </div>
+                </section>
+
+                <section class="checkout-card promo-card">
+                    <h3>Promo code</h3>
+                    <div class="promo-input-wrapper">
+                        <input type="text" id="PromoCode" placeholder="Enter promo code" class="promo-input" />
+                        <button type="button" class="promo-apply-btn">Apply</button>
+                    </div>
+                </section>
+
+                <button class="checkout-btn disabled" type="submit" disabled id="confirmPaymentBtn">
+                    Confirm payment
+                </button>
+                <p class="terms-note">
+                    By continuing, I confirm that I have read and accept the <a href="#">Terms and Conditions</a> and the <a href="#">Privacy Policy</a>
+                </p>
+            </form>
+        </main>
+
+        <aside class="summary-sidebar">
+            <div class="summary-card">
+                <h3>Order summary</h3>
+
+                <div class="summary-items">
+                    @foreach (var item in Model.Items)
+                    {
+                        <div class="summary-row">
+                            <span>@item.Name</span>
+                            <span>@FormatUsd(item.Total)</span>
+                        </div>
+                    }
+                </div>
+
+                <hr class="summary-divider" />
+
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span>@FormatUsd(Model.Subtotal)</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping:</span>
+                    <span>@FormatUsd(Model.ShippingCost)</span>
+                </div>
+
+                <div class="summary-row total">
+                    <span>Total:</span>
+                    <strong>@FormatUsd(Model.Total)</strong>
+                </div>
+
+                <hr class="summary-divider" />
+
+                <label class="checkbox-line gift-checkbox">
+                    <input type="checkbox" @(Model.IncludeGift ? "checked" : "") disabled />
+                    <div class="gift-text">
+                        <span>Order includes a gift</span>
+                        <small>Add gift message at checkout</small>
+                    </div>
+                </label>
+            </div>
+        </aside>
+    </div>
+
+    <div id="successModalOverlay" class="modal-overlay">
+        <div class="modal-content">
+            <button type="button" class="modal-close" id="closeModalBtn" aria-label="Close modal">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13 1L1 13M1 1L13 13" stroke="#111827" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </button>
+            <div class="modal-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5 13L9 17L19 7" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </div>
+            <h3>Payment succeeded!</h3>
+            <p>Your transaction was completed successfully. Receipt was sent to your email.</p>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // --- 1. Payment Method Accordion Logic ---
+        const paymentOptions = document.querySelectorAll('.payment-option');
+        const paymentRadios = document.querySelectorAll('input[name="PaymentMethod"]');
+        const ccInputs = document.querySelectorAll('.payment-option-body input');
+
+        function updatePaymentStyles() {
+            paymentOptions.forEach(option => {
+                const radio = option.querySelector('input[type="radio"]');
+                if (radio.checked) {
+                    option.classList.add('is-active');
+                    if(radio.value === 'CreditCard') {
+                        ccInputs.forEach(input => input.setAttribute('required', 'required'));
+                    } else {
+                        ccInputs.forEach(input => input.removeAttribute('required'));
+                    }
+                } else {
+                    option.classList.remove('is-active');
+                }
+            });
+            checkFormValidity();
+        }
+
+        paymentRadios.forEach(radio => {
+            radio.addEventListener('change', updatePaymentStyles);
+        });
+
+        // --- 2. Form Validation for Button State ---
+        const confirmBtn = document.getElementById('confirmPaymentBtn');
+
+        function checkFormValidity() {
+            let isValid = true;
+            const selectedMethod = document.querySelector('input[name="PaymentMethod"]:checked').value;
+
+            if (selectedMethod === 'CreditCard') {
+                ccInputs.forEach(input => {
+                    if (input.required && input.value.trim() === '') {
+                        isValid = false;
+                    }
+                });
+            } else {
+                isValid = true;
+            }
+
+            if (isValid) {
+                confirmBtn.classList.remove('disabled');
+                confirmBtn.removeAttribute('disabled');
+            } else {
+                confirmBtn.classList.add('disabled');
+                confirmBtn.setAttribute('disabled', 'disabled');
+            }
+        }
+
+        ccInputs.forEach(input => {
+            input.addEventListener('input', checkFormValidity);
+        });
+
+        updatePaymentStyles();
+
+        // --- 3. Modal Intercept & Redirect Logic ---
+        const paymentForm = document.getElementById('paymentForm');
+        const modalOverlay = document.getElementById('successModalOverlay');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+
+        paymentForm.addEventListener('submit', function(e) {
+            e.preventDefault(); // Stop standard form submission
+            modalOverlay.classList.add('is-visible'); // Show success modal
+        });
+
+        closeModalBtn.addEventListener('click', function() {
+            // Unbind the preventDefault listener so it submits properly
+            paymentForm.submit();
+        });
+    </script>
+}

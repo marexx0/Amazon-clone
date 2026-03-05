@@ -1,0 +1,301 @@
+﻿@using System.Globalization
+@model Web_Api_Amazon.Models.CheckoutViewModel
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+@functions {
+    private static string FormatUsd(decimal amount) => $"${amount.ToString("0.00", CultureInfo.InvariantCulture)}";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/checkout.css" asp-append-version="true" />
+}
+
+<div class="checkout-page">
+    <div class="checkout-steps-wrapper">
+        <div class="checkout-steps" aria-label="Checkout progress">
+            <div class="step is-active">
+                <span class="dot"></span>
+                <span class="step-text">Shipping</span>
+            </div>
+            <div class="line"></div>
+            <div class="step">
+                <span class="dot"></span>
+                <span class="step-text">Payment</span>
+            </div>
+            <div class="line"></div>
+            <div class="step">
+                <span class="dot"></span>
+                <span class="step-text">Complete</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="checkout-grid">
+        <main>
+            @if (!Model.IsSignedIn)
+            {
+                <section class="checkout-card signin-card">
+                    <div>
+                        <h2>Sign in for a faster checkout</h2>
+                        <p>We’ll autofill your details, saved addresses, and payment methods.</p>
+                    </div>
+                    <a class="signin-btn" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("Checkout", "Orders")">Sign In</a>
+                </section>
+            }
+            else
+            {
+                <div class="checkout-card welcome-card">
+                    <div class="welcome-header">
+                        <h2>Welcome back, @Model.FirstName</h2>
+                        <a href="#" class="switch-account">Switch account</a>
+                    </div>
+                    <p>You’re checking out with your saved details.</p>
+                </div>
+            }
+
+            <form asp-action="Payment" method="post" class="checkout-form">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input asp-for="IncludeGift" type="hidden" id="includeGiftHidden" />
+
+                <section class="checkout-card">
+                    <div class="checkout-head">
+                        <h3>Customer info</h3>
+                        <span class="required-text">* Required</span>
+                    </div>
+                    <div class="grid-2">
+                        <div>
+                            <label asp-for="FirstName">First name *</label>
+                            <input asp-for="FirstName" placeholder="Enter your first name" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                        <div>
+                            <label asp-for="LastName">Last name *</label>
+                            <input asp-for="LastName" placeholder="Enter your last name" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                        <div>
+                            <label asp-for="Email">Email *</label>
+                            <input asp-for="Email" placeholder="example@gmail.com" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div>
+                            <label asp-for="PhoneNumber">Phone number *</label>
+                            <div class="phone-input">
+                                <div class="phone-prefix">
+                                    <span class="flag">🇺🇸</span>
+                                    <span>+1</span>
+                                    <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M1 1L5 5L9 1" stroke="#111827" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                                <input asp-for="PhoneNumber" placeholder="(123) 456-7890" />
+                            </div>
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="checkout-card">
+                    <div class="checkout-head">
+                        <h3>Shipping address</h3>
+                        <span class="required-text">* Required</span>
+                    </div>
+                    <div class="grid-1">
+                        <div>
+                            <label asp-for="Country">Country *</label>
+                            <select asp-for="Country">
+                                <option value="" disabled selected>Select country</option>
+                                <option value="US">United States</option>
+                                <option value="CA">Canada</option>
+                                <option value="UK">United Kingdom</option>
+                            </select>
+                            <span asp-validation-for="Country" class="text-danger"></span>
+                        </div>
+                        <div>
+                            <label asp-for="AddressLine1">Street address *</label>
+                            <input asp-for="AddressLine1" placeholder="House number and street name" />
+                            <span asp-validation-for="AddressLine1" class="text-danger"></span>
+                        </div>
+                        <div>
+                            <input asp-for="AddressLine2" placeholder="Apartment, suite, unit, etc. (optional)" />
+                        </div>
+                    </div>
+                    <div class="grid-3">
+                        <div>
+                            <label asp-for="City">City *</label>
+                            <select asp-for="City">
+                                <option value="" disabled selected>Select city</option>
+                                <option value="Austin">Austin</option>
+                                <option value="New York">New York</option>
+                            </select>
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
+                        <div>
+                            <label asp-for="State">State/Province *</label>
+                            <select asp-for="State">
+                                <option value="" disabled selected>Select state/province</option>
+                                <option value="Texas">Texas</option>
+                                <option value="New York">New York</option>
+                            </select>
+                            <span asp-validation-for="State" class="text-danger"></span>
+                        </div>
+                        <div>
+                            <label asp-for="PostalCode">Zip/Postal code *</label>
+                            <input asp-for="PostalCode" placeholder="Enter postal code" />
+                            <span asp-validation-for="PostalCode" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <label class="checkbox-line">
+                        <input type="checkbox" asp-for="SaveForFutureOrders" />
+                        <span>Save this address for future orders</span>
+                    </label>
+                </section>
+
+                <section class="checkout-card">
+                    <h3>Shipping method</h3>
+                    <label class="radio-card">
+                        <input type="radio" asp-for="ShippingMethod" value="Standard" checked />
+                        <div class="radio-content">
+                            <span class="radio-title">Standard Delivery</span>
+                            <small>Estimated delivery: 5–7 days</small>
+                        </div>
+                        <strong class="radio-price">FREE</strong>
+                    </label>
+                    <label class="radio-card">
+                        <input type="radio" asp-for="ShippingMethod" value="Express" />
+                        <div class="radio-content">
+                            <span class="radio-title">Express Delivery</span>
+                            <small>Estimated delivery: 2–3 days</small>
+                        </div>
+                        <strong class="radio-price">$9.99</strong>
+                    </label>
+
+                    <p class="shipping-note">
+                        Delivery times are estimates and may vary depending on location and carrier availability.<br />
+                        You will receive a tracking link once your order is shipped.
+                    </p>
+                </section>
+
+                <button class="checkout-btn @(Model.IsSignedIn ? "" : "disabled")" type="submit" @(Model.IsSignedIn ? "" : "disabled")>
+                    Continue to payment
+                </button>
+                <p class="terms-note">
+                    By continuing, I confirm that I have read and accept the <a href="#">Terms and Conditions</a> and the <a href="#">Privacy Policy</a>
+                </p>
+            </form>
+        </main>
+
+        <aside>
+            <div class="checkout-card summary-card">
+                <h3>Order summary</h3>
+
+                <div class="summary-items">
+                    @foreach (var item in Model.Items)
+                    {
+                        <div class="summary-row">
+                            <span>@item.Name</span>
+                            <span>@FormatUsd(item.Total)</span>
+                        </div>
+                    }
+                </div>
+
+                <hr class="summary-divider" />
+
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span id="summary-subtotal" data-value="@Model.Subtotal.ToString(CultureInfo.InvariantCulture)">@FormatUsd(Model.Subtotal)</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping:</span>
+                    <span id="summary-shipping">@FormatUsd(Model.ShippingCost)</span>
+                </div>
+
+                <div class="summary-row total">
+                    <strong>Total:</strong>
+                    <strong id="summary-total">@FormatUsd(Model.Total)</strong>
+                </div>
+
+                <hr class="summary-divider" />
+
+                <label class="checkbox-line gift-checkbox">
+                    <input id="includeGiftCheckbox" type="checkbox" />
+                    <div class="gift-text">
+                        <span>Order includes a gift</span>
+                        <small>Add gift message at checkout</small>
+                    </div>
+                </label>
+            </div>
+        </aside>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // --- 1. Gift Checkbox Sync ---
+        document.getElementById('includeGiftCheckbox')?.addEventListener('change', function () {
+            const hidden = document.getElementById('includeGiftHidden');
+            if (hidden) hidden.value = this.checked ? 'true' : 'false';
+        });
+
+        // --- 2. Dynamic Shipping & Total Calculation ---
+        const shippingRadios = document.querySelectorAll('input[name="ShippingMethod"]');
+        const summaryShipping = document.getElementById('summary-shipping');
+        const summaryTotal = document.getElementById('summary-total');
+        const subtotalElement = document.getElementById('summary-subtotal');
+
+        if (shippingRadios.length > 0 && summaryShipping && summaryTotal && subtotalElement) {
+            const baseSubtotal = parseFloat(subtotalElement.getAttribute('data-value')) || 0;
+            const expressCost = 9.99;
+            const formatUsd = (amount) => '$' + amount.toFixed(2);
+
+            function updateShippingTotals() {
+                const checkedRadio = document.querySelector('input[name="ShippingMethod"]:checked');
+                let currentShipping = checkedRadio && checkedRadio.value === 'Express' ? expressCost : 0;
+
+                summaryShipping.textContent = formatUsd(currentShipping);
+                summaryTotal.textContent = formatUsd(baseSubtotal + currentShipping);
+            }
+
+            shippingRadios.forEach(radio => radio.addEventListener('change', updateShippingTotals));
+            updateShippingTotals();
+        }
+
+        // --- 3. Strict Form Validation for Button State ---
+        const checkoutBtn = document.querySelector('.checkout-btn');
+
+        const requiredFieldIds = [
+            'FirstName', 'LastName', 'Email', 'PhoneNumber',
+            'Country', 'AddressLine1', 'City', 'State', 'PostalCode'
+        ];
+
+        function checkFormValidity() {
+            let isValid = true;
+
+            requiredFieldIds.forEach(id => {
+                const field = document.getElementById(id);
+                if (field && field.value.trim() === '') {
+                    isValid = false;
+                }
+            });
+
+            if (isValid) {
+                checkoutBtn.classList.remove('disabled');
+                checkoutBtn.removeAttribute('disabled');
+            } else {
+                checkoutBtn.classList.add('disabled');
+                checkoutBtn.setAttribute('disabled', 'disabled');
+            }
+        }
+
+        document.querySelectorAll('.checkout-form input, .checkout-form select').forEach(input => {
+            input.addEventListener('input', checkFormValidity);
+            input.addEventListener('change', checkFormValidity);
+        });
+
+        checkFormValidity();
+    </script>
+}
