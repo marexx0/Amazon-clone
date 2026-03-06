@@ -236,16 +236,7 @@ else
             clothingProducts = clothingProducts.Take(12).ToList();
         }
         <!-- Colection-->
-       @*  <section class="collection">
-            <h2>Shop Collection</h2>
-
-            <div class="products-grid">
-                @foreach (var product in clothingProducts)
-                {
-                    <partial name="_ProductCard" model="product" />
-                }
-            </div>
-        </section> *@
+      
         @{
             var selectedCategories = new List<int> { 6, 7, 9 };
 

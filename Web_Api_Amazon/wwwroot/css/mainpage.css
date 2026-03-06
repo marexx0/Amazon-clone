@@ -318,10 +318,14 @@ h2 {
 }
 
     .shop-collection .collection-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 220px);
+        
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 900px;
+        margin: 0 auto;
+        display: flex;
         justify-content: center;
-        gap: 40px;
+        align-items: flex-end;
+        gap: 60px;
     }
 
 .category-card {
@@ -329,6 +333,9 @@ h2 {
     text-decoration: none;
     color: #0D1B34;
     transition: transform 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
     .category-card:hover {
@@ -336,11 +343,25 @@ h2 {
     }
 
     .category-card img {
-        width: 220px;
-        height: 180px;
-        object-fit: cover;
+       
         border-radius: 12px;
-        display: block;
+        background: #F5F7FA;
+        padding: 20px;
+        width: 320px;
+        height: 320px;
+        object-fit: contain;
+        transition: transform 0.3s;
+    }
+    .category-card:nth-child(1) img {
+        margin-top: 20px;
+    }
+
+    .category-card:nth-child(2) img {
+        margin-top: 0;
+    }
+
+    .category-card:nth-child(3) img {
+        margin-top: 40px;
     }
 
 .category-name {
@@ -356,5 +377,14 @@ h2 {
     cursor: pointer;
     
 }
+
+/* SHOP COLLECTION */
+
+
+
+
+
+
+   
 
    
