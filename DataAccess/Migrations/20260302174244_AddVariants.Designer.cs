@@ -4,6 +4,7 @@ using Amazon_clone.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ShopDbContext))]
-    partial class ShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260302174244_AddVariants")]
+    partial class AddVariants
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2179,41 +2182,6 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("PaymentCardExpiry")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentCardLast4")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentCardholderName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentMethod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShippingAddressLine1")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShippingAddressLine2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShippingCity")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShippingCountry")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShippingMethod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShippingPostalCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShippingState")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -2432,9 +2400,9 @@ namespace DataAccess.Migrations
                         new
                         {
                             Id = 27,
-                            ContentType = "image/png",
-                            FileName = "levis_501.png",
-                            ImageUrl = "/images/products/levis_501.png",
+                            ContentType = "image/jfif",
+                            FileName = "levis501.jfif",
+                            ImageUrl = "/images/products/levis501.jfif",
                             IsPrimary = true,
                             ProductId = 23,
                             SortOrder = 0
@@ -5120,7 +5088,7 @@ namespace DataAccess.Migrations
                             Id = 23,
                             CategoryId = 6,
                             Description = "Iconic straight-leg men's jeans made with non-stretch denim and button fly construction for a timeless everyday fit.",
-                            ImageUrl = "/images/products/levis_501.png",
+                            ImageUrl = "/images/products/levis_501.jpg",
                             Name = "Levi's 501 Original Fit Jeans",
                             Price = 59.5
                         },
@@ -5138,7 +5106,7 @@ namespace DataAccess.Migrations
                             Id = 25,
                             CategoryId = 8,
                             Description = "Compact aluminum ultrabook featuring a 13.4-inch InfinityEdge display, 13th Gen Intel Core processor, 16GB RAM and fast 512GB SSD.",
-                            ImageUrl = "/images/products/dell_xps_13_plus.png",
+                            ImageUrl = "/images/products/dell_xps_13_plus.jpg",
                             Name = "Dell XPS 13 Plus Laptop (13th Gen Intel, 16GB, 512GB)",
                             Price = 1399.99
                         },
@@ -5147,7 +5115,7 @@ namespace DataAccess.Migrations
                             Id = 26,
                             CategoryId = 9,
                             Description = "Google flagship phone with advanced AI camera tools, 6.7-inch Super Actua display and all-day battery life.",
-                            ImageUrl = "/images/products/pixel_8_pro.png",
+                            ImageUrl = "/images/products/pixel_8_pro.jpg",
                             Name = "Google Pixel 8 Pro Unlocked Smartphone",
                             Price = 999.0
                         },
@@ -5165,7 +5133,7 @@ namespace DataAccess.Migrations
                             Id = 28,
                             CategoryId = 11,
                             Description = "Full-frame mirrorless camera with dual EXPEED 6 processors, robust autofocus, and strong low-light image quality.",
-                            ImageUrl = "/images/products/nikon_z6_ii.png",
+                            ImageUrl = "/images/products/nikon_z6_ii.jpg",
                             Name = "Nikon Z6 II Mirrorless Camera Body",
                             Price = 1996.95
                         },
@@ -5174,7 +5142,7 @@ namespace DataAccess.Migrations
                             Id = 29,
                             CategoryId = 12,
                             Description = "Microsoft's most powerful Xbox with 1TB SSD, 4K gaming support, and quick resume across multiple games.",
-                            ImageUrl = "/images/products/xbox_series_x.png",
+                            ImageUrl = "/images/products/xbox_series_x.jpg",
                             Name = "Xbox Series X Console",
                             Price = 499.99000000000001
                         },
@@ -5183,7 +5151,7 @@ namespace DataAccess.Migrations
                             Id = 30,
                             CategoryId = 14,
                             Description = "Minimalist bedroom dresser with six smooth-glide drawers and a clean Scandinavian profile suitable for modern spaces.",
-                            ImageUrl = "/images/products/malm_dresser.png",
+                            ImageUrl = "/images/products/malm_dresser.jpg",
                             Name = "IKEA MALM 6-Drawer Dresser",
                             Price = 279.0
                         },
@@ -5192,7 +5160,7 @@ namespace DataAccess.Migrations
                             Id = 31,
                             CategoryId = 17,
                             Description = "Compact cordless drill/driver kit with two-speed transmission, 12V lithium-ion batteries, and durable carrying case.",
-                            ImageUrl = "/images/products/bosch_12v_drill.png",
+                            ImageUrl = "/images/products/bosch_12v_drill.jpg",
                             Name = "Bosch 12V Max Cordless Drill Driver Kit",
                             Price = 129.0
                         },
@@ -5201,7 +5169,7 @@ namespace DataAccess.Migrations
                             Id = 32,
                             CategoryId = 21,
                             Description = "Creative building set with mixed LEGO bricks, wheels, and windows designed to inspire open-ended play for kids.",
-                            ImageUrl = "/images/products/lego_10696.png",
+                            ImageUrl = "/images/products/lego_10696.jpg",
                             Name = "LEGO Classic Medium Creative Brick Box 10696",
                             Price = 29.989999999999998
                         });

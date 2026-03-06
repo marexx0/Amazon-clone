@@ -1,4 +1,3 @@
-using Azure.Core;
 using Amazon_clone.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
@@ -35,6 +34,7 @@ public class ProfileController : Controller
         ViewBag.CurrentToken = "current";
         return View();
     }
+
     public IActionResult Index()
     {
         ViewData["ActivePage"] = "Profile";
@@ -60,20 +60,94 @@ public class ProfileController : Controller
 
         var model = new ProfileOrdersViewModel
         {
-            Orders = orders.Select(order => new ProfileOrderCardViewModel
+            Orders = orders.Select(order =>
             {
-                OrderId = order.Id,
-                OrderDate = order.OrderDate,
-                EstimatedDeliveryDate = order.OrderDate.AddDays(order.Status == OrderStatus.Shipped ? 7 : 7),
-                Total = order.OrderItems.Sum(item => (decimal)item.Price * item.Quantity),
-                Status = order.Status,
-                PreviewImageUrl= order.OrderItems
-                    .Select(item => item.Product?.ImageUrl)
-                    .FirstOrDefault(url => !string.IsNullOrWhiteSpace(url))
+                var items = order.OrderItems
+                    .Where(item => item.Product is not null)
+                    .Select(item => new ProfileOrderItemViewModel
+                    {
+                        Name = item.Product!.Name,
+                        Description = string.IsNullOrWhiteSpace(item.Product.Description)
+                            ? "Product details"
+                            : item.Product.Description,
+                        ImageUrl = item.Product.ImageUrl,
+                        Quantity = item.Quantity,
+                        UnitPrice = (decimal)item.Price
+                    })
+                    .ToList();
+
+                var subtotal = order.OrderItems.Sum(item => (decimal)item.Price * item.Quantity);
+
+                return new ProfileOrderCardViewModel
+                {
+                    OrderId = order.Id,
+                    OrderDate = order.OrderDate,
+                    EstimatedDeliveryDate = order.OrderDate.AddDays(7),
+                    Subtotal = subtotal,
+                    Shipping = string.Equals(order.ShippingMethod, "Express", StringComparison.OrdinalIgnoreCase) ? 9.99m : 0m,
+                    Tax = 0m,
+                    Status = order.Status,
+                    Items = items,
+                    DeliveryTitle = BuildDeliveryTitle(order),
+                    DeliveryAddress = BuildDeliveryAddress(order),
+                    PaymentMethodTitle = BuildPaymentTitle(order),
+                    PaymentMethodSubtitle = BuildPaymentSubtitle(order),
+                    PreviewImageUrls = order.OrderItems
+                        .Select(item => item.Product?.ImageUrl)
+                        .Where(url => !string.IsNullOrWhiteSpace(url))
+                        .Cast<string>()
+                        .Take(3)
+                        .ToList()
+                };
             }).ToList()
         };
 
         ViewData["ActivePage"] = "Orders";
         return View(model);
+    }
+
+    private static string BuildPaymentTitle(Order order)
+    {
+        return order.PaymentMethod switch
+        {
+            "PayPal" => "PayPal",
+            "ApplePay" => "Apple Pay",
+            _ => "Line card"
+        };
+    }
+
+    private static string BuildPaymentSubtitle(Order order)
+    {
+        return order.PaymentMethod switch
+        {
+            "PayPal" => "Paid with PayPal",
+            "ApplePay" => "Paid with Apple Pay",
+            _ => !string.IsNullOrWhiteSpace(order.PaymentCardLast4)
+                ? $"Visa ending in {order.PaymentCardLast4}, expires {order.PaymentCardExpiry ?? "--/--"}"
+                : "Visa ending in ----, expires --/--"
+        };
+    }
+
+    private static string BuildDeliveryTitle(Order order)
+    {
+        return string.Equals(order.ShippingMethod, "Express", StringComparison.OrdinalIgnoreCase)
+            ? "Express delivery"
+            : "Standard delivery";
+    }
+
+    private static string BuildDeliveryAddress(Order order)
+    {
+        var segments = new[]
+        {
+            order.ShippingCountry,
+            order.ShippingCity,
+            order.ShippingState,
+            order.ShippingPostalCode,
+            order.ShippingAddressLine1,
+            order.ShippingAddressLine2
+        };
+
+        var address = string.Join(", ", segments.Where(segment => !string.IsNullOrWhiteSpace(segment)));
+        return string.IsNullOrWhiteSpace(address) ? "Address not provided" : address;
     }
 }

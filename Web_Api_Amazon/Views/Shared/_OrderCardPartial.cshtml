@@ -1,6 +1,24 @@
 ﻿@model Web_Api_Amazon.Models.ProfileOrderCardViewModel
 
-<article class="order-card">
+<article class="order-card js-order-card"
+         role="button"
+         tabindex="0"
+         aria-label="Open details for order #@Model.OrderId"
+         data-order-id="@Model.OrderId"
+         data-order-subtotal="@Model.Subtotal.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+         data-order-shipping="@Model.Shipping.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+         data-order-tax="@Model.Tax.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+         data-order-total="@Model.Total.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+         data-order-location="@Model.Location"
+         data-order-date="@Model.OrderDate.ToLocalTime().ToString("MMM dd, HH:mm, yyyy", System.Globalization.CultureInfo.InvariantCulture)"
+         data-order-date-iso="@Model.OrderDate.ToString("o", System.Globalization.CultureInfo.InvariantCulture)"
+         data-order-status="@Model.StatusLabel"
+         data-order-estimated="@Model.EstimatedDeliveryDate.ToLocalTime().ToString("MMM dd", System.Globalization.CultureInfo.InvariantCulture)"
+         data-order-payment-title="@Model.PaymentMethodTitle"
+         data-order-payment-subtitle="@Model.PaymentMethodSubtitle"
+         data-order-delivery-title="@Model.DeliveryTitle"
+         data-order-delivery-address="@Model.DeliveryAddress"
+         data-order-items='@System.Text.Json.JsonSerializer.Serialize(Model.Items)'>
     <span class="order-card-paid">@Model.PaymentLabel</span>
 
     <div class="order-card-image-wrap">
@@ -14,7 +32,7 @@
         <div class="order-card-details">
             <p class="order-card-title">
                 <strong>Order #@Model.OrderId</strong>
-                <span class="order-card-total">Total @Model.Total.ToString("0.00")</span>
+                <span class="order-card-total">Total $@Model.Total.ToString("0.00")</span>
             </p>
             <p class="order-card-subtitle">
                 @Model.Location &nbsp; @Model.OrderDate.ToLocalTime().ToString("MMM dd") — @Model.EstimatedDeliveryDate.ToLocalTime().ToString("MMM dd")

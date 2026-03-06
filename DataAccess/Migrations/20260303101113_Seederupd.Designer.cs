@@ -4,6 +4,7 @@ using Amazon_clone.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ShopDbContext))]
-    partial class ShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260303101113_Seederupd")]
+    partial class Seederupd
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2179,41 +2182,6 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("PaymentCardExpiry")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentCardLast4")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentCardholderName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentMethod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShippingAddressLine1")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShippingAddressLine2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShippingCity")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShippingCountry")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShippingMethod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShippingPostalCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShippingState")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -4139,6 +4107,48 @@ namespace DataAccess.Migrations
                             Id = 40,
                             ProductId = 32,
                             Quantity = 17
+                        },
+                        new
+                        {
+                            Id = 51,
+                            ProductId = 22,
+                            Quantity = 8
+                        },
+                        new
+                        {
+                            Id = 52,
+                            ProductId = 22,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            Id = 53,
+                            ProductId = 22,
+                            Quantity = 6
+                        },
+                        new
+                        {
+                            Id = 54,
+                            ProductId = 22,
+                            Quantity = 5
+                        },
+                        new
+                        {
+                            Id = 55,
+                            ProductId = 22,
+                            Quantity = 4
+                        },
+                        new
+                        {
+                            Id = 56,
+                            ProductId = 24,
+                            Quantity = 7
+                        },
+                        new
+                        {
+                            Id = 57,
+                            ProductId = 3,
+                            Quantity = 4
                         });
                 });
 
@@ -4312,6 +4322,90 @@ namespace DataAccess.Migrations
                         },
                         new
                         {
+                            Id = 65,
+                            ProductVariantId = 41,
+                            PropertyDefinitionId = 3,
+                            Value = "44"
+                        },
+                        new
+                        {
+                            Id = 66,
+                            ProductVariantId = 41,
+                            PropertyDefinitionId = 2,
+                            Value = "White"
+                        },
+                        new
+                        {
+                            Id = 67,
+                            ProductVariantId = 42,
+                            PropertyDefinitionId = 3,
+                            Value = "45"
+                        },
+                        new
+                        {
+                            Id = 68,
+                            ProductVariantId = 42,
+                            PropertyDefinitionId = 2,
+                            Value = "White"
+                        },
+                        new
+                        {
+                            Id = 69,
+                            ProductVariantId = 43,
+                            PropertyDefinitionId = 3,
+                            Value = "46"
+                        },
+                        new
+                        {
+                            Id = 70,
+                            ProductVariantId = 43,
+                            PropertyDefinitionId = 2,
+                            Value = "White"
+                        },
+                        new
+                        {
+                            Id = 71,
+                            ProductVariantId = 44,
+                            PropertyDefinitionId = 3,
+                            Value = "44"
+                        },
+                        new
+                        {
+                            Id = 72,
+                            ProductVariantId = 44,
+                            PropertyDefinitionId = 2,
+                            Value = "Brown"
+                        },
+                        new
+                        {
+                            Id = 73,
+                            ProductVariantId = 45,
+                            PropertyDefinitionId = 3,
+                            Value = "45"
+                        },
+                        new
+                        {
+                            Id = 74,
+                            ProductVariantId = 45,
+                            PropertyDefinitionId = 2,
+                            Value = "Brown"
+                        },
+                        new
+                        {
+                            Id = 75,
+                            ProductVariantId = 46,
+                            PropertyDefinitionId = 3,
+                            Value = "46"
+                        },
+                        new
+                        {
+                            Id = 76,
+                            ProductVariantId = 46,
+                            PropertyDefinitionId = 2,
+                            Value = "Brown"
+                        },
+                        new
+                        {
                             Id = 21,
                             ProductVariantId = 11,
                             PropertyDefinitionId = 2,
@@ -4319,10 +4413,101 @@ namespace DataAccess.Migrations
                         },
                         new
                         {
+                            Id = 77,
+                            ProductVariantId = 11,
+                            PropertyDefinitionId = 26,
+                            Value = "8GB"
+                        },
+                        new
+                        {
+                            Id = 79,
+                            ProductVariantId = 11,
+                            PropertyDefinitionId = 26,
+                            Value = "16GB"
+                        },
+                        new
+                        {
+                            Id = 82,
+                            ProductVariantId = 11,
+                            PropertyDefinitionId = 25,
+                            Value = "256GB"
+                        },
+                        new
+                        {
+                            Id = 83,
+                            ProductVariantId = 11,
+                            PropertyDefinitionId = 25,
+                            Value = "512GB"
+                        },
+                        new
+                        {
                             Id = 22,
                             ProductVariantId = 12,
                             PropertyDefinitionId = 2,
                             Value = "Silver"
+                        },
+                        new
+                        {
+                            Id = 78,
+                            ProductVariantId = 12,
+                            PropertyDefinitionId = 26,
+                            Value = "8GB"
+                        },
+                        new
+                        {
+                            Id = 80,
+                            ProductVariantId = 12,
+                            PropertyDefinitionId = 26,
+                            Value = "16GB"
+                        },
+                        new
+                        {
+                            Id = 84,
+                            ProductVariantId = 12,
+                            PropertyDefinitionId = 25,
+                            Value = "256GB"
+                        },
+                        new
+                        {
+                            Id = 85,
+                            ProductVariantId = 12,
+                            PropertyDefinitionId = 25,
+                            Value = "512GB"
+                        },
+                        new
+                        {
+                            Id = 88,
+                            ProductVariantId = 47,
+                            PropertyDefinitionId = 2,
+                            Value = "Midnight"
+                        },
+                        new
+                        {
+                            Id = 89,
+                            ProductVariantId = 47,
+                            PropertyDefinitionId = 26,
+                            Value = "8GB"
+                        },
+                        new
+                        {
+                            Id = 81,
+                            ProductVariantId = 47,
+                            PropertyDefinitionId = 26,
+                            Value = "16GB"
+                        },
+                        new
+                        {
+                            Id = 86,
+                            ProductVariantId = 47,
+                            PropertyDefinitionId = 25,
+                            Value = "256GB"
+                        },
+                        new
+                        {
+                            Id = 87,
+                            ProductVariantId = 47,
+                            PropertyDefinitionId = 25,
+                            Value = "512GB"
                         },
                         new
                         {

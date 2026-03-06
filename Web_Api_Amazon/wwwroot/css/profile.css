@@ -852,7 +852,6 @@ body {
     font-size: 11px;
     margin: 0;
 }
-
 .order-card-status {
     background: #f3f5f9;
     color: #0D1B34;
@@ -860,4 +859,530 @@ body {
     padding: 6px 12px;
     font-size: 11px;
     font-weight: 700;
+}
+
+.order-card.js-order-card {
+    cursor: pointer;
+}
+
+    .order-card.js-order-card:focus-visible {
+        outline: 2px solid #0d1b34;
+        outline-offset: 2px;
+    }
+
+.orders-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(13, 27, 52, 0.45);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    z-index: 1000;
+}
+
+    .orders-overlay.open {
+        opacity: 1;
+    }
+
+.order-details-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: min(420px, 100vw);
+    height: 100vh;
+    background: #fff;
+    z-index: 1001;
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+    box-shadow: -4px 0 30px rgba(13, 27, 52, 0.15);
+    padding: 22px;
+    overflow-y: auto;
+}
+
+    .order-details-drawer.open {
+        transform: translateX(0);
+    }
+
+.order-details-close {
+    border: none;
+    background: transparent;
+    color: #7a869a;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+
+.order-details-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+    .order-details-head h2 {
+        font-size: 32px;
+        margin: 0;
+        line-height: 1;
+    }
+
+.order-details-paid {
+    background: #e9f8ed;
+    color: #2da149;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.order-details-meta {
+    margin: 0 0 18px;
+    color: #6b7280;
+    font-size: 12px;
+    display: flex;
+    gap: 10px;
+}
+
+.order-details-drawer h3 {
+    font-size: 24px;
+    margin: 18px 0 10px;
+}
+
+.order-details-summary-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.order-details-total {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #e5e7eb;
+    font-size: 18px;
+}
+
+.order-details-timeline-badge {
+    display: inline-block;
+    margin-bottom: 10px;
+    background: #e8f0ff;
+    color: #2255c5;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+}
+
+.order-details-timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 12px;
+    border-left: 3px solid #b8ea1b;
+}
+
+    .order-details-timeline li {
+        margin: 0 0 8px;
+        color: #374151;
+        font-size: 13px;
+    }
+
+body.drawer-open {
+    overflow: hidden;
+}
+
+.drawer-order-items {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.drawer-order-item {
+    display: grid;
+    grid-template-columns: 64px 1fr auto;
+    gap: 10px;
+    align-items: center;
+}
+
+.drawer-order-item-image {
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #e5e7eb;
+}
+
+.drawer-order-item-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.drawer-order-item-description {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 2px;
+}
+
+.drawer-order-item-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+    .drawer-order-item-meta span {
+        font-size: 11px;
+        background: #eef2f7;
+        color: #374151;
+        border-radius: 999px;
+        padding: 3px 8px;
+    }
+
+.drawer-order-item-price {
+    font-size: 14px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.order-details-info-box {
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+}
+
+.order-details-info-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.order-details-info-subtitle {
+    font-size: 12px;
+    color: #4b5563;
+    margin-top: 2px;
+}
+
+.order-details-help-text {
+    color: #6b7280;
+    font-size: 12px;
+    margin: 0 0 10px;
+}
+
+.order-details-link-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+    .order-details-link-list a {
+        color: #6b7280;
+        font-size: 13px;
+        text-decoration: none;
+    }
+
+        .order-details-link-list a:hover {
+            text-decoration: underline;
+        }
+
+.orders-filters {
+    position: relative;
+}
+
+.orders-date-range-popover {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: 260px;
+    border: 1px solid #dfe5ef;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 14px 32px rgba(13, 27, 52, 0.18);
+    padding: 14px;
+    z-index: 30;
+}
+
+    .orders-date-range-popover h4 {
+        margin: 0 0 10px;
+        font-size: 14px;
+        font-weight: 700;
+        color: #0D1B34;
+    }
+
+    .orders-date-range-popover label {
+        display: block;
+        font-size: 12px;
+        color: #6b7280;
+        margin: 8px 0 4px;
+    }
+
+    .orders-date-range-popover input {
+        width: 100%;
+        border: 1px solid #d8deea;
+        border-radius: 8px;
+        padding: 8px 10px;
+        font-size: 13px;
+        color: #0D1B34;
+        background: #fff;
+    }
+
+.orders-date-range-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.orders-date-range-cancel,
+.orders-date-range-submit {
+    border: none;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.orders-date-range-cancel {
+    background: #f3f5f9;
+    color: #6b7280;
+}
+
+.orders-date-range-submit {
+    background: #b8ea1b;
+    color: #0D1B34;
+}
+
+.orders-action-label {
+    margin-left: 2px;
+}
+
+.order-details-drawer[hidden],
+.orders-overlay[hidden] {
+    display: none !important;
+}
+
+.order-details-drawer {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    max-width: 420px;
+    width: min(420px, 100vw) !important;
+    height: 100vh !important;
+}
+
+.drawer-order-item {
+    grid-template-columns: 64px minmax(0, 1fr) auto;
+}
+.drawer-order-item-content {
+    min-width: 0;
+}
+
+.drawer-order-item-name {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+}
+
+.drawer-order-item-description {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+}
+
+.drawer-order-item-image {
+    width: 64px !important;
+    height: 64px !important;
+    min-width: 64px;
+    max-width: 64px !important;
+    max-height: 64px !important;
+    object-fit: cover !important;
+}
+
+.orders-filters {
+    position: relative;
+}
+
+.orders-date-range-popover {
+    position: absolute;
+    top: calc(100% + 12px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 290px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12), 0 0 1px rgba(0,0,0,0.1);
+    padding: 20px 24px 24px;
+    z-index: 50;
+    cursor: default;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.calendar-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0d1b34;
+}
+
+.calendar-nav {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #6b7280;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background 0.15s ease;
+}
+
+    .calendar-nav:hover {
+        background: #f0f3fa;
+        color: #0d1b34;
+    }
+
+    .calendar-nav svg {
+        width: 16px;
+        height: 16px;
+    }
+
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+    .calendar-weekdays span {
+        font-size: 12px;
+        font-weight: 700;
+        color: #0d1b34;
+    }
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    row-gap: 8px;
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.calendar-day {
+    position: relative;
+    width: 32px;
+    height: 32px;
+    line-height: 32px;
+    margin: 0 auto;
+    font-size: 13px;
+    font-weight: 500;
+    color: #0d1b34;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background 0.2s, color 0.2s;
+}
+
+    .calendar-day:hover:not(.empty):not(.selected) {
+        background: #f0f3fa;
+    }
+
+    .calendar-day.empty {
+        cursor: default;
+    }
+
+    /* Light blue selection styling to match picture */
+    .calendar-day.selected {
+        background: #b0cff8;
+        color: #0d1b34;
+    }
+
+    .calendar-day.in-range {
+        background: #f0f3fa;
+        border-radius: 0;
+        width: 100%;
+    }
+
+.orders-date-range-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    align-items: center;
+}
+
+.orders-date-range-cancel {
+    border: none;
+    background: transparent;
+    color: #7a869a;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+    .orders-date-range-cancel:hover {
+        color: #0d1b34;
+    }
+
+.orders-date-range-submit {
+    border: none;
+    background: #d1f73a;
+    color: #0d1b34;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+    .orders-date-range-submit:hover {
+        background: #b8ea1b;
+    }
+
+.orders-action-label {
+    margin-left: 2px;
+}
+
+.order-details-drawer[hidden],
+.orders-overlay[hidden] {
+    display: none !important;
+}
+
+.order-details-drawer {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    max-width: 420px;
+    width: min(420px, 100vw) !important;
+    height: 100vh !important;
+}
+
+.drawer-order-item {
+    grid-template-columns: 64px minmax(0, 1fr) auto;
+}
+
+.drawer-order-item-image {
+    width: 64px !important;
+    height: 64px !important;
+    min-width: 64px;
+    max-width: 64px !important;
+    max-height: 64px !important;
+    object-fit: cover !important;
 }

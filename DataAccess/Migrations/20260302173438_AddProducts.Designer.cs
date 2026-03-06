@@ -4,6 +4,7 @@ using Amazon_clone.DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccess.Migrations
 {
     [DbContext(typeof(ShopDbContext))]
-    partial class ShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260302173438_AddProducts")]
+    partial class AddProducts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2179,41 +2182,6 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("PaymentCardExpiry")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentCardLast4")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentCardholderName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PaymentMethod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShippingAddressLine1")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShippingAddressLine2")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShippingCity")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShippingCountry")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShippingMethod")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShippingPostalCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ShippingState")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
@@ -2432,9 +2400,9 @@ namespace DataAccess.Migrations
                         new
                         {
                             Id = 27,
-                            ContentType = "image/png",
-                            FileName = "levis_501.png",
-                            ImageUrl = "/images/products/levis_501.png",
+                            ContentType = "image/jfif",
+                            FileName = "levis501.jfif",
+                            ImageUrl = "/images/products/levis501.jfif",
                             IsPrimary = true,
                             ProductId = 23,
                             SortOrder = 0
@@ -3959,186 +3927,6 @@ namespace DataAccess.Migrations
                             Id = 10,
                             ProductId = 22,
                             Quantity = 7
-                        },
-                        new
-                        {
-                            Id = 11,
-                            ProductId = 3,
-                            Quantity = 9
-                        },
-                        new
-                        {
-                            Id = 12,
-                            ProductId = 3,
-                            Quantity = 7
-                        },
-                        new
-                        {
-                            Id = 13,
-                            ProductId = 4,
-                            Quantity = 14
-                        },
-                        new
-                        {
-                            Id = 14,
-                            ProductId = 4,
-                            Quantity = 10
-                        },
-                        new
-                        {
-                            Id = 15,
-                            ProductId = 5,
-                            Quantity = 13
-                        },
-                        new
-                        {
-                            Id = 16,
-                            ProductId = 5,
-                            Quantity = 8
-                        },
-                        new
-                        {
-                            Id = 17,
-                            ProductId = 6,
-                            Quantity = 6
-                        },
-                        new
-                        {
-                            Id = 18,
-                            ProductId = 6,
-                            Quantity = 4
-                        },
-                        new
-                        {
-                            Id = 19,
-                            ProductId = 7,
-                            Quantity = 16
-                        },
-                        new
-                        {
-                            Id = 20,
-                            ProductId = 7,
-                            Quantity = 12
-                        },
-                        new
-                        {
-                            Id = 21,
-                            ProductId = 23,
-                            Quantity = 18
-                        },
-                        new
-                        {
-                            Id = 22,
-                            ProductId = 23,
-                            Quantity = 12
-                        },
-                        new
-                        {
-                            Id = 23,
-                            ProductId = 24,
-                            Quantity = 11
-                        },
-                        new
-                        {
-                            Id = 24,
-                            ProductId = 24,
-                            Quantity = 9
-                        },
-                        new
-                        {
-                            Id = 25,
-                            ProductId = 25,
-                            Quantity = 6
-                        },
-                        new
-                        {
-                            Id = 26,
-                            ProductId = 25,
-                            Quantity = 5
-                        },
-                        new
-                        {
-                            Id = 27,
-                            ProductId = 26,
-                            Quantity = 10
-                        },
-                        new
-                        {
-                            Id = 28,
-                            ProductId = 26,
-                            Quantity = 8
-                        },
-                        new
-                        {
-                            Id = 29,
-                            ProductId = 27,
-                            Quantity = 9
-                        },
-                        new
-                        {
-                            Id = 30,
-                            ProductId = 27,
-                            Quantity = 7
-                        },
-                        new
-                        {
-                            Id = 31,
-                            ProductId = 28,
-                            Quantity = 5
-                        },
-                        new
-                        {
-                            Id = 32,
-                            ProductId = 28,
-                            Quantity = 3
-                        },
-                        new
-                        {
-                            Id = 33,
-                            ProductId = 29,
-                            Quantity = 12
-                        },
-                        new
-                        {
-                            Id = 34,
-                            ProductId = 29,
-                            Quantity = 10
-                        },
-                        new
-                        {
-                            Id = 35,
-                            ProductId = 30,
-                            Quantity = 7
-                        },
-                        new
-                        {
-                            Id = 36,
-                            ProductId = 30,
-                            Quantity = 6
-                        },
-                        new
-                        {
-                            Id = 37,
-                            ProductId = 31,
-                            Quantity = 15
-                        },
-                        new
-                        {
-                            Id = 38,
-                            ProductId = 31,
-                            Quantity = 11
-                        },
-                        new
-                        {
-                            Id = 39,
-                            ProductId = 32,
-                            Quantity = 20
-                        },
-                        new
-                        {
-                            Id = 40,
-                            ProductId = 32,
-                            Quantity = 17
                         });
                 });
 
@@ -4309,314 +4097,6 @@ namespace DataAccess.Migrations
                             ProductVariantId = 10,
                             PropertyDefinitionId = 2,
                             Value = "Brown"
-                        },
-                        new
-                        {
-                            Id = 21,
-                            ProductVariantId = 11,
-                            PropertyDefinitionId = 2,
-                            Value = "Space Gray"
-                        },
-                        new
-                        {
-                            Id = 22,
-                            ProductVariantId = 12,
-                            PropertyDefinitionId = 2,
-                            Value = "Silver"
-                        },
-                        new
-                        {
-                            Id = 23,
-                            ProductVariantId = 13,
-                            PropertyDefinitionId = 2,
-                            Value = "Onyx Black"
-                        },
-                        new
-                        {
-                            Id = 24,
-                            ProductVariantId = 14,
-                            PropertyDefinitionId = 2,
-                            Value = "Amber Yellow"
-                        },
-                        new
-                        {
-                            Id = 25,
-                            ProductVariantId = 15,
-                            PropertyDefinitionId = 2,
-                            Value = "Black"
-                        },
-                        new
-                        {
-                            Id = 26,
-                            ProductVariantId = 16,
-                            PropertyDefinitionId = 2,
-                            Value = "Silver"
-                        },
-                        new
-                        {
-                            Id = 27,
-                            ProductVariantId = 17,
-                            PropertyDefinitionId = 2,
-                            Value = "Black"
-                        },
-                        new
-                        {
-                            Id = 28,
-                            ProductVariantId = 18,
-                            PropertyDefinitionId = 2,
-                            Value = "Black + Kit Lens"
-                        },
-                        new
-                        {
-                            Id = 29,
-                            ProductVariantId = 19,
-                            PropertyDefinitionId = 2,
-                            Value = "White"
-                        },
-                        new
-                        {
-                            Id = 30,
-                            ProductVariantId = 19,
-                            PropertyDefinitionId = 3,
-                            Value = "Standard"
-                        },
-                        new
-                        {
-                            Id = 31,
-                            ProductVariantId = 20,
-                            PropertyDefinitionId = 2,
-                            Value = "Midnight Black"
-                        },
-                        new
-                        {
-                            Id = 32,
-                            ProductVariantId = 20,
-                            PropertyDefinitionId = 3,
-                            Value = "Slim"
-                        },
-                        new
-                        {
-                            Id = 33,
-                            ProductVariantId = 21,
-                            PropertyDefinitionId = 2,
-                            Value = "Dark Stonewash"
-                        },
-                        new
-                        {
-                            Id = 34,
-                            ProductVariantId = 21,
-                            PropertyDefinitionId = 3,
-                            Value = "32W x 32L"
-                        },
-                        new
-                        {
-                            Id = 35,
-                            ProductVariantId = 22,
-                            PropertyDefinitionId = 2,
-                            Value = "Rinse"
-                        },
-                        new
-                        {
-                            Id = 36,
-                            ProductVariantId = 22,
-                            PropertyDefinitionId = 3,
-                            Value = "34W x 32L"
-                        },
-                        new
-                        {
-                            Id = 37,
-                            ProductVariantId = 23,
-                            PropertyDefinitionId = 2,
-                            Value = "Black/Glow Yellow"
-                        },
-                        new
-                        {
-                            Id = 38,
-                            ProductVariantId = 23,
-                            PropertyDefinitionId = 3,
-                            Value = "US 10"
-                        },
-                        new
-                        {
-                            Id = 39,
-                            ProductVariantId = 24,
-                            PropertyDefinitionId = 2,
-                            Value = "White/Blue"
-                        },
-                        new
-                        {
-                            Id = 40,
-                            ProductVariantId = 24,
-                            PropertyDefinitionId = 3,
-                            Value = "US 11"
-                        },
-                        new
-                        {
-                            Id = 41,
-                            ProductVariantId = 25,
-                            PropertyDefinitionId = 2,
-                            Value = "Platinum Silver"
-                        },
-                        new
-                        {
-                            Id = 42,
-                            ProductVariantId = 26,
-                            PropertyDefinitionId = 2,
-                            Value = "Graphite"
-                        },
-                        new
-                        {
-                            Id = 43,
-                            ProductVariantId = 27,
-                            PropertyDefinitionId = 2,
-                            Value = "Obsidian"
-                        },
-                        new
-                        {
-                            Id = 44,
-                            ProductVariantId = 28,
-                            PropertyDefinitionId = 2,
-                            Value = "Bay"
-                        },
-                        new
-                        {
-                            Id = 45,
-                            ProductVariantId = 29,
-                            PropertyDefinitionId = 2,
-                            Value = "Midnight"
-                        },
-                        new
-                        {
-                            Id = 46,
-                            ProductVariantId = 30,
-                            PropertyDefinitionId = 2,
-                            Value = "Starlight"
-                        },
-                        new
-                        {
-                            Id = 47,
-                            ProductVariantId = 31,
-                            PropertyDefinitionId = 2,
-                            Value = "Black"
-                        },
-                        new
-                        {
-                            Id = 48,
-                            ProductVariantId = 32,
-                            PropertyDefinitionId = 2,
-                            Value = "Black + 24-70mm Kit"
-                        },
-                        new
-                        {
-                            Id = 49,
-                            ProductVariantId = 33,
-                            PropertyDefinitionId = 2,
-                            Value = "Black"
-                        },
-                        new
-                        {
-                            Id = 50,
-                            ProductVariantId = 33,
-                            PropertyDefinitionId = 3,
-                            Value = "1TB"
-                        },
-                        new
-                        {
-                            Id = 51,
-                            ProductVariantId = 34,
-                            PropertyDefinitionId = 2,
-                            Value = "Robot White"
-                        },
-                        new
-                        {
-                            Id = 52,
-                            ProductVariantId = 34,
-                            PropertyDefinitionId = 3,
-                            Value = "512GB"
-                        },
-                        new
-                        {
-                            Id = 53,
-                            ProductVariantId = 35,
-                            PropertyDefinitionId = 2,
-                            Value = "White"
-                        },
-                        new
-                        {
-                            Id = 54,
-                            ProductVariantId = 35,
-                            PropertyDefinitionId = 3,
-                            Value = "6-drawer"
-                        },
-                        new
-                        {
-                            Id = 55,
-                            ProductVariantId = 36,
-                            PropertyDefinitionId = 2,
-                            Value = "Black-Brown"
-                        },
-                        new
-                        {
-                            Id = 56,
-                            ProductVariantId = 36,
-                            PropertyDefinitionId = 3,
-                            Value = "3-drawer"
-                        },
-                        new
-                        {
-                            Id = 57,
-                            ProductVariantId = 37,
-                            PropertyDefinitionId = 2,
-                            Value = "Blue/Black"
-                        },
-                        new
-                        {
-                            Id = 58,
-                            ProductVariantId = 37,
-                            PropertyDefinitionId = 3,
-                            Value = "12V Kit"
-                        },
-                        new
-                        {
-                            Id = 59,
-                            ProductVariantId = 38,
-                            PropertyDefinitionId = 2,
-                            Value = "Blue/Black"
-                        },
-                        new
-                        {
-                            Id = 60,
-                            ProductVariantId = 38,
-                            PropertyDefinitionId = 3,
-                            Value = "Bare Tool"
-                        },
-                        new
-                        {
-                            Id = 61,
-                            ProductVariantId = 39,
-                            PropertyDefinitionId = 2,
-                            Value = "Multicolor"
-                        },
-                        new
-                        {
-                            Id = 62,
-                            ProductVariantId = 39,
-                            PropertyDefinitionId = 3,
-                            Value = "484 Pieces"
-                        },
-                        new
-                        {
-                            Id = 63,
-                            ProductVariantId = 40,
-                            PropertyDefinitionId = 2,
-                            Value = "Multicolor"
-                        },
-                        new
-                        {
-                            Id = 64,
-                            ProductVariantId = 40,
-                            PropertyDefinitionId = 3,
-                            Value = "790 Pieces"
                         });
                 });
 
@@ -5120,7 +4600,7 @@ namespace DataAccess.Migrations
                             Id = 23,
                             CategoryId = 6,
                             Description = "Iconic straight-leg men's jeans made with non-stretch denim and button fly construction for a timeless everyday fit.",
-                            ImageUrl = "/images/products/levis_501.png",
+                            ImageUrl = "/images/products/levis_501.jpg",
                             Name = "Levi's 501 Original Fit Jeans",
                             Price = 59.5
                         },
@@ -5138,7 +4618,7 @@ namespace DataAccess.Migrations
                             Id = 25,
                             CategoryId = 8,
                             Description = "Compact aluminum ultrabook featuring a 13.4-inch InfinityEdge display, 13th Gen Intel Core processor, 16GB RAM and fast 512GB SSD.",
-                            ImageUrl = "/images/products/dell_xps_13_plus.png",
+                            ImageUrl = "/images/products/dell_xps_13_plus.jpg",
                             Name = "Dell XPS 13 Plus Laptop (13th Gen Intel, 16GB, 512GB)",
                             Price = 1399.99
                         },
@@ -5147,7 +4627,7 @@ namespace DataAccess.Migrations
                             Id = 26,
                             CategoryId = 9,
                             Description = "Google flagship phone with advanced AI camera tools, 6.7-inch Super Actua display and all-day battery life.",
-                            ImageUrl = "/images/products/pixel_8_pro.png",
+                            ImageUrl = "/images/products/pixel_8_pro.jpg",
                             Name = "Google Pixel 8 Pro Unlocked Smartphone",
                             Price = 999.0
                         },
@@ -5165,7 +4645,7 @@ namespace DataAccess.Migrations
                             Id = 28,
                             CategoryId = 11,
                             Description = "Full-frame mirrorless camera with dual EXPEED 6 processors, robust autofocus, and strong low-light image quality.",
-                            ImageUrl = "/images/products/nikon_z6_ii.png",
+                            ImageUrl = "/images/products/nikon_z6_ii.jpg",
                             Name = "Nikon Z6 II Mirrorless Camera Body",
                             Price = 1996.95
                         },
@@ -5174,7 +4654,7 @@ namespace DataAccess.Migrations
                             Id = 29,
                             CategoryId = 12,
                             Description = "Microsoft's most powerful Xbox with 1TB SSD, 4K gaming support, and quick resume across multiple games.",
-                            ImageUrl = "/images/products/xbox_series_x.png",
+                            ImageUrl = "/images/products/xbox_series_x.jpg",
                             Name = "Xbox Series X Console",
                             Price = 499.99000000000001
                         },
@@ -5183,7 +4663,7 @@ namespace DataAccess.Migrations
                             Id = 30,
                             CategoryId = 14,
                             Description = "Minimalist bedroom dresser with six smooth-glide drawers and a clean Scandinavian profile suitable for modern spaces.",
-                            ImageUrl = "/images/products/malm_dresser.png",
+                            ImageUrl = "/images/products/malm_dresser.jpg",
                             Name = "IKEA MALM 6-Drawer Dresser",
                             Price = 279.0
                         },
@@ -5192,7 +4672,7 @@ namespace DataAccess.Migrations
                             Id = 31,
                             CategoryId = 17,
                             Description = "Compact cordless drill/driver kit with two-speed transmission, 12V lithium-ion batteries, and durable carrying case.",
-                            ImageUrl = "/images/products/bosch_12v_drill.png",
+                            ImageUrl = "/images/products/bosch_12v_drill.jpg",
                             Name = "Bosch 12V Max Cordless Drill Driver Kit",
                             Price = 129.0
                         },
@@ -5201,7 +4681,7 @@ namespace DataAccess.Migrations
                             Id = 32,
                             CategoryId = 21,
                             Description = "Creative building set with mixed LEGO bricks, wheels, and windows designed to inspire open-ended play for kids.",
-                            ImageUrl = "/images/products/lego_10696.png",
+                            ImageUrl = "/images/products/lego_10696.jpg",
                             Name = "LEGO Classic Medium Creative Brick Box 10696",
                             Price = 29.989999999999998
                         });
