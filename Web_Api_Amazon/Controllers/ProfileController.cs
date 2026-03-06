@@ -35,4 +35,14 @@ public class ProfileController : Controller
         ViewData["ActivePage"] = "Profile";
         return View();
     }
+    public IActionResult Privacy()
+    {
+        ViewData["ActivePage"] = "Privacy";
+        return View();
+    }
+    public IActionResult Accessibility()
+    {
+        ViewData["ActivePage"] = "Accessibility";
+        return View();
+    }
 }
