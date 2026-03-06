@@ -28,8 +28,11 @@
             <!-- Sidebar -->
             <aside class="sidebar">
                 <div class="sidebar-top">
-                    <a class="icon-btn" asp-controller="Home" asp-action="Index">
-                        <img src="~/images/iconsPF/chevron-left.png" class="btn-icon" />
+                    <a class="icon-btn" href="@Url.Action("Index", "Home")" aria-label="Go to main page">
+                        <img src="~/images/iconsPF/chevron-left.png"
+                             asp-append-version="true"
+                             alt="Go to main page"
+                             class="btn-icon" />
                     </a>
                     <button class="icon-btn">
                         <img src="~/images/iconsPF/Sidebar.png"
@@ -78,10 +81,17 @@
                     </a>
 
                     <p class="nav-section">Commerce</p>
-                    <a href="#" class="nav-item">
+                    <a asp-controller="Profile" asp-action="Orders"
+                       class="nav-item @(ViewData["ActivePage"]?.ToString() == "Orders" ? "active" : "")">
                         <img src="~/images/iconsPF/package.png" class="nav-icon" alt="Orders" />
                         Orders
                     </a>
+                    @if (ViewData["ActivePage"]?.ToString() == "Orders")
+                    {
+                        <a asp-controller="Profile" asp-action="Orders" class="nav-item nav-item-sub active">Completed</a>
+                        <a asp-controller="Profile" asp-action="Orders" class="nav-item nav-item-sub">In Transit</a>
+                        <a asp-controller="Profile" asp-action="Orders" class="nav-item nav-item-sub">Returned</a>
+                    }
                     <a href="#" class="nav-item">
                         <img src="~/images/iconsPF/credit-card.png" class="nav-icon" alt="Payments" />
                         Payments

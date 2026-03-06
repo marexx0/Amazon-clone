@@ -1,0 +1,25 @@
+﻿@model Web_Api_Amazon.Models.ProfileOrderCardViewModel
+
+<article class="order-card">
+    <span class="order-card-paid">@Model.PaymentLabel</span>
+
+    <div class="order-card-image-wrap">
+        @foreach (var imgUrl in Model.PreviewImageUrls)
+        {
+            <img src="@imgUrl" alt="Order product" class="order-card-image" />
+        }
+    </div>
+
+    <div class="order-card-footer">
+        <div class="order-card-details">
+            <p class="order-card-title">
+                <strong>Order #@Model.OrderId</strong>
+                <span class="order-card-total">Total @Model.Total.ToString("0.00")</span>
+            </p>
+            <p class="order-card-subtitle">
+                @Model.Location &nbsp; @Model.OrderDate.ToLocalTime().ToString("MMM dd") — @Model.EstimatedDeliveryDate.ToLocalTime().ToString("MMM dd")
+            </p>
+        </div>
+        <span class="order-card-status">@Model.StatusLabel</span>
+    </div>
+</article>
