@@ -96,12 +96,15 @@
                         <img src="~/images/iconsPF/bell.png" class="nav-icon" alt="Notifications" />
                         Notifications
                     </a>
-                    <a href="#" class="nav-item">
-                        <img src="~/images/iconsPF/lock-closed.png" class="nav-icon" alt="Privacy & Data" />
+                   
+                    <a asp-controller="Profile" asp-action="Privacy"
+                       class="nav-item @(ViewData["ActivePage"]?.ToString() == "Privacy" ? "active" : "")">
+                        <img src="~/images/iconsPF/lock-closed.png" class="nav-icon" alt="Security" />
                         Privacy & Data
                     </a>
-                    <a href="#" class="nav-item">
-                        <img src="~/images/iconsPF/Accessibility.png" class="nav-icon" alt="Accessibility" />
+                    <a asp-controller="Profile" asp-action="Accessibility"
+                       class="nav-item @(ViewData["ActivePage"]?.ToString() == "Accessibility" ? "active" : "")">
+                        <img src="~/images/iconsPF/Accessibility.png" class="nav-icon" />
                         Accessibility
                     </a>
                 </nav>
