@@ -27,23 +27,29 @@
         body {
             font-family: "DM Sans", sans-serif;
             background: #FCFCFC;
-            padding: 50px 70px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
             color: #080808;
         }
 
         /* MAIN LAYOUT */
         .main-container {
             width: 100%;
-            max-width: 1350px;
-            margin: 0 auto;
+            max-width: 1400px;
             display: grid;
             grid-template-columns: 420px 1fr;
-            gap: 70px;
+            gap: 80px;
         }
 
         /* LEFT */
         .form-section {
             max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         /* H1 — Bold */
@@ -231,7 +237,7 @@
 
 
 
-   /* 
+   
         @@media (max-width:900px) {
             body {
                 padding: 30px 25px;
@@ -245,7 +251,7 @@
             .image-section {
                 min-height: 300px;
             }
-        }  */
+        }
     </style>
 </head>
 
