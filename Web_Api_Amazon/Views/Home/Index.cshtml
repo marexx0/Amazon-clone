@@ -236,28 +236,20 @@ else
             clothingProducts = clothingProducts.Take(12).ToList();
         }
         <!-- Colection-->
-       @*  <section class="collection">
-            <h2>Shop Collection</h2>
-
-            <div class="products-grid">
-                @foreach (var product in clothingProducts)
-                {
-                    <partial name="_ProductCard" model="product" />
-                }
-            </div>
-        </section> *@
+      
         @{
-            var selectedCategories = new List<int> { 6, 7, 9 }; // Clothing, Shoes, Mobile Phones
+            var selectedCategories = new List<int> { 6, 7, 9 };
 
-            // Словник з картинками для цих категорій
             var categoryImages = new Dictionary<int, string>
                 {
-                {6, "~/images/products/nike_dunk_cacao_top.jpg"},
-                {7, "~/images/products/nike_dunk_cacao_top.jpg"},
-                {9, "~/images/products/nike_dunk_cacao_top.jpg"},
+                {6, "~/imagesmain/cloth3.png"},
+                {7, "~/imagesmain/sho6.png"},
+                {9, "~/imagesmain/phone2.png"},
                 };
 
-            var categoriesToShow = (ViewBag.Categories as List<Category>)
+            var categories = ViewBag.Categories as List<Category> ?? new List<Category>();
+
+            var categoriesToShow = categories
             .Where(c => selectedCategories.Contains(c.Id))
             .ToList();
         }
@@ -268,7 +260,7 @@ else
                 @foreach (var category in categoriesToShow)
                 {
                     <a href="/?categoryId=@category.Id" class="category-card">
-                        <img src="@categoryImages[category.Id]" alt="@category.Name" />
+                        <img src="@Url.Content(categoryImages[category.Id])" alt="@category.Name" />
                         <div class="category-name">@category.Name</div>
                     </a>
                 }
