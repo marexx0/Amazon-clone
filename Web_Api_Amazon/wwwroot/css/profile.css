@@ -1386,3 +1386,71 @@ body.drawer-open {
     max-height: 64px !important;
     object-fit: cover !important;
 }
+/* Privacy page */
+
+.privacy-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+}
+
+.privacy-section {
+    margin-bottom: 32px;
+}
+
+    .privacy-section h3 {
+        font-size: 14px;
+        font-weight: 600;
+        color: #0D1B34;
+        margin-bottom: 8px;
+    }
+
+.privacy-desc {
+    font-size: 12px;
+    color: #6b7c99;
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.privacy-link {
+    font-size: 12px;
+    color: #4a7aff;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+    .privacy-link:hover {
+        text-decoration: underline;
+    }
+
+.privacy-danger {
+    color: #ff4d4f;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.privacy-warning {
+    font-size: 11px;
+    color: #a0aec0;
+    margin-top: 4px;
+}
+
+.check-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    margin-bottom: 6px;
+    color: #0D1B34;
+}
+
+    .check-row input {
+        accent-color: #4a7aff;
+    }
+
+@media (max-width: 900px) {
+    .privacy-grid {
+        grid-template-columns: 1fr;
+    }
