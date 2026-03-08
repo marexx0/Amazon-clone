@@ -81,7 +81,7 @@ public class OrdersController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> ProcessPayment(string paymentMethod)
+    public async Task<IActionResult> ProcessPayment(string paymentMethod, string? cardNumber, string? expiryDate, string? nameOnCard)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         var isSignedIn = !string.IsNullOrWhiteSpace(userId);
@@ -93,6 +93,7 @@ public class OrdersController : Controller
         }
 
         var selectedPaymentMethod = NormalizePaymentMethod(paymentMethod);
+        var cardLast4 = ExtractCardLast4(cardNumber);
 
         var cartModel = isSignedIn
             ? await BuildCheckoutModelForUserAsync(userId!, checkoutData.ShippingMethod)
@@ -144,6 +145,17 @@ public class OrdersController : Controller
             UserId = userId,
             OrderDate = DateTime.UtcNow,
             Status = OrderStatus.New,
+            ShippingMethod = checkoutData.ShippingMethod,
+            ShippingAddressLine1 = checkoutData.AddressLine1,
+            ShippingAddressLine2 = checkoutData.AddressLine2,
+            ShippingCity = checkoutData.City,
+            ShippingState = checkoutData.State,
+            ShippingPostalCode = checkoutData.PostalCode,
+            ShippingCountry = checkoutData.Country,
+            PaymentMethod = selectedPaymentMethod,
+            PaymentCardLast4 = cardLast4,
+            PaymentCardExpiry = expiryDate,
+            PaymentCardholderName = nameOnCard,
             OrderItems = cartModel.Items.Select(item => new OrderItem
             {
                 ProductId = item.ProductId,
@@ -225,9 +237,9 @@ public class OrdersController : Controller
             OrderId = order.Id,
             OrderDate = order.OrderDate,
             CustomerName = BuildCustomerName(completionContext, order.User),
-            ShippingAddress = BuildShippingAddress(completionContext),
-            ShippingMethod = completionContext?.ShippingMethod ?? "Standard",
-            PaymentMethod = completionContext?.PaymentMethod ?? "CreditCard",
+            ShippingAddress = BuildShippingAddress(order, completionContext),
+            ShippingMethod = !string.IsNullOrWhiteSpace(order.ShippingMethod) ? order.ShippingMethod : completionContext?.ShippingMethod ?? "Standard",
+            PaymentMethod = !string.IsNullOrWhiteSpace(order.PaymentMethod) ? order.PaymentMethod : completionContext?.PaymentMethod ?? "CreditCard",
             TransactionId = BuildTransactionId(order),
             Items = order.OrderItems
                 .Where(item => item.Product is not null)
@@ -374,8 +386,23 @@ public class OrdersController : Controller
         return orderUser?.Email ?? string.Empty;
     }
 
-    private static string BuildShippingAddress(OrderCompletionContext? context)
+    private static string BuildShippingAddress(Order order, OrderCompletionContext? context)
     {
+        var orderSegments = new[]
+        {
+            order.ShippingAddressLine1,
+            order.ShippingAddressLine2,
+            order.ShippingCity,
+            $"{order.ShippingState} {order.ShippingPostalCode}".Trim(),
+            order.ShippingCountry
+        };
+
+        var orderAddress = string.Join(", ", orderSegments.Where(segment => !string.IsNullOrWhiteSpace(segment)));
+        if (!string.IsNullOrWhiteSpace(orderAddress))
+        {
+            return orderAddress;
+        }
+
         if (context is null)
         {
             return string.Empty;
@@ -395,6 +422,23 @@ public class OrdersController : Controller
 
     private static string BuildTransactionId(Order order)
         => $"ORD-{order.Id}-{order.OrderDate:yyyyMMddHHmmss}";
+
+    private static string? ExtractCardLast4(string? cardNumber)
+    {
+        if (string.IsNullOrWhiteSpace(cardNumber))
+        {
+            return null;
+        }
+
+        var digits = new string(cardNumber.Where(char.IsDigit).ToArray());
+        if (digits.Length < 4)
+        {
+            return null;
+        }
+
+        return digits[^4..];
+    }
+
 
     private async Task<CheckoutViewModel> BuildCheckoutModelForUserAsync(string userId, string shippingMethod = "Standard")
     {

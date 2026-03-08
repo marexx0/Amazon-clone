@@ -1,0 +1,162 @@
+﻿@model Web_Api_Amazon.Models.ProfileOrdersViewModel
+
+@{
+    Layout = "~/Views/Shared/_ProfileLayout.cshtml";
+    ViewData["Title"] = "Orders";
+    ViewData["ActivePage"] = "Orders";
+
+    var inTransitOrders = Model.Orders.Where(o => o.StatusLabel == "In Transit").ToList();
+    var completedOrders = Model.Orders.Where(o => o.StatusLabel == "Completed").ToList();
+}
+
+<h1 class="page-title">Orders</h1>
+<p class="page-subtitle">Track and manage your purchases</p>
+
+<div class="orders-toolbar">
+    <div class="orders-filters">
+        <button class="orders-filter active" type="button" data-range="all">All orders</button>
+        <button class="orders-filter" type="button" data-range="today">Today</button>
+        <button class="orders-filter" type="button" data-range="7">Last 7 days</button>
+        <button class="orders-filter" type="button" data-range="30">Last 30 days</button>
+        <button class="orders-filter" type="button" id="customRangeBtn" data-range="custom" aria-expanded="false" aria-controls="ordersDateRangePopover">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            Custom range
+        </button>
+
+        <div class="orders-date-range-popover" id="ordersDateRangePopover" hidden>
+            <div class="calendar-header">
+                <button type="button" class="calendar-nav" id="calPrev" aria-label="Previous month">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                </button>
+                <span class="calendar-title" id="calTitle">December 2026</span>
+                <button type="button" class="calendar-nav" id="calNext" aria-label="Next month">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+            </div>
+
+            <div class="calendar-weekdays">
+                <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+            </div>
+
+            <div class="calendar-days" id="calDays">
+            </div>
+
+            <div class="orders-date-range-actions">
+                <button type="button" class="orders-date-range-cancel" id="ordersRangeCancel">Cancel</button>
+                <button type="button" class="orders-date-range-submit" id="ordersRangeSubmit">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="orders-actions">
+        <button class="orders-action-btn" type="button" id="ordersSortBtn" data-sort="newest">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="4" y1="12" x2="14" y2="12"></line><line x1="4" y1="18" x2="8" y2="18"></line></svg>
+            <span class="orders-action-label">Sort: Newest</span>
+        </button>
+        <button class="orders-action-btn" type="button" id="ordersStatusBtn" data-filter="all">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+            <span class="orders-action-label">Filter: All</span>
+        </button>
+    </div>
+</div>
+
+@if (!Model.Orders.Any())
+{
+    <section class="orders-empty-state">
+        <img src="~/images/ui/EmptyCart.png" alt="No orders yet" class="orders-empty-image" />
+        <h2>No orders yet</h2>
+        <p>When you place your first order,<br />it will appear here</p>
+        <div class="orders-empty-actions">
+            <a href="#" class="orders-learn-btn">Learn about orders</a>
+            <a asp-controller="Home" asp-action="Index" class="orders-shop-btn">Start shopping</a>
+        </div>
+    </section>
+}
+else
+{
+    @if (inTransitOrders.Any())
+    {
+        <section class="orders-section">
+            <h2 class="orders-group-title">In Transit</h2>
+            <div class="orders-grid">
+                @foreach (var order in inTransitOrders)
+                {
+                    <partial name="_OrderCardPartial" model="order" />
+                }
+            </div>
+        </section>
+    }
+
+    @if (completedOrders.Any())
+    {
+        <section class="orders-section">
+            <h2 class="orders-group-title">Completed</h2>
+            <div class="orders-grid">
+                @foreach (var order in completedOrders)
+                {
+                    <partial name="_OrderCardPartial" model="order" />
+                }
+            </div>
+        </section>
+    }
+}
+
+<div class="orders-overlay" id="ordersOverlay" hidden></div>
+<aside class="order-details-drawer" id="orderDetailsDrawer" aria-hidden="true" hidden>
+    <button type="button" class="order-details-close" id="orderDetailsClose" aria-label="Close order details">×</button>
+
+    <div class="order-details-head">
+        <h2 id="drawerOrderTitle">Order #</h2>
+        <span class="order-details-paid">Paid</span>
+    </div>
+
+    <p class="order-details-meta"><span id="drawerOrderLocation">Vienna, Austria</span> <span id="drawerOrderDate">-</span></p>
+
+    <h3>Order details</h3>
+    <div id="drawerOrderItems" class="drawer-order-items"></div>
+
+    <h3>Order summary</h3>
+    <div class="order-details-summary-row"><span>Subtotal</span><strong id="drawerOrderSubtotal">$0.00</strong></div>
+    <div class="order-details-summary-row"><span>Shipping</span><strong id="drawerOrderShipping">$0.00</strong></div>
+    <div class="order-details-summary-row"><span>Tax</span><strong id="drawerOrderTax">$0.00</strong></div>
+    <div class="order-details-summary-row order-details-total"><span>Total</span><strong id="drawerOrderTotal">$0.00</strong></div>
+
+    <h3>Payment Methods</h3>
+    <div class="order-details-info-box">
+        <div class="order-details-info-title" id="drawerPaymentTitle">Line card</div>
+        <div class="order-details-info-subtitle" id="drawerPaymentSubtitle">Visa ending in 4288, expires 08/26</div>
+    </div>
+
+    <h3>Delivery Information</h3>
+    <div class="order-details-info-box">
+        <div class="order-details-info-title" id="drawerDeliveryTitle">Office</div>
+        <div class="order-details-info-subtitle" id="drawerDeliveryAddress">France, Paris, 75001, 15 Pl. Vendôme</div>
+    </div>
+
+    <h3>Order timeline</h3>
+    <div class="order-details-timeline-badge" id="drawerOrderStatus">Processing</div>
+    <ul class="order-details-timeline">
+        <li id="drawerTimelineOrderPlaced">Order placed</li>
+        <li id="drawerTimelinePaymentConfirmed">Payment confirmed</li>
+        <li id="drawerTimelineShipped">Shipped</li>
+        <li id="drawerEstimatedDelivery">Estimated delivery</li>
+    </ul>
+
+    <h3>Need help with this order?</h3>
+    <p class="order-details-help-text">If something doesn’t look right, we’re here to help.</p>
+    <div class="order-details-link-list">
+        <a href="#">Contact support</a>
+        <a href="#">Report an issue</a>
+    </div>
+
+    <h3>Actions</h3>
+    <div class="order-details-link-list">
+        <a href="#">Download invoice</a>
+        <a href="#">Reorder items</a>
+        <a href="#">Request a return or refund</a>
+    </div>
+</aside>
+
+@section Scripts {
+    <script src="~/js/profile-orders.js" asp-append-version="true"></script>
+}
