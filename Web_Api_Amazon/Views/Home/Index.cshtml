@@ -24,8 +24,9 @@
             .ToList();
     }
 
-    var popularProducts = PickProducts(allProducts, 12);
+    var popularProducts = ViewBag.PopularProducts as List<Product> ?? new List<Product>();
 }
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

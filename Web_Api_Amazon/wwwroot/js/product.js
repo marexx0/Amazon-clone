@@ -74,8 +74,7 @@
     const cartModal = document.getElementById('cart-modal');
     const closeCartModalElements = document.querySelectorAll('[data-close-cart-modal]');
 
-    const selectedColorTarget = document.getElementById('modal-selected-color');
-    const selectedSizeTarget = document.getElementById('modal-selected-size');
+    const modalOptionTargets = document.querySelectorAll('[data-modal-option-name]');
     const selectedQtyTarget = document.getElementById('modal-selected-qty');
 
 
@@ -98,17 +97,22 @@
     const openCartModal = () => {
         if (!cartModal) return;
 
-        const selectedColor = document.querySelector('.color-option.is-selected')?.getAttribute('data-color');
-        const selectedSize = document.querySelector('.size-option.is-selected')?.textContent?.trim();
+        const selectedOptions = selectedOptionsInput?.value
+            ? JSON.parse(selectedOptionsInput.value)
+            : {};
         const qty = qtyInput?.value || '1';
 
-        if (selectedColorTarget && selectedColor) {
-            selectedColorTarget.textContent = selectedColor;
-        }
+        modalOptionTargets.forEach((target) => {
+            const optionName = target.getAttribute('data-modal-option-name');
+            if (!optionName) {
+                return;
+            }
 
-        if (selectedSizeTarget && selectedSize) {
-            selectedSizeTarget.textContent = selectedSize;
-        }
+            const selectedValue = selectedOptions[optionName];
+            if (selectedValue) {
+                target.textContent = selectedValue;
+            }
+        });
 
         if (selectedQtyTarget) {
             selectedQtyTarget.textContent = qty;
