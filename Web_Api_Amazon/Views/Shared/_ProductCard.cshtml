@@ -98,14 +98,20 @@
                     <img src="~/imagesmain/shopping-cartBL.png" alt="logo" style="width:15px; height:15px; " />
                 </button>
             </form>
+            <div class=" buy-btn">
+            <form asp-controller="Cart"
+                  asp-action="Add"
+                  method="post">
 
-            <a asp-controller="Orders"
-               asp-action="BuyNow"
-               asp-route-id="@Model.Id"
-               class="buy-btn">
-                Buy now
-            </a>
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="productId" value="@Model.Id" />
+                <input type="hidden" name="returnUrl" value="@Url.Action("Checkout", "Orders")" />
 
+                <button type="submit" class="buy-btn">
+                    Buy now
+                </button>
+            </form>
+			</div>
         </div>
     </div>
 

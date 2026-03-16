@@ -37,6 +37,30 @@ namespace Web_Api_Amazon.Controllers
                     .ToListAsync();
             }) ?? new List<Product>();
 
+            var popularProductIds = await _context.OrderItems
+               .AsNoTracking()
+               .GroupBy(oi => oi.ProductId)
+               .Select(group => new
+               {
+                   ProductId = group.Key,
+                   TotalOrderedQuantity = group.Sum(oi => oi.Quantity)
+               })
+               .OrderByDescending(item => item.TotalOrderedQuantity)
+               .Take(12)
+               .Select(item => item.ProductId)
+               .ToListAsync();
+
+            var popularProducts = popularProductIds
+                .Select(productId => allProducts.FirstOrDefault(product => product.Id == productId))
+                .Where(product => product is not null)
+                .Cast<Product>()
+                .ToList();
+
+            if (!popularProducts.Any())
+            {
+                popularProducts = allProducts.Take(12).ToList();
+            }
+
             var categories = await _cache.GetOrCreateAsync(HomepageCategoriesCacheKey, async entry =>
             {
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
@@ -70,6 +94,7 @@ namespace Web_Api_Amazon.Controllers
             ViewBag.FilteredProducts = filteredProducts.ToList();
             ViewBag.SelectedCategoryId = categoryId;
             ViewBag.AllProducts = allProducts;
+            ViewBag.PopularProducts = popularProducts;
             ViewBag.SearchString = searchString;
             ViewBag.Categories = categories;
 
