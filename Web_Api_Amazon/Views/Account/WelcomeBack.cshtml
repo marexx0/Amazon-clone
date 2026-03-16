@@ -158,28 +158,12 @@
             color: #9CA3AF;
         }
 
-        @@media (max-width:900px) {
-            .main-container {
-                grid-template-columns: 1fr;
-                max-width: 520px;
-            }
-
-            .image-section {
-                min-height: 320px;
-                margin-top: 20px;
-            }
-
-            .action-buttons {
-                flex-direction: column;
-            }
-        }
-
-
-        
     </style>
+
+    <link rel="stylesheet" href="~/css/account-responsive.css" asp-append-version="true" />
 </head>
 
-<body>
+<body class="account-page">
     <div class="main-container">
 
         <!-- LEFT -->

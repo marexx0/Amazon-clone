@@ -155,39 +155,45 @@
     var searchString = ViewBag.SearchString as string;
 }
 
-@if (!string.IsNullOrEmpty(searchString))
-{
-    <section id="search-section" class="category-results">
-        
-
-        @if (filteredProducts.Any())
+        @if (!string.IsNullOrEmpty(searchString))
         {
-            <div class="products-grid">
-                @foreach (var product in filteredProducts)
+            <section id="search-section" class="category-results">
+
+
+                @if (filteredProducts.Any())
                 {
-                    <partial name="_ProductCard" model="product" />
+                    <div class="products-grid">
+                        @foreach (var product in filteredProducts)
+                        {
+                            <partial name="_ProductCard" model="product" />
+                        }
+                    </div>
+                    <div class="section-watch-more">
+                        <a href="#" class="watch-more-btn">Watch more</a>
+                    </div>
                 }
-            </div>
+                else
+                {
+                    <p>No products found.</p>
+                }
+            </section>
         }
-        else
+        else if (selectedCategoryId.HasValue && filteredProducts.Any())
         {
-            <p>No products found.</p>
-        }
-    </section>
-}
-else if (selectedCategoryId.HasValue && filteredProducts.Any())
-{
-    <section id="category-section" class="category-results">
-        
+            <section id="category-section" class="category-results">
 
-        <div class="products-grid">
-            @foreach (var product in filteredProducts)
-            {
-                <partial name="_ProductCard" model="product" />
-            }
-        </div>
-    </section>
-}
+
+                <div class="products-grid">
+                    @foreach (var product in filteredProducts)
+                    {
+                        <partial name="_ProductCard" model="product" />
+                    }
+                </div>
+                <div class="section-watch-more">
+                    <a href="#" class="watch-more-btn">Watch more</a>
+                </div>
+            </section>
+        }
 else
 {
     <!-- ТУТ ВСЯ ГОЛОВНА СТОРІНКА -->
@@ -218,6 +224,9 @@ else
                 {
                     <partial name="_ProductCard" model="product" />
                 }
+            </div>
+            <div class="section-watch-more">
+                <a href="#" class="watch-more-btn">Watch more</a>
             </div>
 
         </section>
@@ -268,22 +277,33 @@ else
             </div>
         </section>
         @{
-            var technologyCategoryIds = new List<int> { 8, 9, 10, 11, 12 };
+            var womensKeywords = new[] { "women", "woman", "ladies", "lady", "female", "dress", "skirt", "blouse", "heel", "handbag" };
 
-            var technologyProducts = PickProducts(
-            allProducts.Where(p => technologyCategoryIds.Contains(p.CategoryId)),
-            12);
+            var womensDayBase = allProducts.Where(p =>
+            p.CategoryId == 6
+            || (!string.IsNullOrWhiteSpace(p.Name) && womensKeywords.Any(k => p.Name.Contains(k, StringComparison.OrdinalIgnoreCase)))
+            || (!string.IsNullOrWhiteSpace(p.Description) && womensKeywords.Any(k => p.Description.Contains(k, StringComparison.OrdinalIgnoreCase))));
+
+            var womensDayProducts = PickProducts(womensDayBase, 12);
+
+            if (!womensDayProducts.Any())
+            {
+                womensDayProducts = PickProducts(allProducts, 12);
+            }
         }
-        
+
         <!-- Gifts -->
         <section class="collection">
             <h2>Women's Day Gifts</h2>
 
             <div class="products-grid">
-                @foreach (var product in technologyProducts)
+                @foreach (var product in womensDayProducts)
                 {
                     <partial name="_ProductCard" model="product" />
                 }
+            </div>
+            <div class="section-watch-more">
+                <a href="#" class="watch-more-btn">Watch more</a>
             </div>
         </section>
         <!-- BANNER -->
@@ -313,6 +333,9 @@ else
                 {
                     <partial name="_ProductCard" model="product" />
                 }
+            </div>
+            <div class="section-watch-more">
+                <a href="#" class="watch-more-btn">Watch more</a>
             </div>
         </section>
         @section Scripts {

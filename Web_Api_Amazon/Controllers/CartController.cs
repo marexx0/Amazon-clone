@@ -147,12 +147,19 @@ public class CartController : Controller
         usedIds.UnionWith(savedForLater.Select(item => item.ProductId));
         usedIds.UnionWith(favorites.Select(item => item.ProductId));
 
-        var recommendations = await _context.Products
-            .Where(product => !usedIds.Contains(product.Id))
+        var preferredCategoryIds = await _context.Products
+            .AsNoTracking()
+            .Where(p => usedIds.Contains(p.Id))
+            .Select(p => p.CategoryId)
+            .Distinct()
+            .ToListAsync();
+
+        var categoryMatched = await _context.Products
+            .AsNoTracking()
+            .Where(product => !usedIds.Contains(product.Id) && preferredCategoryIds.Contains(product.CategoryId))
             .OrderByDescending(product => product.Id)
             .Take(6)
             .Include(p => p.Images)
-            .AsNoTracking()
             .Select(product => new ProductCardViewModel
             {
                 ProductId = product.Id,
@@ -164,6 +171,32 @@ public class CartController : Controller
                 Rating = 4.2 + ((product.Id % 7) * 0.1)
             })
             .ToListAsync();
+
+        var recommendations = categoryMatched;
+
+        if (recommendations.Count < 6)
+        {
+            var existingRecommendationIds = recommendations.Select(r => r.ProductId).ToHashSet();
+            var fallback = await _context.Products
+                .AsNoTracking()
+                .Where(product => !usedIds.Contains(product.Id) && !existingRecommendationIds.Contains(product.Id))
+                .OrderByDescending(product => product.Id)
+                .Take(6 - recommendations.Count)
+                .Include(p => p.Images)
+                .Select(product => new ProductCardViewModel
+                {
+                    ProductId = product.Id,
+                    Name = product.Name,
+                    Description = product.Description,
+                    ImageUrl = product.Images.OrderBy(i => i.SortOrder).Select(i => i.ImageUrl).FirstOrDefault() ?? product.ImageUrl,
+                    Price = (decimal)product.Price,
+                    InStock = product.Variants.Sum(v => v.Quantity) > 0 || !product.Variants.Any(),
+                    Rating = 4.2 + ((product.Id % 7) * 0.1)
+                })
+                .ToListAsync();
+
+            recommendations.AddRange(fallback);
+        }
 
         var viewModel = new ShoppingCartViewModel
         {

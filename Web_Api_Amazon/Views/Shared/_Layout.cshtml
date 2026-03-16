@@ -330,6 +330,37 @@
         </div>
     </footer>
 
+    <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+        <a asp-controller="Home" asp-action="Index" class="mobile-bottom-nav__item" aria-label="Menu">
+            <span class="mobile-bottom-nav__icon mobile-bottom-nav__icon-menu" aria-hidden="true"></span>
+        </a>
+
+        <a asp-controller="Favorites" asp-action="Index" class="mobile-bottom-nav__item" aria-label="Favorites">
+            <img src="~/imagesmain/heart.png" alt="" class="mobile-bottom-nav__img-icon" />
+        </a>
+
+        <a asp-controller="Home" asp-action="Index" class="mobile-bottom-nav__item mobile-bottom-nav__item--active" aria-label="Search">
+            <img src="~/imagesmain/search.png" alt="" class="mobile-bottom-nav__img-icon" />
+        </a>
+
+        <a asp-controller="Cart" asp-action="Index" class="mobile-bottom-nav__item" aria-label="Cart">
+            <img src="~/imagesmain/shopping-cart.png" alt="" class="mobile-bottom-nav__img-icon" />
+        </a>
+
+        @if (SignInManager.IsSignedIn(User))
+        {
+            <a asp-controller="Profile" asp-action="Index" class="mobile-bottom-nav__item" aria-label="Profile">
+                <img src="~/imagesmain/Account Photo.png" alt="" class="mobile-bottom-nav__img-icon" />
+            </a>
+        }
+        else
+        {
+            <a asp-controller="Account" asp-action="Entry" class="mobile-bottom-nav__item" aria-label="Sign in">
+                <img src="~/imagesmain/Account Photo.png" alt="" class="mobile-bottom-nav__img-icon" />
+            </a>
+        }
+    </nav>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

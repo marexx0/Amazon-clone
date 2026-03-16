@@ -235,27 +235,12 @@
 }
 
 
-
-
-   
-        @@media (max-width:900px) {
-            body {
-                padding: 30px 25px;
-            }
-
-            .main-container {
-                grid-template-columns: 1fr;
-                max-width: 520px;
-            }
-
-            .image-section {
-                min-height: 300px;
-            }
-        }
     </style>
+
+    <link rel="stylesheet" href="~/css/account-responsive.css" asp-append-version="true" />
 </head>
 
-<body>
+<body class="account-page">
 
 <div class="main-container">
 
@@ -321,10 +306,10 @@
 
     <!-- RIGHT -->
         <div class="image-section">
-    <img src="~/imageslogreg/Illustrations.png" asp-append-version="true" class="auth-image" />
-    <img src="~/imageslogreg/Logotype.png" asp-append-version="true" class="logo-small" />
-</div>
-
+            <img src="~/imageslogreg/Illustrations.png" asp-append-version="true" class="auth-image" />
+            <img src="~/imageslogreg/Logotype.png" asp-append-version="true" class="logo-small" />
+        </div>
+    </div>
 
 
    

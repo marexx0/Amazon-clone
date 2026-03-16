@@ -72,13 +72,20 @@ namespace Web_Api_Amazon.Controllers
                 .ToListAsync();
 
             var relatedIds = relatedProducts.Select(p => p.Id).ToHashSet();
-            var topPicks = await _context.Products
+            var monthSeed = DateTime.UtcNow.Year * 100 + DateTime.UtcNow.Month;
+
+            var topPickCandidates = await _context.Products
                 .AsNoTracking()
                 .Include(p => p.Images)
+                .Include(p => p.Variants)
                 .Where(p => p.Id != product.Id && !relatedIds.Contains(p.Id))
-                .OrderByDescending(p => p.Id)
-                .Take(4)
                 .ToListAsync();
+
+            var topPicks = topPickCandidates
+                .OrderByDescending(p => p.Variants.Sum(v => v.Quantity) > 0 || !p.Variants.Any())
+                .ThenBy(p => Math.Abs(HashCode.Combine(p.Id, monthSeed)))
+                .Take(8)
+                .ToList();
 
             var variantSummaries = product.Variants?
                            .Where(v => !string.IsNullOrWhiteSpace(v.Name)

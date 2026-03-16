@@ -26,7 +26,7 @@
         <div class="layout">
 
             <!-- Sidebar -->
-            <aside class="sidebar">
+            <aside class="sidebar" id="profileSidebar">
                 <div class="sidebar-top">
                     <a class="icon-btn" href="@Url.Action("Index", "Home")" aria-label="Go to main page">
                         <img src="~/images/iconsPF/chevron-left.png"
@@ -34,10 +34,10 @@
                              alt="Go to main page"
                              class="btn-icon" />
                     </a>
-                    <button class="icon-btn">
+                    <button class="icon-btn sidebar-toggle" type="button" id="sidebarToggle" aria-label="Toggle profile menu" aria-expanded="false" aria-controls="profileSidebar">
                         <img src="~/images/iconsPF/Sidebar.png"
                              asp-append-version="true"
-                             alt="back"
+                             alt="Toggle sidebar"
                              class="btn-icon" />
                     </button>
                 </div>
@@ -137,8 +137,15 @@
 
             <!-- Main content -->
             <main class="content">
+                <button class="mobile-title-menu-btn" type="button" id="mobileSidebarOpen" aria-label="Open profile menu" aria-controls="profileSidebar" aria-expanded="false">
+                    <img src="~/images/iconsPF/chevron-left.png"
+                         asp-append-version="true"
+                         alt="Open profile menu"
+                         class="mobile-title-menu-icon" />
+                </button>
                 @RenderBody()
             </main>
+            <button class="sidebar-overlay" type="button" id="sidebarOverlay" aria-label="Close profile menu"></button>
 
         </div>
     }
@@ -149,6 +156,67 @@
             <a asp-controller="Account" asp-action="Entry">Sign in</a>
         </p>
     }
+    <script>
+        (function () {
+            const sidebar = document.getElementById('profileSidebar');
+            const toggleButton = document.getElementById('sidebarToggle');
+            const mobileOpenButton = document.getElementById('mobileSidebarOpen');
+            const overlay = document.getElementById('sidebarOverlay');
+            const pageTitle = document.querySelector('.content .page-title');
+
+            if (!sidebar || !toggleButton || !overlay) {
+                return;
+            }
+
+            if (mobileOpenButton && pageTitle) {
+                pageTitle.classList.add('page-title-with-menu');
+                pageTitle.prepend(mobileOpenButton);
+            }
+
+            const syncExpandedState = (value) => {
+                const expanded = value ? 'true' : 'false';
+                toggleButton.setAttribute('aria-expanded', expanded);
+
+                if (mobileOpenButton) {
+                    mobileOpenButton.setAttribute('aria-expanded', expanded);
+                }
+            };
+
+            const closeSidebar = () => {
+                sidebar.classList.remove('sidebar-open');
+                overlay.classList.remove('is-visible');
+                syncExpandedState(false);
+            };
+
+            const openSidebar = () => {
+                sidebar.classList.add('sidebar-open');
+                overlay.classList.add('is-visible');
+                syncExpandedState(true);
+            };
+
+            toggleButton.addEventListener('click', () => {
+                const isOpen = sidebar.classList.contains('sidebar-open');
+                if (isOpen) {
+                    closeSidebar();
+                    return;
+                }
+
+                openSidebar();
+            });
+
+            if (mobileOpenButton) {
+                mobileOpenButton.addEventListener('click', openSidebar);
+            }
+
+            overlay.addEventListener('click', closeSidebar);
+
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 767) {
+                    closeSidebar();
+                }
+            });
+        })();
+    </script>
 
     @RenderSection("Scripts", required: false)
 

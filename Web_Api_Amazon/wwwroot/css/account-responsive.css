@@ -1,0 +1,27 @@
+﻿@media (max-width: 900px) {
+    body.account-page {
+        padding: 24px 16px;
+    }
+
+        body.account-page .main-container,
+        .account-page .main-container {
+            grid-template-columns: 1fr;
+            max-width: 520px;
+            gap: 24px;
+        }
+
+        body.account-page .form-section,
+        .account-page .form-section {
+            max-width: 100%;
+        }
+
+        body.account-page .image-section,
+        .account-page .image-section {
+            display: none;
+        }
+
+        body.account-page .action-buttons,
+        .account-page .action-buttons {
+            flex-direction: column;
+        }
+}
