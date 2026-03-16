@@ -1,5 +1,5 @@
 ﻿.product-card {
-    width: 210px;
+    width: 100%;
     min-width: auto;
     height: 380px;
     background: #3B82E10D;
@@ -177,4 +177,16 @@
     gap: 12px; 
     justify-items: stretch;
     align-items: start;
+}
+
+
+@media (max-width: 768px) {
+    .product-card {
+        height: auto;
+        min-height: 360px;
+    }
+
+    .product-image {
+        height: 150px;
+    }
 }
