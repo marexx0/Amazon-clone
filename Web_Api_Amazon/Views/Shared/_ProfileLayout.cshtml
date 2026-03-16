@@ -130,6 +130,12 @@
 
             <!-- Main content -->
             <main class="content">
+                <button class="mobile-title-menu-btn" type="button" id="mobileSidebarOpen" aria-label="Open profile menu" aria-controls="profileSidebar" aria-expanded="false">
+                    <img src="~/images/iconsPF/chevron-left.png"
+                         asp-append-version="true"
+                         alt="Open profile menu"
+                         class="mobile-title-menu-icon" />
+                </button>
                 @RenderBody()
             </main>
             <button class="sidebar-overlay" type="button" id="sidebarOverlay" aria-label="Close profile menu"></button>
@@ -147,22 +153,38 @@
         (function () {
             const sidebar = document.getElementById('profileSidebar');
             const toggleButton = document.getElementById('sidebarToggle');
+            const mobileOpenButton = document.getElementById('mobileSidebarOpen');
             const overlay = document.getElementById('sidebarOverlay');
+            const pageTitle = document.querySelector('.content .page-title');
 
             if (!sidebar || !toggleButton || !overlay) {
                 return;
             }
 
+            if (mobileOpenButton && pageTitle) {
+                pageTitle.classList.add('page-title-with-menu');
+                pageTitle.prepend(mobileOpenButton);
+            }
+
+            const syncExpandedState = (value) => {
+                const expanded = value ? 'true' : 'false';
+                toggleButton.setAttribute('aria-expanded', expanded);
+
+                if (mobileOpenButton) {
+                    mobileOpenButton.setAttribute('aria-expanded', expanded);
+                }
+            };
+
             const closeSidebar = () => {
                 sidebar.classList.remove('sidebar-open');
                 overlay.classList.remove('is-visible');
-                toggleButton.setAttribute('aria-expanded', 'false');
+                syncExpandedState(false);
             };
 
             const openSidebar = () => {
                 sidebar.classList.add('sidebar-open');
                 overlay.classList.add('is-visible');
-                toggleButton.setAttribute('aria-expanded', 'true');
+                syncExpandedState(true);
             };
 
             toggleButton.addEventListener('click', () => {
@@ -174,6 +196,10 @@
 
                 openSidebar();
             });
+
+            if (mobileOpenButton) {
+                mobileOpenButton.addEventListener('click', openSidebar);
+            }
 
             overlay.addEventListener('click', closeSidebar);
 

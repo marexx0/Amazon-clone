@@ -166,6 +166,24 @@ body {
 .sidebar-overlay {
     display: none;
 }
+.mobile-title-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    width: 32px;
+    height: 32px;
+    padding: 4px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.mobile-title-menu-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    filter: brightness(0) saturate(100%) invert(56%) sepia(0%) saturate(0%) hue-rotate(180deg) brightness(95%) contrast(88%);
+}
 
 .page-title {
     font-size: 22px;
@@ -352,6 +370,16 @@ body {
         background: white;
         overflow-y: auto;
         width: 100%;
+    }
+    .page-title-with-menu {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .mobile-title-menu-btn {
+        display: inline-flex;
+        flex-shrink: 0;
     }
 
     .sidebar-overlay {
