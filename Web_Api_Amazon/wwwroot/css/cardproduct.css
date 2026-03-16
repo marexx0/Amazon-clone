@@ -178,3 +178,15 @@
     justify-items: stretch;
     align-items: start;
 }
+
+@media (max-width: 768px) {
+    .product-card {
+        width: 100%;
+        height: auto;
+        min-height: 360px;
+    }
+
+    .product-image {
+        height: 150px;
+    }
+}

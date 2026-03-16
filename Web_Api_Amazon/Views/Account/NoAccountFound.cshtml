@@ -153,53 +153,16 @@
 
 
         .footer {
-        
             font-size: 11px;
             color: #9CA3AF;
         }
 
-        @@media (max-width:900px) {
-            .main-container {
-                grid-template-columns: 1fr;
-                max-width: 520px;
-            }
-
-           .image-section {
-    position: relative;
-    background: #0D1B34;
-    border-radius: 24px;
-    min-height: 220px;
-    min-width: 220px;
-    overflow: hidden;
-}
-
-.auth-image {
-    position: absolute;          
-    top: 50%;                    
-    left: 50%;                   
-    transform: translate(-50%, -50%); 
-    max-width: 60%;    
-    max-height: 60%;   
-    width: auto;                 
-    height: auto;                
-}
-.logo-small {
-    position: absolute;
-    bottom: 20px;       
-    right: 20px;        
-    width: 104px;       
-    height: 61px;       
-    object-fit: contain;
-    opacity: 1;
-}
-            .action-buttons {
-                flex-direction: column;
-            }
-        }
     </style>
+
+    <link rel="stylesheet" href="~/css/account-responsive.css" asp-append-version="true" />
 </head>
 
-<body>
+<body class="account-page">
     <div class="main-container">
 
         <!-- LEFT -->
@@ -220,14 +183,13 @@
       
         <!-- RIGHT -->
          <div class="image-section">
-    <img src="~/imageslogreg/Illustrations2.png" asp-append-version="true" class="auth-image" />
-    <img src="~/imageslogreg/Logotype.png" asp-append-version="true" class="logo-small" />
-</div>
+            <img src="~/imageslogreg/Illustrations2.png" asp-append-version="true" class="auth-image" />
+            <img src="~/imageslogreg/Logotype.png" asp-append-version="true" class="logo-small" />
+        </div>
 <div class="footer">
             © 2026 Allora.com Inc. or its affiliates
         </div>
-        </div>
-        
     </div>
+
 </body>
 </html>

@@ -43,3 +43,50 @@ window.addEventListener('load', function () {
         sessionStorage.removeItem('scrollPos');
     }
 });
+
+// Watch more: progressively reveal more cards in each section
+(function () {
+    var sections = document.querySelectorAll('section');
+    if (!sections.length) return;
+
+    sections.forEach(function (section) {
+        var grid = section.querySelector('.products-grid');
+        var watchMoreBtn = section.querySelector('.watch-more-btn');
+        if (!grid || !watchMoreBtn) return;
+
+        var cards = Array.prototype.slice.call(grid.querySelectorAll('.product-card'));
+        if (!cards.length) {
+            var emptyWrap = watchMoreBtn.closest('.section-watch-more');
+            if (emptyWrap) emptyWrap.remove();
+            return;
+        }
+
+        var isMobile = window.matchMedia('(max-width: 768px)').matches;
+        var initialVisible = isMobile ? 4 : 6;
+        var step = isMobile ? 2 : 3;
+        var visibleCount = Math.min(initialVisible, cards.length);
+
+        function applyVisibility() {
+            cards.forEach(function (card, index) {
+                card.style.display = index < visibleCount ? '' : 'none';
+            });
+
+            var watchMoreWrap = watchMoreBtn.closest('.section-watch-more');
+            if (!watchMoreWrap) return;
+
+            if (visibleCount >= cards.length) {
+                watchMoreWrap.style.display = 'none';
+            } else {
+                watchMoreWrap.style.display = 'flex';
+            }
+        }
+
+        watchMoreBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            visibleCount = Math.min(visibleCount + step, cards.length);
+            applyVisibility();
+        });
+
+        applyVisibility();
+    });
+})();
